@@ -277,4 +277,18 @@ def get_active_ads():
 @admin_bp.get("/debug_sockets")
 def debug_sockets():
     from ..sockets import online_users
-    return ok({"online_users": {k: list(v) for k, v in online_users.items()}})
+    from ..extensions import socketio
+    
+    rooms = {}
+    try:
+        # Access the raw internal rooms dictionary for the '/' namespace
+        raw_rooms = socketio.server.manager.rooms.get("/", {})
+        for room_name, room_sids in raw_rooms.items():
+            rooms[room_name] = list(room_sids.keys()) if isinstance(room_sids, dict) else list(room_sids)
+    except Exception as e:
+        rooms = {"error": str(e)}
+
+    return ok({
+        "online_users_dict": {k: list(v) for k, v in online_users.items()},
+        "engine_rooms": rooms
+    })
