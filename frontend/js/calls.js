@@ -159,9 +159,9 @@ const Calls = {
             toUserId: otherUserId, 
             callId, 
             video,
-            fromUserId: app.currentUser.id,
-            fromName: app.currentUser.name,
-            fromAvatar: app.currentUser.avatar
+            fromUserId: store.getCurrentUser().id,
+            fromName: store.getCurrentUser().name,
+            fromAvatar: store.getCurrentUser().avatar
         });
 
         this.ringTimeout = setTimeout(() => {
