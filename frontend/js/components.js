@@ -350,14 +350,14 @@ function renderReel(reel) {
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="19" r="2"></circle><circle cx="12" cy="5" r="2"></circle></svg>
                     </div>
                     <!-- Menu popup -->
-                    <div class="post-dropdown hidden" id="reel-menu-${reel.id}" style="position: absolute; right: 40px; bottom: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; min-width: 150px; z-index: 100;">
-                        <div class="post-dropdown-item" onclick="event.stopPropagation(); app.reportContent('reel', '${reel.id}')" style="padding: 10px; cursor: pointer; display: flex; gap: 8px; align-items: center;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-                            <span style="color: var(--danger);">Report</span>
+                    <div class="post-dropdown hidden" id="reel-menu-${reel.id}" style="position: absolute; right: 50px; bottom: 0; top: auto; background: var(--bg-card, #121c32); border: 1px solid var(--border-glass, rgba(255,255,255,0.15)); border-radius: 12px; min-width: 170px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+                        <div class="post-dropdown-item" onclick="event.stopPropagation(); app.reportContent('reel', '${reel.id}')" style="padding: 12px 14px; cursor: pointer; display: flex; gap: 10px; align-items: center; color: var(--danger, #ff4444);">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <span style="font-weight: 600; font-size: 14px;">Report</span>
                         </div>
-                        <div class="post-dropdown-item" onclick="event.stopPropagation(); app.notInterestedReel('${reel.id}')" style="padding: 10px; cursor: pointer; display: flex; gap: 8px; align-items: center;">
+                        <div class="post-dropdown-item" onclick="event.stopPropagation(); app.notInterestedReel('${reel.id}')" style="padding: 12px 14px; cursor: pointer; display: flex; gap: 10px; align-items: center; color: white;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M12 2v20"></path></svg>
-                            <span>Not Interested</span>
+                            <span style="font-weight: 600; font-size: 14px;">Not Interested</span>
                         </div>
                     </div>
                 </div>
