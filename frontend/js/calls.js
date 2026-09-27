@@ -74,9 +74,18 @@ const Calls = {
             reconnectionDelayMax: 5000
         });
 
-        this.socket.on('connect', () => console.log('[Calls] connected to real-time server'));
-        this.socket.on('disconnect', (reason) => console.warn('[Calls] disconnected:', reason));
-        this.socket.on('connect_error', (err) => console.error('[Calls] connection error:', err && err.message));
+        this.socket.on('connect', () => {
+            console.log('[Calls] connected to real-time server');
+            if (typeof app !== 'undefined' && app.showToast) app.showToast('Call Server Connected!', 'success');
+        });
+        this.socket.on('disconnect', (reason) => {
+            console.warn('[Calls] disconnected:', reason);
+            if (typeof app !== 'undefined' && app.showToast) app.showToast('Call Server Disconnected: ' + reason, 'danger');
+        });
+        this.socket.on('connect_error', (err) => {
+            console.error('[Calls] connection error:', err && err.message);
+            if (typeof app !== 'undefined' && app.showToast) app.showToast('Call Server Error: ' + err.message, 'danger');
+        });
 
         this.socket.on('call:incoming', (data) => this.onIncoming(data));
         this.socket.on('call:accepted', (data) => this.onAccepted(data));
