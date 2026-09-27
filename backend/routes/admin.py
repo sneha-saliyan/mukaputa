@@ -196,7 +196,7 @@ def update_report(report_id):
                 actor_id=None,
                 type="admin_warning",
                 target_id=report.content_id,
-                message=f"Admin removed your {report.content_type} due to reports."
+                text=f"Admin removed your {report.content_type} due to reports."
             )
             db.session.add(notif)
 
@@ -210,7 +210,7 @@ def update_report(report_id):
                 actor_id=None,
                 type="admin_warning",
                 target_id=report.content_id,
-                message=f"Admin warning: Your {report.content_type} has been reported. Please ensure it follows guidelines."
+                text=f"Admin warning: Your {report.content_type} has been reported. Please ensure it follows guidelines."
             )
             db.session.add(notif)
     else:
