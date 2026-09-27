@@ -400,6 +400,40 @@ const Calls = {
         if (btn) btn.classList.toggle('active-state', this.cameraOff);
     },
 
+    async toggleScreenShare() {
+        if (!this.localStream || !this.pc) return;
+        try {
+            if (!this.isScreenSharing) {
+                this.screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                const screenTrack = this.screenStream.getVideoTracks()[0];
+                const sender = this.pc.getSenders().find(s => s.track && s.track.kind === 'video');
+                if (sender) await sender.replaceTrack(screenTrack);
+                const localVideo = document.getElementById('call-local-video');
+                if (localVideo) localVideo.srcObject = new MediaStream([screenTrack]);
+                
+                this.isScreenSharing = true;
+                const btn = document.getElementById('call-screen-btn');
+                if (btn) btn.classList.add('active-state');
+
+                screenTrack.onended = () => { if (this.isScreenSharing) this.toggleScreenShare(); };
+            } else {
+                const cameraTrack = this.localStream.getVideoTracks()[0];
+                const sender = this.pc.getSenders().find(s => s.track && s.track.kind === 'video');
+                if (sender) await sender.replaceTrack(cameraTrack);
+                const localVideo = document.getElementById('call-local-video');
+                if (localVideo) localVideo.srcObject = this.localStream;
+                
+                if (this.screenStream) {
+                    this.screenStream.getTracks().forEach(t => t.stop());
+                    this.screenStream = null;
+                }
+                this.isScreenSharing = false;
+                const btn = document.getElementById('call-screen-btn');
+                if (btn) btn.classList.remove('active-state');
+            }
+        } catch (e) { console.error('Screen sharing error:', e); }
+    },
+
     // ------------------------------------------------------------------
     // UI
     // ------------------------------------------------------------------
@@ -433,6 +467,11 @@ const Calls = {
         document.getElementById('call-controls-active').classList.remove('hidden');
         document.getElementById('call-camera-btn').classList.toggle('hidden', !this.currentCall.video);
         document.getElementById('call-video-stage').classList.toggle('hidden', !this.currentCall.video);
+
+        // Show screen share only if video call AND desktop browser
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const screenBtn = document.getElementById('call-screen-btn');
+        if (screenBtn) screenBtn.classList.toggle('hidden', !this.currentCall.video || isMobile);
     },
 
     hideUI() {
