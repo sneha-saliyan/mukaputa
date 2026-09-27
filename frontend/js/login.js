@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setButtonLoading(btn, false);
                 
                 if (ok) {
-                    showToast('OTP sent to your email!', 'success');
+                    showToast(data.message || 'OTP sent to your email!', 'success');
                     isOtpSent = true;
                     // Hide other fields slightly and show OTP
                     document.getElementById('otp-group').classList.remove('hidden');
