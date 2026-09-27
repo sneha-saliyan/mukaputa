@@ -27,8 +27,29 @@ const Calls = {
     cameraOff: false,
 
     ICE_SERVERS: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' }
+        {
+            urls: "stun:stun.relay.metered.ca:80",
+        },
+        {
+            urls: "turn:in.relay.metered.ca:80",
+            username: "8acfb7cd2189a63d00758a79",
+            credential: "vHE5l9sYtVDMotP9",
+        },
+        {
+            urls: "turn:in.relay.metered.ca:80?transport=tcp",
+            username: "8acfb7cd2189a63d00758a79",
+            credential: "vHE5l9sYtVDMotP9",
+        },
+        {
+            urls: "turn:in.relay.metered.ca:443",
+            username: "8acfb7cd2189a63d00758a79",
+            credential: "vHE5l9sYtVDMotP9",
+        },
+        {
+            urls: "turns:in.relay.metered.ca:443?transport=tcp",
+            username: "8acfb7cd2189a63d00758a79",
+            credential: "vHE5l9sYtVDMotP9",
+        },
     ],
     RING_TIMEOUT_MS: 35000,
     libAvailable: true,
