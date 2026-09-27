@@ -1048,3 +1048,34 @@ function escapeHtml(unsafe) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
+// ==========================================
+// AD COMPONENT
+// ==========================================
+function renderAd(ad) {
+    return `
+    <div class="post-card" style="border: 1px solid var(--accent); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 16px; right: 16px; background: rgba(255,107,53,0.15); color: var(--accent); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid rgba(255,107,53,0.3);">Sponsored</div>
+        <div class="post-header">
+            <div class="avatar" style="background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px;">
+                Ad
+            </div>
+            <div class="post-meta">
+                <div class="post-author" style="font-size: 16px;">${escapeHtml(ad.title)}</div>
+                <div class="post-time" style="color: var(--accent);">Promoted</div>
+            </div>
+        </div>
+        <div class="post-content" style="padding-top: 4px;">
+            <p>${escapeHtml(ad.body)}</p>
+        </div>
+        ${ad.image ? `<img src="${escapeHtml(ad.image)}" alt="Advertisement" style="width: 100%; max-height: 400px; object-fit: cover; display: block; border-bottom: 1px solid var(--border);">` : ''}
+        ${ad.link ? `
+        <div style="padding: 16px; text-align: center; border-bottom: 1px solid var(--border);">
+            <a href="${escapeHtml(ad.link)}" target="_blank" style="display: inline-block; background: var(--accent); color: white; padding: 10px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; transition: transform 0.2s;">
+                Learn More
+            </a>
+        </div>
+        ` : ''}
+    </div>
+    `;
+}

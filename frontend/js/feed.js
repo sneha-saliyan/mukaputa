@@ -92,7 +92,20 @@ class Feed {
                 `;
             }
 
-            this.container.innerHTML = memoryCardHtml + regularPosts.map(p => renderPost(p)).join('');
+            const activeAds = store.getAds();
+        let postsHtml = '';
+        let adIndex = 0;
+        
+        regularPosts.forEach((p, i) => {
+            postsHtml += renderPost(p);
+            // Insert an ad every 3 posts
+            if ((i + 1) % 3 === 0 && activeAds.length > 0) {
+                postsHtml += renderAd(activeAds[adIndex % activeAds.length]);
+                adIndex++;
+            }
+        });
+
+        this.container.innerHTML = memoryCardHtml + postsHtml;
         }
 
         // Render contacts list

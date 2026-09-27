@@ -59,6 +59,10 @@ class Store {
         this.db = null;
     }
 
+    getAds() {
+        return this.db && this.db.ads ? this.db.ads : [];
+    }
+
     // ==========================================
     // USER & AUTH METHODS
     // ==========================================

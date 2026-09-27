@@ -4,7 +4,7 @@ import concurrent.futures
 
 from ..models import (
     User, Post, Story, Reel, WatchVideo, Page, JobVacancy,
-    Conversation, ConversationParticipant, Notification, SavedItem, JobApplication
+    Conversation, ConversationParticipant, Notification, SavedItem, JobApplication, Ad
 )
 from ..utils import ok
 
@@ -24,6 +24,7 @@ def bootstrap():
         reels = [r.to_dict() for r in Reel.query.order_by(Reel.created_at.desc()).limit(50).all()]
         watch_videos = [v.to_dict() for v in WatchVideo.query.order_by(WatchVideo.created_at.desc()).limit(50).all()]
         pages = [p.to_dict() for p in Page.query.limit(50).all()]
+        ads = [a.to_dict() for a in Ad.query.filter_by(is_active=True).all()]
         
         my_saved = {s.item_id for s in SavedItem.query.filter_by(user_id=uid).all()}
         my_applied = {a.job_id for a in JobApplication.query.filter_by(user_id=uid).all()}
@@ -53,4 +54,5 @@ def bootstrap():
         "conversations": conversations,
         "notifications": notifications,
         "contacts": contacts,
+        "ads": ads,
     })
