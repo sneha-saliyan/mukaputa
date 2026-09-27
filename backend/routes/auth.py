@@ -59,33 +59,39 @@ def send_otp():
     otp.expires_at = datetime.utcnow() + timedelta(minutes=10)
     db.session.commit()
     
-    # Send email
-    sender_email = os.environ.get("SMTP_EMAIL", "")
-    sender_password = os.environ.get("SMTP_PASSWORD", "")
+    # Send email using Brevo HTTP API
+    import urllib.request
+    import json
     
-    if sender_email and sender_password:
-        try:
-            msg = EmailMessage()
-            msg.set_content(f"Your Mukaputa verification code is: {code}\n\nThis code expires in 10 minutes.")
-            msg['Subject'] = f"{code} is your Mukaputa verification code"
-            msg['From'] = sender_email
-            msg['To'] = email
-            
-            s = smtplib.SMTP('smtp.gmail.com', 587, timeout=5)
-            s.starttls()
-            s.login(sender_email, sender_password)
-            s.send_message(msg)
-            s.quit()
-        except Exception as e:
-            print(f"Failed to send email (timeout/blocked): {e}")
-            # Render blocks SMTP. Fallback to a hardcoded testing OTP so the user isn't stuck.
-            otp.code = "123456"
-            db.session.commit()
-            return ok({"message": "Render blocked email! Use code 123456 to test."})
-    else:
-        print(f"\n[MOCK EMAIL] OTP for {email} is {code}\n")
+    sender_email = os.environ.get("SMTP_EMAIL", "admin@mukaputa.com") # fallback if not set
+    brevo_api_key = os.environ.get("BREVO_API_KEY", "")
+    
+    try:
+        url = "https://api.brevo.com/v3/smtp/email"
+        payload = {
+            "sender": {"name": "Mukaputa", "email": sender_email},
+            "to": [{"email": email}],
+            "subject": f"{code} is your Mukaputa verification code",
+            "htmlContent": f"<html><body><h3>Welcome to Mukaputa!</h3><p>Your verification code is: <strong style='font-size:24px;'>{code}</strong></p><p>This code expires in 10 minutes.</p></body></html>"
+        }
         
-    return ok({"message": "OTP sent successfully"})
+        req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'))
+        req.add_header('api-key', brevo_api_key)
+        req.add_header('Content-Type', 'application/json')
+        req.add_header('Accept', 'application/json')
+        
+        with urllib.request.urlopen(req, timeout=10) as response:
+            res_data = response.read()
+            print("Brevo response:", res_data)
+            
+    except Exception as e:
+        print(f"Failed to send Brevo email: {e}")
+        # Fallback to a hardcoded testing OTP so the user isn't stuck if email fails
+        otp.code = "123456"
+        db.session.commit()
+        return ok({"message": "Failed to send email. Use code 123456 to test."})
+        
+    return ok({"message": "OTP sent successfully!"})
 
 
 @auth_bp.post("/register")
