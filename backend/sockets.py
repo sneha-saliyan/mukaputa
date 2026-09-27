@@ -55,10 +55,6 @@ def handle_call_invite(data):
     if not to_user or not call_id:
         return
 
-    if to_user not in online_users:
-        emit("call:unavailable", {"callId": call_id, "toUserId": to_user})
-        return
-
     emit("call:incoming", {
         "callId": call_id,
         "fromUserId": current_user.id,
