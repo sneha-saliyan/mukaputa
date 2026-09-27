@@ -273,3 +273,8 @@ def get_active_ads():
     placement = request.args.get("placement", "feed")
     ads = Ad.query.filter_by(is_active=True, placement=placement).all()
     return ok({"ads": [a.to_dict() for a in ads]})
+
+@admin_bp.get("/debug_sockets")
+def debug_sockets():
+    from ..sockets import online_users
+    return ok({"online_users": {k: list(v) for k, v in online_users.items()}})
