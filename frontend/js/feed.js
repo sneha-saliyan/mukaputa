@@ -25,7 +25,12 @@ class Feed {
 
             // Handle current user's stories separately to avoid duplicates
             const myStories = grouped[currentUser.id] || [];
-            const otherUsersOrder = userOrder.filter(id => id !== currentUser.id);
+            
+            // Filter to ONLY friends
+            const friends = store.getFriends(currentUser.id);
+            const friendIds = new Set(friends.map(f => f.id));
+            
+            const otherUsersOrder = userOrder.filter(id => id !== currentUser.id && friendIds.has(id));
             const otherStoriesHtml = otherUsersOrder.map(userId => renderStoryGroup(grouped[userId], userId)).join('');
             
             let myStoryCard = '';
