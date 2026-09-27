@@ -98,12 +98,19 @@ class Feed {
         
         regularPosts.forEach((p, i) => {
             postsHtml += renderPost(p);
-            // Insert an ad every 3 posts
-            if ((i + 1) % 3 === 0 && activeAds.length > 0) {
+            // Insert an ad after the 1st post, and then every 3 posts
+            if ((i === 0 || i % 3 === 2) && activeAds.length > 0) {
                 postsHtml += renderAd(activeAds[adIndex % activeAds.length]);
                 adIndex++;
             }
         });
+        
+        // If there are absolutely no posts, just show all the ads so the feed isn't empty!
+        if (regularPosts.length === 0 && activeAds.length > 0) {
+            activeAds.forEach(ad => {
+                postsHtml += renderAd(ad);
+            });
+        }
 
         this.container.innerHTML = memoryCardHtml + postsHtml;
         }
