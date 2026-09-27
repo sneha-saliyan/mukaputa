@@ -1,3 +1,8 @@
+import smtplib
+import os
+from email.message import EmailMessage
+import random
+from datetime import datetime, timedelta
 import re
 import uuid
 
@@ -7,7 +12,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from ..extensions import db
 from ..models import User, Conversation, ConversationParticipant, Message, Post, Comment, \
     CommentReply, PostReaction, Story, Reel, ReelLike, ReelComment, FriendLink, Follow, \
-    BlockedUser, SavedItem, Notification, JobApplication
+    BlockedUser, SavedItem, Notification, JobApplication, EmailOTP
 from ..utils import err, ok
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
@@ -30,6 +35,56 @@ def slugify_username(name):
     return candidate
 
 
+
+@auth_bp.post("/send_otp")
+def send_otp():
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip().lower()
+    if not email or not EMAIL_RE.match(email):
+        return err("Valid email is required.", 400)
+        
+    if User.query.filter_by(email=email).first():
+        return err("Email already registered.", 400)
+        
+    # Generate 6 digit code
+    code = f"{random.randint(0, 999999):06d}"
+    
+    # Save to db
+    otp = EmailOTP.query.filter_by(email=email).first()
+    if not otp:
+        otp = EmailOTP(email=email)
+        db.session.add(otp)
+    
+    otp.code = code
+    otp.expires_at = datetime.utcnow() + timedelta(minutes=10)
+    db.session.commit()
+    
+    # Send email
+    sender_email = os.environ.get("SMTP_EMAIL", "")
+    sender_password = os.environ.get("SMTP_PASSWORD", "")
+    
+    if sender_email and sender_password:
+        try:
+            msg = EmailMessage()
+            msg.set_content(f"Your Mukaputa verification code is: {code}\n\nThis code expires in 10 minutes.")
+            msg['Subject'] = f"{code} is your Mukaputa verification code"
+            msg['From'] = sender_email
+            msg['To'] = email
+            
+            s = smtplib.SMTP('smtp.gmail.com', 587)
+            s.starttls()
+            s.login(sender_email, sender_password)
+            s.send_message(msg)
+            s.quit()
+        except Exception as e:
+            print("Failed to send email:", e)
+            return err("Failed to send OTP email. Please try again later.", 500)
+    else:
+        print(f"\n[MOCK EMAIL] OTP for {email} is {code}\n")
+        
+    return ok({"message": "OTP sent successfully"})
+
+
 @auth_bp.post("/register")
 def register():
     data = request.get_json(silent=True) or {}
@@ -37,34 +92,35 @@ def register():
     email = (data.get("email") or "").strip().lower()
     username = (data.get("username") or "").strip().lower()
     password = data.get("password") or ""
+    otp_code = (data.get("otp") or "").strip()
 
-    if not name or len(name) < 2:
-        return err("Please enter your full name.")
+    if not name or not email or not username or not password or not otp_code:
+        return err("All fields including OTP are required.", 400)
+        
     if not EMAIL_RE.match(email):
-        return err("Please enter a valid email address.")
-    if len(password) < 6:
-        return err("Password must be at least 6 characters long.")
+        return err("Invalid email format.", 400)
+    if not USERNAME_RE.match(username):
+        return err("Username must be 3-30 characters (letters, numbers, underscores, dots).", 400)
+
+    # Verify OTP
+    otp_record = EmailOTP.query.filter_by(email=email).first()
+    if not otp_record or otp_record.code != otp_code:
+        return err("Invalid or expired OTP code.", 400)
+        
+    if datetime.utcnow() > otp_record.expires_at:
+        db.session.delete(otp_record)
+        db.session.commit()
+        return err("OTP has expired. Please request a new one.", 400)
 
     if User.query.filter_by(email=email).first():
-        return err("An account with that email already exists.", 409)
+        return err("Email already registered.", 409)
+    if User.query.filter_by(username=username).first():
+        return err("Username taken.", 409)
+        
+    # Delete used OTP
+    db.session.delete(otp_record)
 
-    if username:
-        if not USERNAME_RE.match(username):
-            return err("Username must be 3-30 characters: lowercase letters, numbers, '.' or '_'.")
-        if User.query.filter_by(username=username).first():
-            return err("That username is already taken.", 409)
-    else:
-        username = slugify_username(name)
-
-    user = User(
-        id=f"u_{uuid.uuid4().hex[:12]}",
-        name=name,
-        username=username,
-        email=email,
-        avatar=DEFAULT_AVATAR,
-        cover=DEFAULT_COVER,
-        bio="",
-    )
+    user = User(name=name, email=email, username=username)
     user.set_password(password)
     db.session.add(user)
     db.session.commit()

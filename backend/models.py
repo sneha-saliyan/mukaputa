@@ -469,6 +469,17 @@ class Notification(db.Model):
 
 
 # ---------------------------------------------------------------------------
+# OTP VERIFICATION
+# ---------------------------------------------------------------------------
+class EmailOTP(db.Model):
+    __tablename__ = "email_otps"
+    id = db.Column(db.String(64), primary_key=True, default=lambda: new_id("otp"))
+    email = db.Column(db.String(120), nullable=False, index=True)
+    code = db.Column(db.String(6), nullable=False)
+    expires_at = db.Column(db.DateTime, nullable=False)
+
+
+# ---------------------------------------------------------------------------
 # ADMIN
 # ---------------------------------------------------------------------------
 class AdminUser(db.Model):

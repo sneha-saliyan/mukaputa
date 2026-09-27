@@ -290,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5. Handle Register Form Submit
+    let isOtpSent = false;
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
@@ -301,6 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const username = document.getElementById('reg-username')?.value.trim();
             const email = document.getElementById('reg-email')?.value.trim();
             const password = document.getElementById('reg-password')?.value;
+            const otpEl = document.getElementById('reg-otp');
 
             if (!name || !email || !password) {
                 showFormError('registerError', 'Please fill in your name, email, and password.');
@@ -318,18 +320,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            setButtonLoading(btn, true);
-            const { ok, data } = await apiCall('POST', '/api/auth/register', { name, username, email, password });
-            setButtonLoading(btn, false);
-
-            if (ok) {
-                showToast('Account created successfully! Welcome to Mukaputa.', 'success');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 400);
+            if (!isOtpSent) {
+                // Step 1: Send OTP
+                setButtonLoading(btn, true);
+                const { ok, data } = await apiCall('POST', '/api/auth/send_otp', { email });
+                setButtonLoading(btn, false);
+                
+                if (ok) {
+                    showToast('OTP sent to your email!', 'success');
+                    isOtpSent = true;
+                    // Hide other fields slightly and show OTP
+                    document.getElementById('otp-group').classList.remove('hidden');
+                    // Change button text
+                    btn.querySelector('.btn-text').textContent = 'Verify & Create Account';
+                    otpEl.focus();
+                } else {
+                    showFormError('registerError', (data && data.error) || 'Failed to send OTP.');
+                }
             } else {
-                showFormError('registerError', (data && data.error) || 'Could not create account. Please try again.');
+                // Step 2: Register with OTP
+                const otp = otpEl?.value.trim();
+                if (!otp || otp.length !== 6) {
+                    showFormError('registerError', 'Please enter a valid 6-digit OTP.');
+                    return;
+                }
+                
+                setButtonLoading(btn, true);
+                const { ok, data } = await apiCall('POST', '/api/auth/register', { name, username, email, password, otp });
+                setButtonLoading(btn, false);
+
+                if (ok) {
+                    showToast('Account created successfully! Welcome to Mukaputa.', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 400);
+                } else {
+                    showFormError('registerError', (data && data.error) || 'Could not create account. Please try again.');
+                }
             }
         });
     }
+
 });
