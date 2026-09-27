@@ -101,8 +101,9 @@ def send_message(conv_id):
     db.session.add(message)
 
     other_ids = [p.user_id for p in conv.participants if p.user_id != current_user.id]
-    for oid in other_ids:
-        notify(oid, current_user.id, "message", f"{current_user.name} sent you a message.", conv_id)
+    # Removed message notifications as requested by user
+    # for oid in other_ids:
+    #     notify(oid, current_user.id, "message", f"{current_user.name} sent you a message.", conv_id)
 
     db.session.commit()
     return ok({"message": message.to_dict()}, 201)
