@@ -155,7 +155,14 @@ const Calls = {
 
         this.currentCall = { callId, otherUserId, otherName: other.name, otherAvatar: other.avatar, video, isCaller: true, status: 'calling' };
         this.showOutgoingUI();
-        this.socket.emit('call:invite', { toUserId: otherUserId, callId, video });
+        this.socket.emit('call:invite', { 
+            toUserId: otherUserId, 
+            callId, 
+            video,
+            fromUserId: app.currentUser.id,
+            fromName: app.currentUser.name,
+            fromAvatar: app.currentUser.avatar
+        });
 
         this.ringTimeout = setTimeout(() => {
             if (this.currentCall && this.currentCall.status === 'calling') {
