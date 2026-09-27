@@ -192,6 +192,8 @@ GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configura
 def google_login():
     client_id = os.environ.get("GOOGLE_CLIENT_ID")
     redirect_uri = request.host_url.rstrip("/") + "/api/auth/google/callback"
+    if "localhost" not in redirect_uri and "127.0.0.1" not in redirect_uri:
+        redirect_uri = redirect_uri.replace("http://", "https://")
     
     provider_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
     authorization_endpoint = provider_cfg["authorization_endpoint"]
@@ -213,6 +215,8 @@ def google_callback():
     client_id = os.environ.get("GOOGLE_CLIENT_ID")
     client_secret = os.environ.get("GOOGLE_CLIENT_SECRET")
     redirect_uri = request.host_url.rstrip("/") + "/api/auth/google/callback"
+    if "localhost" not in redirect_uri and "127.0.0.1" not in redirect_uri:
+        redirect_uri = redirect_uri.replace("http://", "https://")
     
     provider_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
     token_endpoint = provider_cfg["token_endpoint"]
