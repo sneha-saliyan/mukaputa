@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mukaputa — Next-Gen Social Connection</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Fonts: Space Grotesk (Headings) + Inter (UI/Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/variables.css?v=3">
+    <link rel="stylesheet" href="css/layout.css?v=5">
+    <link rel="stylesheet" href="css/components.css?v=3">
+    <link rel="stylesheet" href="css/feed.css?v=3">
+    <link rel="stylesheet" href="css/realtime.css">
+    <style>
+        #app-splash {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            background: #ffffff;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        body.dark-theme #app-splash { background: #0d0d0d; }
+        #app-splash.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #app-splash .splash-logo {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            opacity: 0;
+            transform: translateY(6px);
+            animation: splashIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
+        }
+        #app-splash .splash-bar {
+            width: 40px;
+            height: 2px;
+            background: rgba(0,0,0,0.08);
+            border-radius: 2px;
+            overflow: hidden;
+            opacity: 0;
+            animation: splashIn 0.4s ease 0.4s forwards;
+        }
+        #app-splash .splash-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #FF7A00;
+            border-radius: 2px;
+            animation: loadBar 1.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s infinite;
+        }
+        @keyframes splashIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes loadBar {
+            0%   { width: 0%;   margin-left: 0; }
+            50%  { width: 80%;  margin-left: 10%; }
+            100% { width: 0%;   margin-left: 100%; }
+        }
+        @media (prefers-color-scheme: dark) {
+            #app-splash { background: #0d0d0d; }
+            #app-splash .splash-bar { background: rgba(255,255,255,0.08); }
+        }
+    </style>
+</head>
+<body>
+    <div id="app-splash">
+        <img src="logo.png" alt="Mukaputa" class="splash-logo" onerror="this.style.opacity='0'">
+        <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+    </div>
+    <!-- ======================================================================
+         TOP NAVIGATION BAR
+         ====================================================================== -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <div class="logo-container" onclick="app.switchView('home')" style="cursor: pointer; display: flex; align-items: center;">
+                <img src="logo.png" alt="MukaPuta Logo" style="height: 42px; width: auto; object-fit: contain;">
+            </div>
+        </div>
+
+        <div class="nav-right">
+            <button class="icon-btn" onclick="app.switchView('search')" title="Search">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </button>
+            
+            <button class="icon-btn" onclick="app.toggleNotifications()" title="Notifications">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                <div class="badge-counter" id="notification-badge" style="display: none;">0</div>
+            </button>
+
+            <button class="icon-btn" onclick="app.toggleMessenger()" title="Messenger">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                <div class="badge-counter">2</div>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ======================================================================
+         MAIN SHELL & DYNAMIC VIEWS
+         ====================================================================== -->
+    <div class="main-container" id="main-content">
+        <!-- Left Desktop Sidebar (Global) -->
+        <aside class="sidebar left-sidebar desktop-only">
+                <div class="menu-list">
+                    <div class="menu-item" data-nav="profile">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="User" class="avatar-small current-user-avatar">
+                        <span class="current-user-name">John Doe</span>
+                    </div>
+                    <div class="menu-item active" data-nav="home" onclick="app.switchView('home')">
+                        <div class="menu-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+                        <span>Home</span>
+                    </div>
+                    <div class="menu-item" data-nav="friends">
+                        <div class="menu-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                        <span>Friends</span>
+                    </div>
+                    <div class="menu-item" data-nav="reels">
+                        <div class="menu-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="4"></rect><path d="M10 9l5 3-5 3V9z"></path></svg></div>
+                        <span>Reels</span>
+                    </div>
+                    <div class="menu-item" data-nav="jobs">
+                        <div class="menu-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div>
+                        <span>Job Vacancy</span>
+                    </div>
+                    <div class="menu-item" data-nav="watch">
+                        <div class="menu-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg></div>
+                        <span>Watch</span>
+                    </div>
+                    <div class="menu-item" data-nav="pages">
+                        <div class="menu-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
+                        <span>Pages</span>
+                    </div>
+                    <div class="menu-item" data-nav="saved">
+                        <div class="menu-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg></div>
+                        <span>Saved Items</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-divider"></div>
+                <div class="menu-list">
+                    <div class="menu-item" onclick="app.switchView('settings')">
+                        <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></div>
+                        <span>Settings & Privacy</span>
+                    </div>
+                    <div class="menu-item" onclick="app.logout()">
+                        <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></div>
+                        <span>Log Out</span>
+                    </div>
+                </div>
+            </aside>
+            
+        <div class="views-wrapper" style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
+            <!-- ==================== SEARCH VIEW ==================== -->
+            <div id="search-view" class="view-section hidden" style="width: 100%; max-width: 800px; margin: 0 auto; padding: 20px;">
+                <div class="card" style="padding: 20px; margin-bottom: 20px; background: rgba(30, 30, 30, 0.7); backdrop-filter: blur(24px) saturate(1.8); -webkit-backdrop-filter: blur(24px) saturate(1.8); border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <div class="search-bar" style="margin-bottom: 16px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="global-search-input" placeholder="Search people, posts, and jobs..." autocomplete="off" oninput="app.performGlobalSearch(this.value)" style="font-size: 16px;">
+                    </div>
+                    <div class="filter-pills" id="search-filter-pills">
+                        <div class="pill active" data-filter="all" onclick="app.setSearchFilter('all')">All</div>
+                        <div class="pill" data-filter="people" onclick="app.setSearchFilter('people')">People</div>
+                        <div class="pill" data-filter="posts" onclick="app.setSearchFilter('posts')">Posts</div>
+                        <div class="pill" data-filter="jobs" onclick="app.setSearchFilter('jobs')">Jobs</div>
+                    </div>
+                </div>
+                
+                <!-- Search Results Area -->
+                <div id="global-search-results" style="display: flex; flex-direction: column; gap: 16px;">
+                    <div style="padding: 40px; text-align: center; color: var(--text-tertiary);">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 16px; opacity: 0.5;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <p style="font-size: 16px;">Search for anything across Mukaputa.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== HOME FEED VIEW ==================== -->
+            <div id="home-view" class="view-section active-view" style="display: flex; justify-content: space-between; width: 100%;">
+                <!-- Center Feed Column -->
+                <main class="feed-container">
+                <!-- Stories Tray -->
+                <div class="stories-container" id="stories-tray"></div>
+
+                <!-- Create Post Card -->
+                <div class="card create-post-box">
+                    <div class="create-post-top">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="User" class="avatar current-user-avatar">
+                        <div class="create-post-trigger" id="create-post-trigger">What's on your mind, John?</div>
+                    </div>
+                    <div class="create-post-actions">
+                        <button class="action-btn text-accent" onclick="app.openLiveStudio()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            <span>Live Video</span>
+                        </button>
+                        <button class="action-btn text-green" onclick="app.openCreatePostModal('photo')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                            <span>Photo/video</span>
+                        </button>
+                        <button class="action-btn text-yellow" onclick="app.openCreatePostModal('feeling')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                            <span>Feeling/activity</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Feed Posts Stream -->
+                <div id="feed-posts"></div>
+            </main>
+
+            <!-- Right Desktop Sidebar -->
+            <aside class="sidebar right-sidebar desktop-only">
+                <div class="sidebar-section">
+                    <div class="sidebar-heading"><span>Sponsored</span></div>
+                    <div class="card card-interactive" style="padding: 10px; margin-top: 8px;" onclick="app.showToast('Navigating to sponsor: Mukaputa Cloud Architecture', 'info')">
+                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600" style="width: 100%; height: 120px; border-radius: var(--radius-md); object-fit: cover;" alt="Sponsor">
+                        <div style="margin-top: 8px;">
+                            <strong style="font-size: 13px; display: block;">Mukaputa Cloud Engine</strong>
+                            <span class="text-secondary" style="font-size: 11px;">mukaputa.dev</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-divider"></div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-heading">
+                        <span>Contacts</span>
+                        <div class="contact-actions" style="display: flex; gap: 4px;">
+                            <button class="icon-btn-small" onclick="app.switchView('search')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
+                        </div>
+                    </div>
+                    <div class="contact-list" id="contacts-list" style="margin-top: 6px;"></div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- ==================== REELS VIEW ==================== -->
+        <div id="reels-view" class="view-section hidden" style="padding: 0; max-width: 100vw; height: 100dvh; display: flex; overflow: hidden; background: #111; position: relative;">
+            <!-- Top Nav for Reels (Liquid Glass) -->
+            <div class="reels-mobile-nav-container" style="position: absolute; top: 16px; left: 0; right: 0; display: flex; justify-content: center; z-index: 100; pointer-events: none;">
+                <div class="reels-mobile-nav" style="display: flex; position: relative; background: rgba(30, 30, 30, 0.6); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px; padding: 4px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); pointer-events: auto;">
+                    <div id="reels-mobile-tab-slider" style="position: absolute; top: 4px; bottom: 4px; width: 0; background: rgba(255, 255, 255, 0.2); border-radius: 20px; transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), width 0.3s cubic-bezier(0.25, 1, 0.5, 1); z-index: 0;"></div>
+                    <button class="reel-mobile-filter-btn active" data-filter="trending" onclick="app.renderReelsView('trending')" style="position: relative; z-index: 1; background: none; border: none; color: white; font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 20px; transition: color 0.2s;">Trending</button>
+                    <button class="reel-mobile-filter-btn" data-filter="following" onclick="app.renderReelsView('following')" style="position: relative; z-index: 1; background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 20px; transition: color 0.2s;">Following</button>
+                    <button class="reel-mobile-filter-btn" data-filter="saved" onclick="app.renderReelsView('saved')" style="position: relative; z-index: 1; background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 20px; transition: color 0.2s;">Saved</button>
+                </div>
+            </div>
+
+            <!-- Upload Reel FAB -->
+            <button class="reel-upload-fab" onclick="app.openCreateReelModal()" title="Upload a reel">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </button>
+
+            <!-- Feed Area -->
+            <div style="flex: 1; height: 100%; display: flex; background: #111; overflow-y: scroll; scroll-snap-type: y mandatory; position: relative;" id="reels-container" class="reels-feed-container no-scrollbar">
+            </div>
+        </div>
+        <!-- Reel Comments Modal -->
+        <div class="modal-overlay hidden" id="reel-comments-modal" style="z-index: 10000; background: rgba(0,0,0,0.5); backdrop-filter: none; -webkit-backdrop-filter: none;">
+            <div class="modal-content" style="max-width: 400px; height: 70vh; position: fixed; bottom: 0; margin: 0; border-radius: 24px 24px 0 0; display: flex; flex-direction: column; right: 50%; transform: translateX(50%); background: #1c1c1c; backdrop-filter: none; -webkit-backdrop-filter: none; animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border);">
+                    <h3 style="text-align: center; width: 100%; margin: 0;">Comments</h3>
+                    <button class="close-btn" style="position: absolute; right: 16px;" onclick="app.closeReelComments()">&times;</button>
+                </div>
+                <div class="modal-body" id="reel-comments-list" style="flex: 1; overflow-y: auto; padding: 16px;">
+                </div>
+                <div style="padding: 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: center;">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Me" class="avatar-small current-user-avatar">
+                    <input type="text" id="reel-comment-input" class="input-text" placeholder="Add a comment..." style="flex: 1; border-radius: 20px; padding: 8px 16px;" onkeydown="if(event.key === 'Enter') app.submitReelComment()">
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== WATCH VIEW ==================== -->
+        <div id="watch-view" class="view-section hidden" style="padding: 24px 16px; max-width: 840px; margin: 0 auto;">
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h2 style="font-family: var(--font-heading); font-size: 24px;">Watch Videos</h2>
+                        <p class="text-secondary" style="font-size: 13px;">Curated YouTube & Google courses and learning paths in Education & the IT Field</p>
+                    </div>
+                </div>
+                <div class="filter-pills" id="watch-filter-pills">
+                    <div class="pill active" onclick="app.filterWatchVideos('All', this)">All</div>
+                    <div class="pill" onclick="app.filterWatchVideos('Education', this)">🎓 Education</div>
+                    <div class="pill" onclick="app.filterWatchVideos('IT Field', this)">💻 IT Field</div>
+                    <div class="pill" onclick="app.filterWatchVideos('YouTube', this)">▶️ YouTube Tutorials</div>
+                    <div class="pill" onclick="app.filterWatchVideos('Google', this)">🌐 Google Resources</div>
+                </div>
+            </div>
+            <div id="watch-container"></div>
+        </div>
+
+        <!-- ==================== JOBS VIEW ==================== -->
+        <div id="jobs-view" class="view-section hidden" style="padding: 24px 16px; max-width: 860px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div>
+                    <h2 style="font-family: var(--font-heading); font-size: 24px;">Job Vacancies</h2>
+                    <p class="text-secondary" style="font-size: 13px;">Find your next opportunity at top companies</p>
+                </div>
+                <button class="btn btn-primary" onclick="app.openPostJobModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Post a Job
+                </button>
+            </div>
+
+            <!-- Search bar for jobs -->
+            <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+                <div style="flex: 1; position: relative;">
+                    <svg style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="jobs-search-input" placeholder="Search job titles, companies, skills..." style="width: 100%; padding: 10px 12px 10px 38px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-card); color: var(--text-primary); font-size: 14px;" oninput="app.filterJobs(this.value)">
+                </div>
+            </div>
+
+            <div class="filter-pills" id="jobs-pills">
+                <div class="pill active" onclick="app.filterJobsByCategory('All', this)">All Jobs</div>
+                <div class="pill" onclick="app.filterJobsByCategory('Engineering', this)">Engineering</div>
+                <div class="pill" onclick="app.filterJobsByCategory('Design', this)">Design</div>
+                <div class="pill" onclick="app.filterJobsByCategory('AI / ML', this)">AI / ML</div>
+                <div class="pill" onclick="app.filterJobsByCategory('DevOps', this)">DevOps</div>
+                <div class="pill" onclick="app.filterJobsByCategory('Remote', this)">Remote Only</div>
+                <div class="pill" onclick="app.filterJobsByCategory('Saved', this)">⭐ Saved</div>
+            </div>
+
+            <div id="jobs-container" style="margin-top: 16px;"></div>
+        </div>
+
+        <!-- ==================== PAGES VIEW ==================== -->
+        <div id="pages-view" class="view-section hidden" style="padding: 24px 16px; max-width: 840px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h2 style="font-family: var(--font-heading); font-size: 24px;">Pages</h2>
+                <button class="btn btn-primary" onclick="app.openCreatePageModal()">+ Create Page</button>
+            </div>
+            <div id="pages-container" style="display: flex; flex-direction: column; gap: 12px;"></div>
+        </div>
+
+        <!-- ==================== FRIENDS VIEW ==================== -->
+        <div id="friends-view" class="view-section hidden" style="padding: 24px 16px; max-width: 840px; margin: 0 auto;">
+            <div id="friends-container"></div>
+        </div>
+
+        <!-- ==================== SAVED ITEMS VIEW ==================== -->
+        <div id="saved-view" class="view-section hidden" style="padding: 24px 16px; max-width: 840px; margin: 0 auto;">
+            <h2 style="font-family: var(--font-heading); font-size: 24px; margin-bottom: 16px;">Saved Collection</h2>
+            <div id="saved-container"></div>
+        </div>
+
+        <!-- ==================== PROFILE VIEW ==================== -->
+        <div id="profile-view" class="view-section hidden" style="padding: 0; max-width: 860px; margin: 0 auto;"></div>
+
+        <!-- ==================== NOTIFICATIONS VIEW ==================== -->
+        <div id="notifications-view" class="view-section hidden" style="padding: 24px 16px; max-width: 600px; margin: 0 auto;"></div>
+
+        <!-- ==================== MESSAGES VIEW ==================== -->
+        <div id="messages-view" class="view-section hidden messages-view-container"></div>
+        
+        <!-- ==================== MOBILE MENU VIEW ==================== -->
+        <div id="menu-view" class="view-section hidden" style="padding: 16px; max-width: 600px; margin: 0 auto; min-height: 100vh;">
+            <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 16px;">Menu</h2>
+            <div class="card card-interactive" style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;" onclick="app.switchView('profile')">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="User" class="avatar current-user-avatar">
+                <div>
+                    <h3 style="margin: 0; font-size: 18px;" class="current-user-name">John Doe</h3>
+                    <span style="font-size: 14px; color: var(--text-secondary);">See your profile</span>
+                </div>
+            </div>
+            
+            <h3 style="font-size: 16px; font-weight: 600; margin: 16px 0 12px; color: var(--text-secondary);">Shortcuts</h3>
+            <div class="menu-list menu-list-grid">
+                <div class="menu-item card card-interactive" style="display: flex; flex-direction: column; align-items: flex-start; margin: 0; padding: 16px;" onclick="app.switchView('friends')">
+                    <div class="menu-item-icon" style="margin-bottom: 8px; background: transparent; padding: 0;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                    <span style="font-weight: 600;">Friends</span>
+                </div>
+                <div class="menu-item card card-interactive" style="display: flex; flex-direction: column; align-items: flex-start; margin: 0; padding: 16px;" onclick="app.switchView('reels')">
+                    <div class="menu-item-icon" style="margin-bottom: 8px; background: transparent; padding: 0;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="4"></rect><path d="M10 9l5 3-5 3V9z"></path></svg></div>
+                    <span style="font-weight: 600;">Reels</span>
+                </div>
+                <div class="menu-item card card-interactive" style="display: flex; flex-direction: column; align-items: flex-start; margin: 0; padding: 16px;" onclick="app.switchView('jobs')">
+                    <div class="menu-item-icon" style="margin-bottom: 8px; background: transparent; padding: 0;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div>
+                    <span style="font-weight: 600;">Jobs</span>
+                </div>
+                <div class="menu-item card card-interactive" style="display: flex; flex-direction: column; align-items: flex-start; margin: 0; padding: 16px;" onclick="app.switchView('watch')">
+                    <div class="menu-item-icon" style="margin-bottom: 8px; background: transparent; padding: 0;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg></div>
+                    <span style="font-weight: 600;">Watch</span>
+                </div>
+                <div class="menu-item card card-interactive" style="display: flex; flex-direction: column; align-items: flex-start; margin: 0; padding: 16px;" onclick="app.switchView('saved')">
+                    <div class="menu-item-icon" style="margin-bottom: 8px; background: transparent; padding: 0;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg></div>
+                    <span style="font-weight: 600;">Saved Items</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-divider" style="margin: 16px 0;"></div>
+            <div class="menu-list card" style="padding: 8px 0;">
+                <div class="menu-item" onclick="app.switchView('settings')" style="margin: 0 8px;">
+                    <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></div>
+                    <span style="font-weight: 500;">Settings & Privacy</span>
+                </div>
+                <div class="menu-item" onclick="app.logout()" style="margin: 0 8px;">
+                    <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></div>
+                    <span style="font-weight: 500;">Log Out</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== SETTINGS VIEW ==================== -->
+        <div id="settings-view" class="view-section hidden" style="padding: 24px 16px; max-width: 680px; margin: 0 auto; min-height: 100vh;">
+            <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px;">Settings & Privacy</h2>
+            
+            <div class="card" style="margin-bottom: 16px; padding: 0; overflow: hidden;">
+                <div class="sidebar-heading" style="padding: 16px 16px 8px;">Account Center</div>
+                <div class="menu-list">
+                    <div class="menu-item" onclick="app.openEditProfileModal()">
+                        <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500;">Personal Details</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Manage your name and contact info</div>
+                        </div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                    <div class="menu-item" onclick="app.openPasswordModal()">
+                        <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500;">Password & Security</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Update your password and secure your account</div>
+                        </div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-bottom: 16px; padding: 0; overflow: hidden;">
+                <div class="sidebar-heading" style="padding: 16px 16px 8px;">Audience and Visibility</div>
+                <div class="menu-list">
+                    <div class="menu-item" onclick="app.openPrivacyModal()">
+                        <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500;">Profile Privacy</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Control who can see your posts and profile</div>
+                        </div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                    <div class="menu-item" onclick="app.openBlockedModal()">
+                        <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg></div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500;">Blocked Accounts</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Review people you've blocked</div>
+                        </div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 16px; padding: 0; overflow: hidden;">
+                <div class="sidebar-heading" style="padding: 16px 16px 8px;">Your Information</div>
+                <div class="menu-list">
+                    <div class="menu-item" onclick="app.downloadMyData()">
+                        <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500;">Download Your Data</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Get a copy of your Mukaputa information</div>
+                        </div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                    <div class="menu-item" onclick="app.openDeleteAccountModal()">
+                        <div class="menu-item-icon" style="background: var(--bg-tertiary); color: var(--danger);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500; color: var(--danger);">Deactivate or Delete</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Temporarily deactivate or permanently delete your account</div>
+                        </div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 16px; padding: 0; overflow: hidden;">
+                <div class="sidebar-heading" style="padding: 16px 16px 8px;">Preferences</div>
+                <div class="menu-list">
+                    <div class="menu-item" onclick="app.toggleThemeFromSettings()">
+                        <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500;">Dark Mode</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Adjust the appearance of Mukaputa</div>
+                        </div>
+                        <div class="theme-toggle-indicator" style="font-size: 13px; font-weight: 600; color: var(--accent);">Toggle</div>
+                    </div>
+                    <div class="menu-item" onclick="app.openNotificationSettingsModal()">
+                        <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500;">Notifications</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Choose what notifications you receive</div>
+                        </div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-bottom: 16px; padding: 0; overflow: hidden;">
+                <div class="sidebar-heading" style="padding: 16px 16px 8px;">Support & Legal</div>
+                <div class="menu-list">
+                    <div class="menu-item" onclick="app.openHelpModal()">
+                        <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
+                        <span style="font-weight: 500; flex: 1;">Help Center</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                    <div class="menu-item" onclick="app.openTermsModal()">
+                        <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
+                        <span style="font-weight: 500; flex: 1;">Terms & Policies</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-secondary full-width" style="margin-top: 24px; color: var(--danger); background: var(--bg-secondary); border: 1px solid var(--border);" onclick="app.logout()">
+                Log Out
+            </button>
+        </div>
+        </div> <!-- End views-wrapper -->
+    </div>
+
+    <!-- ======================================================================
+         MOBILE BOTTOM TAB BAR
+         ====================================================================== -->
+    <nav class="bottom-tab-bar mobile-only">
+        <div class="tab-slider" id="mobile-tab-slider"></div>
+        <button class="tab-btn active" data-target="home">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </button>
+        <button class="tab-btn" data-target="reels">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="4"></rect><path d="M10 9l5 3-5 3V9z"></path></svg>
+        </button>
+        <button class="tab-btn" data-target="jobs">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12.01"/><path d="M2 12h8"/><path d="M14 12h8"/></svg>
+        </button>
+        <button class="tab-btn" data-target="watch">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2" ry="2"></rect><path d="M10 16V8l6 4-6 4z"></path></svg>
+        </button>
+        <button class="tab-btn" data-target="menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+    </nav>
+
+    <!-- ======================================================================
+         MODALS & FLOATING DRAWERS
+         ====================================================================== -->
+        <!-- Share Modal -->
+    <div class="modal-overlay hidden" id="share-modal">
+        <div class="modal-content" style="max-width: 420px;">
+            <div class="modal-header">
+                <h3>Share</h3>
+                <button class="close-btn" onclick="app.closeShareModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <!-- Send to Friends Section -->
+                <h4 style="margin: 0 0 12px; font-size: 15px; font-weight: 600;">Send to Friends</h4>
+                <div id="share-friends-list" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px; margin-bottom: 16px; scrollbar-width: none;">
+                    <!-- Dynamically populated by JS -->
+                </div>
+
+                <!-- Copy Link Section -->
+                <h4 style="margin: 0 0 12px; font-size: 15px; font-weight: 600;">Copy Link</h4>
+                <div style="display: flex; gap: 8px; margin-bottom: 24px;">
+                    <input type="text" id="share-link-input" readonly style="flex: 1; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); background: rgba(0,0,0,0.3); color: white; outline: none; font-size: 14px;">
+                    <button class="btn btn-primary" onclick="app.copyShareLink()">Copy</button>
+                </div>
+
+                <!-- External Share Options -->
+                <h4 style="margin: 0 0 12px; font-size: 15px; font-weight: 600;">Share via...</h4>
+                <div style="display: flex; justify-content: space-between; padding: 0 10px;">
+                    <button class="icon-btn" style="background: rgba(37, 211, 102, 0.2); color: #25D366; width: 48px; height: 48px;" onclick="app.showToast('Opening WhatsApp...', 'info')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></button>
+                    <button class="icon-btn" style="background: rgba(29, 161, 242, 0.2); color: #1DA1F2; width: 48px; height: 48px;" onclick="app.showToast('Opening Twitter...', 'info')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></button>
+                    <button class="icon-btn" style="background: rgba(24, 119, 242, 0.2); color: #1877F2; width: 48px; height: 48px;" onclick="app.showToast('Opening Facebook...', 'info')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></button>
+                    <button class="icon-btn" style="background: rgba(255, 255, 255, 0.1); color: white; width: 48px; height: 48px;" onclick="app.showToast('Opening Email...', 'info')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div class="modal-overlay hidden" id="create-post-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Post</h2>
+                <button class="close-btn" id="close-post-modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="avatar current-user-avatar" alt="User">
+                    <div>
+                        <strong class="current-user-name" style="font-size: 14px;">John Doe</strong>
+                        <div style="display: flex; gap: 6px; margin-top: 2px;">
+                            <span class="pill" style="padding: 2px 8px; font-size: 11px;">🌐 Public ▾</span>
+                            <select id="post-feeling-select" class="pill" style="padding: 2px 8px; font-size: 11px; border: none; background: var(--bg-secondary);">
+                                <option value="">😄 Feeling / Activity</option>
+                                <option value="feeling excited">✨ feeling excited</option>
+                                <option value="feeling happy">😊 feeling happy</option>
+                                <option value="feeling peaceful">🌄 feeling peaceful</option>
+                                <option value="feeling motivated">🚀 feeling motivated</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <textarea class="form-textarea" id="post-composer-text" placeholder="What's on your mind, John?" style="border: none; background: transparent; font-size: 16px; min-height: 120px; padding: 0;"></textarea>
+
+                <div id="post-image-preview-container" style="display: none; position: relative; margin-top: 12px; border-radius: var(--radius-md); overflow: hidden;">
+                    <img id="post-image-preview-src" src="" style="width: 100%; max-height: 250px; object-fit: cover;" alt="Upload Preview">
+                    <button class="close-btn" style="position: absolute; top: 8px; right: 8px;" onclick="app.removePostImagePreview()">✕</button>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px 14px; margin-top: 16px;">
+                    <span style="font-size: 13px; font-weight: 600;">Add to your post</span>
+                    <div style="display: flex; gap: 8px;">
+                        <label for="post-file-input" style="cursor: pointer; color: #45bd62;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        </label>
+                        <input type="file" id="post-file-input" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary full-width" id="submit-post-btn">Post to Feed</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Story Viewer Fullscreen Modal (5s Timer) -->
+    <div class="story-viewer-modal hidden" id="story-viewer-modal">
+        <div class="story-viewer-wrapper" style="position: relative;">
+            <div class="story-progress-bars" id="story-progress-bars"></div>
+            
+            <div class="story-viewer-header">
+                <div class="story-viewer-author">
+                    <img src="" id="story-viewer-avatar" class="avatar-small" alt="Author">
+                    <div>
+                        <div id="story-viewer-name">User</div>
+                        <span id="story-viewer-time" style="font-size: 11px; opacity: 0.8;">2h ago</span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center; z-index: 10;">
+                    <button class="icon-btn-small hidden" id="story-delete-btn" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 14px;" onclick="app.deleteCurrentStory()" title="Delete Story">🗑️</button>
+                    <button class="icon-btn-small" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 14px;" onclick="app.openStorySettings()" title="Story Settings">⚙️</button>
+                    <button class="close-btn" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 18px; margin-left: 8px;" onclick="app.closeStoryViewer()">✕</button>
+                </div>
+            </div>
+
+            <img src="" id="story-viewer-media" class="story-viewer-media" alt="Story Media">
+            
+            <div style="position: absolute; top: 0; left: 0; width: 40%; height: 100%; cursor: pointer;" onclick="app.prevStory()"></div>
+            <div style="position: absolute; top: 0; right: 0; width: 60%; height: 100%; cursor: pointer;" onclick="app.nextStory()"></div>
+            
+            <button class="story-nav-btn story-nav-left" onclick="app.prevStory()">‹</button>
+            <button class="story-nav-btn story-nav-right" onclick="app.nextStory()">›</button>
+        </div>
+    </div>
+
+    <!-- Live Broadcast Studio Modal -->
+    <div class="live-studio-modal hidden" id="live-studio-modal">
+        <div class="live-studio-container">
+            <video id="live-webcam-preview" class="live-video-stream" autoplay playsinline muted></video>
+            
+            <div class="live-badge">🔴 LIVE</div>
+            <div class="live-viewer-count" id="live-viewers-count">14 viewers</div>
+
+            <div class="live-comments-stream" id="live-comments-stream"></div>
+
+            <div class="live-footer-controls">
+                <div style="color: white; font-size: 14px; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">
+                    <strong>Mukaputa Live Studio</strong> · Broadcasting to your followers
+                </div>
+                <button class="btn btn-danger" onclick="app.endLiveStudio()">End Broadcast</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messenger Popover Drawer (REMOVED, NOW A SEPARATE PAGE) -->
+
+    <!-- Notifications Popover Drawer (REMOVED, NOW A SEPARATE PAGE) -->
+
+    <!-- Floating Chat Tabs (Desktop) -->
+    <div class="floating-chat-container" id="floating-chat-container"></div>
+
+    <!-- Floating Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Photo Viewer Lightbox -->
+    <div class="photo-viewer-overlay hidden" id="photo-viewer-overlay">
+        <button class="photo-viewer-close" onclick="app.closePhotoViewer()">✕</button>
+        <img class="photo-viewer-img" id="photo-viewer-img" src="" alt="Photo">
+        <div class="photo-viewer-controls">
+            <button class="photo-viewer-btn" onclick="app.prevPhoto()">‹</button>
+            <span class="photo-viewer-counter" id="photo-viewer-counter">1 / 1</span>
+            <button class="photo-viewer-btn" onclick="app.nextPhoto()">›</button>
+        </div>
+    </div>
+
+    <!-- Job Details Modal -->
+    <div class="modal-overlay hidden" id="job-details-modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Job Details</h2>
+                <button class="close-btn" onclick="document.getElementById('job-details-modal').classList.add('hidden')">✕</button>
+            </div>
+            <div class="modal-body" id="job-details-content" style="max-height: 80vh; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <!-- New Message Modal -->
+    <div class="modal-overlay hidden" id="new-message-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>New Message</h2>
+                <button class="close-btn" onclick="document.getElementById('new-message-modal').classList.add('hidden')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <h4 style="margin-top: 0; margin-bottom: 12px; font-size: 14px; color: var(--text-secondary);">Select a friend to message</h4>
+                <div id="new-message-friends-list" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div class="modal-overlay hidden" id="password-modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Change Password</h2>
+                <button class="close-btn" onclick="document.getElementById('password-modal').classList.add('hidden')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <input type="password" id="current-password-input" class="input-text" placeholder="Current Password" style="margin-bottom: 12px; width: 100%; box-sizing: border-box;">
+                <input type="password" id="new-password-input" class="input-text" placeholder="New Password" style="margin-bottom: 12px; width: 100%; box-sizing: border-box;">
+                <input type="password" id="confirm-password-input" class="input-text" placeholder="Confirm New Password" style="margin-bottom: 16px; width: 100%; box-sizing: border-box;">
+                <button class="btn btn-primary full-width" onclick="app.submitPasswordChange()">Update Password</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Settings Modal -->
+    <div class="modal-overlay hidden" id="notification-settings-modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2>Notification Preferences</h2>
+                <button class="close-btn" onclick="document.getElementById('notification-settings-modal').classList.add('hidden')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <div class="menu-list">
+                    <div class="menu-item" style="cursor: default;">
+                        <span style="flex: 1; font-weight: 500;">Push Notifications</span>
+                        <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--accent);">
+                    </div>
+                    <div class="menu-item" style="cursor: default;">
+                        <span style="flex: 1; font-weight: 500;">Email Notifications</span>
+                        <input type="checkbox" style="width: 20px; height: 20px; accent-color: var(--accent);">
+                    </div>
+                    <div class="menu-item" style="cursor: default;">
+                        <span style="flex: 1; font-weight: 500;">SMS Notifications</span>
+                        <input type="checkbox" style="width: 20px; height: 20px; accent-color: var(--accent);">
+                    </div>
+                </div>
+                <div style="padding: 16px;">
+                    <button class="btn btn-primary full-width" onclick="app.showToast('Preferences saved!', 'success'); document.getElementById('notification-settings-modal').classList.add('hidden')">Save Preferences</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Center Modal -->
+    <div class="modal-overlay hidden" id="help-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Help Center</h2>
+                <button class="close-btn" onclick="document.getElementById('help-modal').classList.add('hidden')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <input type="text" class="input-text" placeholder="Search Help Center..." style="margin-bottom: 16px; width: 100%; box-sizing: border-box;">
+                <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary);">Popular Articles</h4>
+                <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">How to change my profile picture?</div>
+                <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">Recovering an old account</div>
+                <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">Privacy settings explained</div>
+                <button class="btn btn-secondary full-width" style="margin-top: 12px;" onclick="app.showToast('Contacting support...', 'info')">Contact Support</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div class="modal-overlay hidden" id="terms-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Terms of Service & Privacy</h3>
+                <button class="close-btn" onclick="document.getElementById('terms-modal').classList.add('hidden')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px; max-height: 400px; overflow-y: auto;">
+                <h4 style="margin-top: 0;">1. Introduction</h4>
+                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">By using Mukaputa, you agree to our Terms of Service. We are committed to protecting your privacy and personal data.</p>
+                <h4>2. Data Collection</h4>
+                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">We collect data to provide better services to all our users. This data is stored locally in your browser for this demo.</p>
+                <button class="btn btn-primary full-width" style="margin-top: 24px;" onclick="document.getElementById('terms-modal').classList.add('hidden')">I Agree</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="modal-overlay hidden" id="search-modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Search</h3>
+                <button class="close-btn" onclick="app.closeSearchModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="modal-search-input" placeholder="Search people, groups, jobs..." autocomplete="off">
+                </div>
+                <div id="modal-search-results">
+                    <div style="padding: 32px 16px; text-align: center; color: var(--text-tertiary);">Type to search...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div class="modal-overlay hidden" id="create-group-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Create Group</h3>
+                <button class="close-btn" onclick="document.getElementById('create-group-modal').classList.add('hidden')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Group Name</label>
+                <input type="text" id="create-group-name" class="input-text" placeholder="Name your group" style="width: 100%; box-sizing: border-box; margin-bottom: 16px;">
+                
+                <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Privacy</label>
+                <select id="create-group-privacy" class="input-text" style="width: 100%; box-sizing: border-box; margin-bottom: 16px;">
+                    <option value="public">🌍 Public (Anyone can see who's in the group and what they post)</option>
+                    <option value="private">🔒 Private (Only members can see who's in the group and what they post)</option>
+                </select>
+
+                <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Description</label>
+                <textarea id="create-group-desc" class="input-text" placeholder="What is this group about?" style="width: 100%; box-sizing: border-box; height: 80px; resize: none; margin-bottom: 24px;"></textarea>
+
+                <button class="btn btn-primary full-width" onclick="app.submitCreateGroup()">Create Group</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice / Video Call Overlay (real WebRTC call UI -- see js/calls.js) -->
+    <div class="modal-overlay hidden" id="call-overlay">
+        <div class="call-video-stage hidden" id="call-video-stage">
+            <video id="call-remote-video" autoplay playsinline></video>
+            <video id="call-local-video" autoplay playsinline muted></video>
+        </div>
+        <audio id="call-remote-audio" autoplay></audio>
+
+        <div class="call-panel">
+            <img id="call-avatar" class="call-avatar-ring" src="" alt="">
+            <h2 id="call-name" class="call-name">Name</h2>
+            <p id="call-status" class="call-status">Calling...</p>
+
+            <!-- Incoming call: accept / decline -->
+            <div id="call-controls-incoming" class="call-controls hidden">
+                <button class="call-btn call-btn-decline" onclick="Calls.decline()" title="Decline">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"></path><line x1="23" y1="1" x2="1" y2="23"></line></svg>
+                </button>
+                <button class="call-btn call-btn-accept" onclick="Calls.accept()" title="Accept">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                </button>
+            </div>
+
+            <!-- Outgoing call: cancel -->
+            <div id="call-controls-outgoing" class="call-controls hidden">
+                <button class="call-btn call-btn-end" onclick="Calls.cancelOutgoing()" title="Cancel">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"></path><line x1="23" y1="1" x2="1" y2="23"></line></svg>
+                </button>
+            </div>
+
+            <!-- Active call: mute / camera / end -->
+            <div id="call-controls-active" class="call-controls hidden">
+                <button class="call-btn call-btn-ghost" id="call-mute-btn" onclick="Calls.toggleMute()" title="Mute">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>
+                </button>
+                <button class="call-btn call-btn-ghost hidden" id="call-camera-btn" onclick="Calls.toggleCamera()" title="Camera">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                </button>
+                <button class="call-btn call-btn-end" onclick="Calls.end()" title="End call">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"></path><line x1="23" y1="1" x2="1" y2="23"></line></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messenger Popover Drawer (REMOVED, NOW A SEPARATE PAGE) -->
+
+    <!-- Notifications Popover Drawer (REMOVED, NOW A SEPARATE PAGE) -->
+
+    <!-- Floating Chat Tabs (Desktop) -->
+    <div class="floating-chat-container" id="floating-chat-container"></div>
+
+    <!-- Floating Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Photo Viewer Lightbox -->
+    <div class="photo-viewer-overlay hidden" id="photo-viewer-overlay">
+        <button class="photo-viewer-close" onclick="app.closePhotoViewer()">✕</button>
+        <img class="photo-viewer-img" id="photo-viewer-img" src="" alt="Photo">
+        <div class="photo-viewer-controls">
+            <button class="photo-viewer-btn" onclick="app.prevPhoto()">‹</button>
+            <span class="photo-viewer-counter" id="photo-viewer-counter">1 / 1</span>
+            <button class="photo-viewer-btn" onclick="app.nextPhoto()">›</button>
+        </div>
+    </div>
+
+    <!-- Job Details Modal -->
+    <div class="modal-overlay hidden" id="job-details-modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Job Details</h2>
+                <button class="close-btn" onclick="document.getElementById('job-details-modal').classList.add('hidden')">✕</button>
+            </div>
+            <div class="modal-body" id="job-details-content" style="max-height: 80vh; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <!-- New Message Modal -->
+    <div class="modal-overlay hidden" id="new-message-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>New Message</h2>
+                <button class="close-btn" onclick="document.getElementById('new-message-modal').classList.add('hidden')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <h4 style="margin-top: 0; margin-bottom: 12px; font-size: 14px; color: var(--text-secondary);">Select a friend to message</h4>
+                <div id="new-message-friends-list" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px;"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Notification Settings Modal -->
+    <div class="modal-overlay hidden" id="notification-settings-modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2>Notification Preferences</h2>
+                <button class="close-btn" onclick="document.getElementById('notification-settings-modal').classList.add('hidden')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <div class="menu-list">
+                    <div class="menu-item" style="cursor: default;">
+                        <span style="flex: 1; font-weight: 500;">Push Notifications</span>
+                        <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--accent);">
+                    </div>
+                    <div class="menu-item" style="cursor: default;">
+                        <span style="flex: 1; font-weight: 500;">Email Notifications</span>
+                        <input type="checkbox" style="width: 20px; height: 20px; accent-color: var(--accent);">
+                    </div>
+                    <div class="menu-item" style="cursor: default;">
+                        <span style="flex: 1; font-weight: 500;">SMS Notifications</span>
+                        <input type="checkbox" style="width: 20px; height: 20px; accent-color: var(--accent);">
+                    </div>
+                </div>
+                <div style="padding: 16px;">
+                    <button class="btn btn-primary full-width" onclick="app.showToast('Preferences saved!', 'success'); document.getElementById('notification-settings-modal').classList.add('hidden')">Save Preferences</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Center Modal -->
+    <div class="modal-overlay hidden" id="help-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Help Center</h2>
+                <button class="close-btn" onclick="document.getElementById('help-modal').classList.add('hidden')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <input type="text" class="input-text" placeholder="Search Help Center..." style="margin-bottom: 16px; width: 100%; box-sizing: border-box;">
+                <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary);">Popular Articles</h4>
+                <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">How to change my profile picture?</div>
+                <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">Recovering an old account</div>
+                <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">Privacy settings explained</div>
+                <button class="btn btn-secondary full-width" style="margin-top: 12px;" onclick="app.showToast('Contacting support...', 'info')">Contact Support</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div class="modal-overlay hidden" id="terms-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Terms of Service & Privacy</h3>
+                <button class="close-btn" onclick="document.getElementById('terms-modal').classList.add('hidden')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px; max-height: 400px; overflow-y: auto;">
+                <h4 style="margin-top: 0;">1. Introduction</h4>
+                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">By using Mukaputa, you agree to our Terms of Service. We are committed to protecting your privacy and personal data.</p>
+                <h4>2. Data Collection</h4>
+                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">We collect data to provide better services to all our users. This data is stored locally in your browser for this demo.</p>
+                <button class="btn btn-primary full-width" style="margin-top: 24px;" onclick="document.getElementById('terms-modal').classList.add('hidden')">I Agree</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="modal-overlay hidden" id="search-modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Search</h3>
+                <button class="close-btn" onclick="app.closeSearchModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <div class="search-bar" style="margin-bottom: 16px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="modal-search-input" placeholder="Search people, groups, jobs..." autocomplete="off">
+                </div>
+                <div id="modal-search-results">
+                    <div style="padding: 32px 16px; text-align: center; color: var(--text-tertiary);">Type to search...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div class="modal-overlay hidden" id="create-group-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Create Group</h3>
+                <button class="close-btn" onclick="document.getElementById('create-group-modal').classList.add('hidden')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Group Name</label>
+                <input type="text" id="create-group-name" class="input-text" placeholder="Name your group" style="width: 100%; box-sizing: border-box; margin-bottom: 16px;">
+                
+                <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Privacy</label>
+                <select id="create-group-privacy" class="input-text" style="width: 100%; box-sizing: border-box; margin-bottom: 16px;">
+                    <option value="public">🌍 Public (Anyone can see who's in the group and what they post)</option>
+                    <option value="private">🔒 Private (Only members can see who's in the group and what they post)</option>
+                </select>
+
+                <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Description</label>
+                <textarea id="create-group-desc" class="input-text" placeholder="What is this group about?" style="width: 100%; box-sizing: border-box; height: 80px; resize: none; margin-bottom: 24px;"></textarea>
+
+                <button class="btn btn-primary full-width" onclick="app.submitCreateGroup()">Create Group</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Inputs -->
+    <input type="file" id="chat-image-upload" accept="image/*" style="display: none;" onchange="app.handleImageSelected(event)">
+
+    <!-- Create Story Modal -->
+    <div class="modal-overlay hidden" id="create-story-modal">
+        <div class="modal-content" style="max-width: 400px; padding: 0;">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding: 16px;">
+                <h2 style="font-size: 18px;">Create Story</h2>
+                <button class="icon-btn close-modal" onclick="document.getElementById('create-story-modal').classList.add('hidden')">&times;</button>
+            </div>
+            <div style="padding: 16px;">
+                <div style="margin-bottom: 24px; text-align: center;">
+                    <label for="story-image-upload" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--bg-secondary); padding: 24px; border-radius: 16px; border: 2px dashed var(--border-color); cursor: pointer; width: 100%; transition: all 0.2s;" onmouseenter="this.style.background='var(--bg-hover)'" onmouseleave="this.style.background='var(--bg-secondary)'">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        <span style="font-size: 16px; font-weight: 600; color: var(--text-primary);">Upload Photo/Video</span>
+                        <input type="file" id="story-image-upload" accept="image/*,video/*" style="display: none;" onchange="app.handleStoryImagePreview(event)">
+                    </label>
+                </div>
+                <div id="story-preview-container" style="display: none; margin-bottom: 24px; position: relative; border-radius: 12px; overflow: hidden;">
+                    <img id="story-preview-img" src="" style="width: 100%; height: 300px; object-fit: cover;">
+                    <button class="icon-btn-small" style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); color: white; border: none;" onclick="document.getElementById('story-preview-container').style.display='none'; document.getElementById('story-image-upload').value='';">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+                <button class="btn btn-primary full-width" style="padding: 12px; font-size: 16px;" onclick="app.submitCreateStory()">Share to Story</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Reel Modal -->
+    <div class="modal-overlay hidden" id="create-reel-modal">
+        <div class="modal-content" style="max-width: 420px; padding: 0;">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding: 16px;">
+                <h2 style="font-size: 18px;">Upload Reel</h2>
+                <button class="icon-btn close-modal" onclick="document.getElementById('create-reel-modal').classList.add('hidden')">&times;</button>
+            </div>
+            <div style="padding: 16px;">
+                <div id="reel-upload-prompt" style="margin-bottom: 16px; text-align: center;">
+                    <label for="reel-video-upload" style="display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: var(--bg-secondary); padding: 28px 16px; border-radius: 16px; border: 2px dashed var(--border-color); cursor: pointer; width: 100%; transition: all 0.2s; box-sizing: border-box;" onmouseenter="this.style.background='var(--bg-hover)'" onmouseleave="this.style.background='var(--bg-secondary)'">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                        <span style="font-size: 15px; font-weight: 600; color: var(--text-primary);">Select a video</span>
+                        <span style="font-size: 12px; color: var(--text-secondary);">MP4, WebM, or MOV &middot; up to 25MB</span>
+                        <input type="file" id="reel-video-upload" accept="video/*" style="display: none;" onchange="app.handleReelVideoPreview(event)">
+                    </label>
+                </div>
+                <div id="reel-preview-container" style="display: none; margin-bottom: 16px; position: relative; border-radius: 12px; overflow: hidden; background: #000;">
+                    <video id="reel-preview-video" src="" controls muted style="width: 100%; max-height: 320px; display: block; background: #000;"></video>
+                    <button class="icon-btn-small" style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); color: white; border: none;" onclick="app.resetCreateReelModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+                <textarea id="reel-caption-input" class="input-text" placeholder="Write a caption..." style="width: 100%; box-sizing: border-box; min-height: 64px; resize: vertical; margin-bottom: 16px; padding: 10px 12px; border-radius: 10px;"></textarea>
+                <button class="btn btn-primary full-width" id="reel-submit-btn" style="padding: 12px; font-size: 16px;" onclick="app.submitCreateReel()">Post Reel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay hidden" id="edit-profile-modal">
+        <div class="modal-content" style="max-width: 500px; padding: 0;">
+            <div class="modal-header" style="padding: 16px; border-bottom: 1px solid var(--border-color);">
+                <h2>Edit Profile</h2>
+                <button class="icon-btn close-modal" onclick="document.getElementById('edit-profile-modal').classList.add('hidden')">✕</button>
+            </div>
+            <div style="padding: 24px; max-height: 70vh; overflow-y: auto;">
+                
+                <div style="display: flex; gap: 16px; margin-bottom: 24px;">
+                    <label class="edit-upload-box" style="flex: 1; border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s;">
+                        <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">Profile Photo</div>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-bottom: 8px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        <div class="edit-upload-subtext" style="font-size: 11px;">Click to update</div>
+                        <input type="file" id="edit-profile-avatar" accept="image/*" style="display: none;" onchange="app.handleProfileImageUpdate(event, 'avatar')">
+                    </label>
+                    <label class="edit-upload-box" style="flex: 1; border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s;">
+                        <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">Cover Photo</div>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="margin-bottom: 8px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        <div class="edit-upload-subtext" style="font-size: 11px;">Click to update</div>
+                        <input type="file" id="edit-profile-cover" accept="image/*" style="display: none;" onchange="app.handleProfileImageUpdate(event, 'cover')">
+                    </label>
+                </div>
+
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px;">Name</label>
+                <input type="text" id="edit-profile-name" class="input-text" style="width: 100%; box-sizing: border-box; margin-bottom: 20px;">
+                
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px;">Username</label>
+                <input type="text" id="edit-profile-username" class="input-text" style="width: 100%; box-sizing: border-box; margin-bottom: 20px;">
+                
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px;">Bio</label>
+                <textarea id="edit-profile-bio" class="input-text" style="width: 100%; box-sizing: border-box; height: 80px; resize: none; margin-bottom: 20px;"></textarea>
+                
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px;">Workplace</label>
+                <input type="text" id="edit-profile-work" class="input-text" style="width: 100%; box-sizing: border-box; margin-bottom: 20px;">
+                
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px;">Location</label>
+                <input type="text" id="edit-profile-location" class="input-text" style="width: 100%; box-sizing: border-box; margin-bottom: 24px;">
+
+                <button class="btn btn-primary full-width" style="padding: 12px; font-size: 16px;" onclick="app.submitEditProfile()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Modal -->
+    <div class="modal-overlay hidden" id="privacy-settings-modal">
+        <div class="modal-content" style="max-width: 500px; padding: 0;">
+            <div class="modal-header" style="padding: 16px; border-bottom: 1px solid var(--border-color);">
+                <h2>Profile Privacy</h2>
+                <button class="icon-btn close-modal" onclick="document.getElementById('privacy-settings-modal').classList.add('hidden')">✕</button>
+            </div>
+            <div style="padding: 24px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Who can see your future posts?</label>
+                <select id="privacy-posts" class="input-text" style="width: 100%; margin-bottom: 24px;">
+                    <option value="public">Public (Everyone)</option>
+                    <option value="friends">Friends Only</option>
+                    <option value="private">Only Me</option>
+                </select>
+
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Who can send you friend requests?</label>
+                <select id="privacy-requests" class="input-text" style="width: 100%; margin-bottom: 24px;">
+                    <option value="everyone">Everyone</option>
+                    <option value="friends_of_friends">Friends of Friends</option>
+                </select>
+
+                <button class="btn btn-primary full-width" onclick="app.savePrivacySettings()">Save Privacy Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blocked Accounts Modal -->
+    <div class="modal-overlay hidden" id="blocked-accounts-modal">
+        <div class="modal-content" style="max-width: 500px; padding: 0;">
+            <div class="modal-header" style="padding: 16px; border-bottom: 1px solid var(--border-color);">
+                <h2>Blocked Accounts</h2>
+                <button class="icon-btn close-modal" onclick="document.getElementById('blocked-accounts-modal').classList.add('hidden')">✕</button>
+            </div>
+            <div style="padding: 24px; max-height: 400px; overflow-y: auto;" id="blocked-accounts-list">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div class="modal-overlay hidden" id="delete-account-modal">
+        <div class="modal-content" style="max-width: 500px; padding: 0;">
+            <div class="modal-header" style="padding: 16px; border-bottom: 1px solid var(--border-color);">
+                <h2>Deactivate or Delete</h2>
+                <button class="icon-btn close-modal" onclick="document.getElementById('delete-account-modal').classList.add('hidden')">✕</button>
+            </div>
+            <div style="padding: 24px;">
+                <div style="padding: 16px; border: 1px solid var(--danger); border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: var(--danger); margin-bottom: 24px;">
+                    <strong>Warning:</strong> Deleting your account is permanent. All your posts, photos, and connections will be lost forever.
+                </div>
+                <button class="btn btn-secondary full-width" style="margin-bottom: 12px;" onclick="app.confirmDeactivateAccount()">Deactivate Temporarily</button>
+                <button class="btn full-width" style="background: var(--danger); color: white;" onclick="app.confirmDeleteAccount()">Delete Account Permanently</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/vendor/socket.io.min.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/feed.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/calls.js"></script>
+    <script src="js/boot.js"></script>
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,8 @@
+.env
+venv/
+Mukaputa_Venv/
+__pycache__/
+*.pyc
+uploads/
+mukaputa.db
+.pytest_cache/

@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+
+<title>MukaPuta &mdash; Where your circle lives</title>
+
+<meta name="description" content="MukaPuta is the place to make friends, share posts, stories and reels, and grow your circle.">
+
+
+
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ================= TOKENS (dark mode default) ================= */
+  :root{
+    --bg-950:#0c0c0e;
+    --bg-900:#131316;
+    --bg-800:#1c1c1f;
+    --bg-700:#262629;
+    --bg-600:#78aae0;
+    --gold-bright:#ff7a29;
+    --gold-mid:#e85a0c;
+    --gold-dark:#b83a00;
+    --blue-bright:#78aae0;
+    --blue-mid:#4a7ab5;
+    --blue-dark:#2a4880;
+    --lav-bright:#c0aae8;
+    --lav-mid:#9878cc;
+    --lav-dark:#5a4090;
+    --silver:#b8b8d0;
+    --cream:#eeeef5;
+    --mist:#909099;
+    --navy-950:var(--bg-950);
+    --navy-900:var(--bg-900);
+    --navy-800:var(--bg-800);
+    --navy-700:var(--bg-700);
+    --navy-600:var(--bg-600);
+    --orange-600:var(--gold-dark);
+    --orange-500:var(--gold-mid);
+    --orange-400:var(--gold-bright);
+    --orange-300:#ff9c52;
+    --radius-lg:28px;
+    --radius-md:18px;
+    --radius-sm:10px;
+    --ease:cubic-bezier(.16,.84,.44,1);
+  }
+
+  /* ================= LIGHT MODE via CSS media query (works on ALL devices incl. phones) ================= */
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg-950:#f2f2f5;
+      --bg-900:#e8e8ec;
+      --bg-800:#d8d8de;
+      --bg-700:#c4c4cc;
+      --bg-600:#a8a8b4;
+      --gold-bright:#d84c00;
+      --gold-mid:#f57c00;
+      --gold-dark:#ff9800;
+      --blue-bright:#2a4880;
+      --blue-mid:#3a5e9a;
+      --blue-dark:#4a78c0;
+      --lav-bright:#5a4090;
+      --lav-mid:#7858b0;
+      --lav-dark:#9878cc;
+      --silver:#606078;
+      --cream:#18181e;
+      --mist:#52525e;
+      --navy-950:var(--bg-950);
+      --navy-900:var(--bg-900);
+      --navy-800:var(--bg-800);
+      --navy-700:var(--bg-700);
+      --navy-600:var(--bg-600);
+      --orange-400:var(--gold-bright);
+      --orange-300:#ff8533;
+    }
+    body{ background:var(--bg-950); color:var(--cream); }
+    .nav-inner{ background:rgba(242,242,245,0.88); border-color:rgba(24,24,30,0.12); box-shadow:0 8px 30px rgba(0,0,0,0.06); }
+    nav ul a{ color:#18181f; text-shadow:none; }
+    nav ul a:hover{ color:var(--gold-bright); text-shadow:none; }
+    nav ul a.active{ color:var(--gold-bright); text-shadow:none; }
+    .mobile-menu{ background:rgba(242,242,245,0.97); border-color:rgba(24,24,30,0.10); }
+    .mobile-menu a{ border-bottom-color:rgba(24,24,30,0.08); color:#18181f; }
+    .mobile-menu a:hover{ color:var(--gold-bright); background:rgba(216,76,0,0.06); }
+    .btn-ghost{ background:rgba(24,24,30,0.08); border:1.5px solid rgba(24,24,30,0.32); color:#18181f; font-weight:600; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+    .btn-ghost:hover{ background:rgba(216,76,0,0.10); border-color:var(--gold-bright); color:var(--gold-bright); }
+    .btn-live-demo, .btn-live-demo span{
+      color:#000000 !important;
+    }
+    .btn-live-demo{
+      background:#ffffff !important;
+      border:2px solid #000000 !important;
+      color:#000000 !important;
+      font-weight:700 !important;
+      box-shadow:0 4px 18px rgba(0,0,0,0.12) !important;
+      text-shadow:none !important;
+    }
+    .btn-live-demo:hover, .btn-live-demo:hover span{
+      color:#000000 !important;
+    }
+    .btn-live-demo:hover{
+      background:#f2f2f6 !important;
+      border-color:var(--gold-bright) !important;
+      color:#000000 !important;
+      box-shadow:0 8px 25px rgba(216,76,0,0.35) !important;
+    }
+    .feature-card{ background:linear-gradient(165deg,rgba(255,255,255,0.96),rgba(232,232,236,0.88)); border-color:rgba(24,24,30,0.07); }
+    .quote-card{ background:var(--bg-900); border-color:rgba(24,24,30,0.08); }
+    .float-card{ background:rgba(242,242,245,0.90); border-color:rgba(24,24,30,0.12); }
+    .cphone{ background:linear-gradient(180deg,var(--bg-900),var(--bg-800)); border-color:var(--bg-700); }
+    .stat-strip{ background:linear-gradient(135deg,rgba(216,76,0,0.08),rgba(216,216,222,0.55)); border-color:rgba(216,76,0,0.22); }
+    #bg-canvas{ filter:invert(1) brightness(0.96); }
+    .grain{ opacity:0.015; }
+    footer{ border-top-color:rgba(24,24,30,0.10); }
+    .footer-bottom{ border-top-color:rgba(24,24,30,0.07); }
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;width:100%;max-width:100vw;overflow-x:hidden;}
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms!important;animation-iteration-count:1!important;transition-duration:0.001ms!important;}
+  }
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg-950);
+    color:var(--cream);
+    width:100%;
+    max-width:100vw;
+    overflow-x:hidden;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    touch-action:manipulation;
+  }
+  h1,h2,h3,.display{ font-family:'Outfit','Space Grotesk',sans-serif; letter-spacing:-0.025em; }
+  a{color:inherit;text-decoration:none;touch-action:manipulation;}
+  ul{list-style:none;}
+  img,canvas{display:block;max-width:100%;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation;}
+  section{position:relative;z-index:2;}
+  .wrap{ width:100%; max-width:min(1180px, calc(100vw - 32px)); margin-inline:auto; }
+
+  /* eyebrow */
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.16em;
+    color:var(--gold-bright);
+    background:rgba(255,122,41,0.09);
+    border:1px solid rgba(255,122,41,0.32);
+    padding:7px 14px; border-radius:999px;
+  }
+  .eyebrow::before{
+    content:""; width:6px; height:6px; border-radius:50%;
+    background:var(--gold-bright); box-shadow:0 0 8px var(--gold-bright);
+  }
+
+  /* buttons */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    gap:10px; padding:15px 28px; border-radius:999px;
+    font-weight:600; font-size:0.95rem;
+    transition:transform .35s var(--ease),box-shadow .35s var(--ease),background .3s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid));
+    color:#0c0c0e;
+    box-shadow:0 10px 30px -8px rgba(255,122,41,0.55);
+  }
+  .btn-primary:hover{ transform:translateY(-3px) scale(1.02); box-shadow:0 16px 36px -8px rgba(255,122,41,0.75); }
+  .btn-ghost{
+    background:rgba(255,255,255,0.14);
+    border:1.5px solid rgba(255,255,255,0.45);
+    color:#ffffff;
+    font-weight:600;
+    box-shadow:0 2px 12px rgba(0,0,0,0.3);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+  .btn-ghost:hover{
+    background:rgba(255,122,41,0.18);
+    border-color:var(--gold-bright);
+    color:var(--gold-bright);
+    text-shadow:0 0 10px rgba(255,122,41,0.45);
+    box-shadow:0 6px 20px -4px rgba(255,122,41,0.45);
+    transform:translateY(-3px);
+  }
+  .btn-orange-highlight{
+    background:rgba(255,122,41,0.14);
+    border:2px solid #ff7a29;
+    color:#ff7a29 !important;
+    font-weight:700;
+    box-shadow:0 0 20px -2px rgba(255,122,41,0.45);
+    text-shadow:0 0 8px rgba(255,122,41,0.3);
+  }
+  .btn-orange-highlight:hover{
+    background:#ff7a29;
+    color:#0c0c0e !important;
+    border-color:#ff7a29;
+    transform:translateY(-3px) scale(1.03);
+    box-shadow:0 12px 32px -4px rgba(255,122,41,0.75);
+  }
+
+  /* Explore Live Demo Button - Crisp White Pill with Black Font */
+  .btn-live-demo, .btn-live-demo span{
+    color:#000000 !important;
+  }
+  .btn-live-demo{
+    background:#ffffff !important;
+    border:2px solid #ffffff !important;
+    color:#000000 !important;
+    font-weight:700;
+    font-size:0.96rem;
+    box-shadow:0 6px 22px rgba(0,0,0,0.45), 0 0 16px rgba(255,255,255,0.4);
+    text-shadow:none !important;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+  }
+  .btn-live-demo:hover, .btn-live-demo:hover span{
+    color:#000000 !important;
+  }
+  .btn-live-demo:hover{
+    background:#f2f2f6 !important;
+    border-color:var(--gold-bright) !important;
+    color:#000000 !important;
+    text-shadow:none !important;
+    box-shadow:0 10px 32px -4px rgba(255,122,41,0.5), 0 0 22px rgba(255,255,255,0.6);
+    transform:translateY(-3px) scale(1.03);
+  }
+  .btn-live-demo svg{
+    stroke:#000000 !important;
+    transition:transform 0.3s ease;
+  }
+  .btn-live-demo:hover svg{
+    stroke:#000000 !important;
+    transform:translateX(3px) scale(1.1);
+  }
+  .live-pulse-dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#10b981;
+    box-shadow:0 0 0 0 rgba(16,185,129,0.8);
+    animation:livePulseBeacon 2s infinite cubic-bezier(0.4,0,0.2,1);
+    display:inline-block;
+    flex-shrink:0;
+  }
+  @keyframes livePulseBeacon{
+    0%{ transform:scale(0.95); box-shadow:0 0 0 0 rgba(16,185,129,0.8); }
+    70%{ transform:scale(1); box-shadow:0 0 0 8px rgba(16,185,129,0); }
+    100%{ transform:scale(0.95); box-shadow:0 0 0 0 rgba(16,185,129,0); }
+  }
+
+  /* backdrop */
+  #bg-canvas{ position:fixed; inset:0; z-index:0; width:100%; height:100%; pointer-events:none !important; }
+  .grain{
+    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0.04;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay;
+  }
+  .cursor-glow{
+    position:fixed; width:420px; height:420px; border-radius:50%;
+    pointer-events:none; z-index:1;
+    background:radial-gradient(circle,rgba(255,122,41,0.09),transparent 70%);
+    transform:translate(-50%,-50%); transition:opacity .3s ease; display:none;
+  }
+  @media(hover:hover){ .cursor-glow{ display:block; } }
+
+  /* nav */
+  header{ position:fixed; top:0; left:0; right:0; z-index:50; padding:16px 0; }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 24px; border-radius:999px;
+    background:rgba(12, 12, 14, 0.78);
+    border:1px solid rgba(255,255,255,0.12);
+    box-shadow:0 12px 36px -8px rgba(0, 0, 0, 0.55);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  }
+  .logo{ display:flex; align-items:center; gap:11px; text-decoration:none; }
+  .logo img{
+    transition:transform .3s var(--ease), filter .3s ease;
+    filter:drop-shadow(0 2px 8px rgba(255,122,41,0.25));
+  }
+  .logo:hover img{
+    transform:scale(1.03);
+    filter:drop-shadow(0 4px 16px rgba(255,122,41,0.45));
+  }
+  .logo-text{
+    font-family:'Outfit', 'Space Grotesk', -apple-system, sans-serif;
+    font-size:1.32rem;
+    font-weight:700;
+    letter-spacing:-0.03em;
+    color:var(--cream);
+    display:inline-block;
+    line-height:1;
+    transition:color .3s var(--ease), transform .3s var(--ease), opacity .3s ease;
+  }
+  .logo:hover .logo-text{
+    color:var(--gold-bright);
+    opacity:0.95;
+  }
+  .logo-mark{
+    width:38px; height:38px; border-radius:12px;
+    background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid));
+    display:flex; align-items:center; justify-content:center;
+    color:#0c0c0e; font-family:'Outfit','Space Grotesk',sans-serif;
+    font-weight:800; font-size:21px;
+    transform-style:preserve-3d; transition:transform .5s var(--ease), box-shadow .3s ease;
+    box-shadow:0 6px 18px -4px rgba(255,122,41,0.75);
+  }
+  .logo:hover .logo-mark{ transform:rotateY(180deg) rotateX(10deg) scale(1.08); box-shadow:0 10px 24px -4px rgba(255,122,41,0.95); }
+  nav ul{ display:flex; gap:32px; align-items:center; list-style:none; }
+  nav ul a{
+    font-size:0.96rem;
+    font-weight:600;
+    color:#ffffff;
+    position:relative;
+    padding:4px 0;
+    display:inline-block;
+    letter-spacing:-0.01em;
+    text-shadow:0 1px 3px rgba(0,0,0,0.4);
+    transition:color .25s var(--ease), text-shadow .25s var(--ease), transform .25s var(--ease);
+  }
+  nav ul a::after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:-4px;
+    width:0%;
+    height:2.5px;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--gold-bright),#ff9c52);
+    box-shadow:0 0 10px rgba(255,122,41,0.65);
+    transition:width .3s var(--ease);
+  }
+  nav ul a:hover{
+    color:var(--gold-bright);
+    text-shadow:0 0 14px rgba(255,122,41,0.5), 0 1px 3px rgba(0,0,0,0.5);
+    transform:translateY(-1px);
+  }
+  nav ul a:hover::after{ width:100%; }
+  nav ul a.active{
+    color:var(--gold-bright);
+    text-shadow:0 0 12px rgba(255,122,41,0.4);
+  }
+  nav ul a.active::after{ width:100%; }
+  .nav-cta{ display:flex; align-items:center; gap:12px; }
+  .nav-cta .btn{ padding:10px 22px; font-size:0.88rem; font-weight:600; }
+  .nav-cta .btn-ghost{
+    background:rgba(255,255,255,0.12);
+    border:1.5px solid rgba(255,255,255,0.38);
+    color:#ffffff;
+    box-shadow:0 2px 12px rgba(0,0,0,0.3);
+  }
+  .nav-cta .btn-ghost:hover{
+    background:rgba(255,122,41,0.18);
+    border-color:var(--gold-bright);
+    color:var(--gold-bright);
+    text-shadow:0 0 10px rgba(255,122,41,0.5);
+    box-shadow:0 6px 22px -2px rgba(255,122,41,0.5);
+    transform:translateY(-2px) scale(1.02);
+  }
+  .burger{
+    display:none; width:40px; height:40px; border-radius:10px;
+    background:rgba(238,238,245,0.06);
+    align-items:center; justify-content:center; flex-direction:column; gap:5px;
+  }
+  .burger span{ width:18px; height:2px; background:var(--cream); border-radius:2px; transition:.3s ease; }
+  .burger.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .burger.open span:nth-child(2){ opacity:0; }
+  .burger.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+  .mobile-menu{
+    position:fixed; inset:88px 16px auto 16px;
+    background:rgba(19,19,22,0.97); border:1px solid rgba(238,238,245,0.10);
+    border-radius:20px; padding:22px;
+    display:flex; flex-direction:column; gap:6px;
+    backdrop-filter:blur(20px); transform:translateY(-16px) scale(0.98);
+    opacity:0; pointer-events:none; transition:.35s var(--ease); z-index:49;
+  }
+  .mobile-menu.show{ transform:translateY(0) scale(1); opacity:1; pointer-events:auto; }
+  .mobile-menu a{
+    padding:13px 12px;
+    font-size:1.05rem;
+    font-weight:600;
+    border-bottom:1px solid rgba(238,238,245,0.08);
+    color:#ffffff;
+    border-radius:10px;
+    transition:color .25s ease, background .25s ease, padding-left .25s ease;
+  }
+  .mobile-menu a:hover{
+    color:var(--gold-bright);
+    background:rgba(255,122,41,0.08);
+    padding-left:18px;
+  }
+  .mobile-menu .btn{ margin-top:12px; width:100%; }
+  .mobile-menu-cta{ display:flex; gap:10px; margin-top:14px; }
+  .mobile-menu-cta .btn{ flex:1; width:auto; margin-top:0; padding:12px 14px; font-size:0.92rem; }
+
+  /* hero */
+  .hero{ padding:170px 0 90px; display:grid; grid-template-columns:1.05fr 1fr; gap:40px; align-items:center; min-height:92vh; }
+  .hero h1{ font-size:clamp(2.6rem,5.4vw,4.4rem); font-weight:700; line-height:1.03; margin:20px 0 22px; }
+  .hero h1 .accent{
+    background:linear-gradient(135deg,var(--gold-bright),var(--lav-bright));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    background-clip:text; font-style:normal;
+  }
+  .hero p.lead{ font-size:1.08rem; color:var(--mist); max-width:480px; margin-bottom:34px; }
+  .hero-actions{ display:flex; gap:16px; flex-wrap:wrap; margin-bottom:38px; }
+  .trust-row{ display:flex; align-items:center; gap:14px; }
+  .avatar-stack{ display:flex; }
+  .avatar-stack span{
+    width:34px; height:34px; border-radius:50%;
+    border:2px solid var(--bg-950); margin-left:-10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.7rem; font-weight:700; color:#0c0c0e;
+  }
+  .avatar-stack span:nth-child(1){ background:linear-gradient(135deg,var(--gold-bright),var(--gold-dark)); }
+  .avatar-stack span:nth-child(2){ background:linear-gradient(135deg,var(--blue-bright),var(--blue-dark)); color:#eeeef5; }
+  .avatar-stack span:nth-child(3){ background:linear-gradient(135deg,var(--lav-bright),var(--lav-dark)); }
+  .avatar-stack span:nth-child(4){ background:linear-gradient(135deg,var(--gold-mid),var(--lav-mid)); }
+  .avatar-stack span:first-child{ margin-left:0; }
+  .trust-row small{ color:var(--mist); font-size:0.85rem; }
+
+  /* hero visual */
+  .hero-visual{ position:relative; height:560px; }
+  #hero-canvas{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none !important; }
+  .float-card{
+    position:absolute;
+    background:rgba(28,28,31,0.82); border:1px solid rgba(238,238,245,0.12);
+    background:rgba(255,255,255,0.92); border:1px solid rgba(0,0,0,0.08);
+    backdrop-filter:blur(14px); border-radius:var(--radius-md);
+    padding:14px 16px; box-shadow:0 20px 50px -18px rgba(0,0,0,0.6);
+    padding:14px 16px; box-shadow:0 24px 48px -12px rgba(0,0,0,0.25);
+    transform-style:preserve-3d; will-change:transform;
+    color:#1a1a24;
+  
+  }
+  .float-card.phone{
+    width:230px; left:50%; top:50%;
+    margin-left:-115px; margin-top:-190px;
+    padding:0; overflow:hidden; border-radius:34px;
+    border:6px solid var(--bg-800);
+    border:6px solid #eef0f5;
+    animation:phoneFloat 7s ease-in-out infinite;
+    box-shadow:0 30px 60px -15px rgba(0,0,0,0.3);
+  }
+  .float-card.phone .screen{ background:linear-gradient(180deg,var(--bg-900),var(--bg-800)); height:390px; padding:14px 12px; }
+  .float-card.phone .screen{ background:linear-gradient(180deg,#f8f9fa,#e2e5eb); height:390px; padding:14px 12px; }
+  .mini-row{ display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+  .mini-dot{ width:24px; height:24px; border-radius:50%; background:linear-gradient(135deg,var(--gold-bright),var(--gold-dark)); flex-shrink:0; }
+  .mini-line{ height:7px; border-radius:4px; background:rgba(238,238,245,0.14); }
+  .mini-line{ height:7px; border-radius:4px; background:rgba(0,0,0,0.08); }
+  .mini-line.w60{ width:60%; } .mini-line.w40{ width:40%; }
+  .mini-media{ height:120px; border-radius:12px; background:linear-gradient(135deg,var(--bg-700),var(--bg-600)); margin-bottom:10px; position:relative; overflow:hidden; }
+  .mini-media{ height:120px; border-radius:12px; background:linear-gradient(135deg,#e2e5eb,#d1d5db); margin-bottom:10px; position:relative; overflow:hidden; }
+  .mini-media::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(120deg,transparent 20%,rgba(255,122,41,0.22) 50%,transparent 80%);
+    background-size:200% 100%; animation:shimmer 3.2s linear infinite;
+  }
+  .mini-actions{ display:flex; gap:16px; margin-top:10px; color:var(--mist); font-size:0.7rem; align-items:center; }
+  .mini-actions{ display:flex; gap:16px; margin-top:10px; color:#5a5a68; font-size:0.7rem; align-items:center; }
+  .mini-actions b{ color:var(--gold-bright); }
+  .float-card.likes{ top:12%; left:-4%; animation:floaty 5.5s ease-in-out infinite; }
+  .float-card.reel{ bottom:8%; right:-6%; animation:floaty 6.5s ease-in-out infinite reverse; width:160px; }
+  .float-card.stories{ bottom:2%; left:2%; animation:floaty 6s ease-in-out infinite; width:190px; }
+  .badge-icon{ width:30px; height:30px; border-radius:9px; background:rgba(192,170,232,0.15); display:flex; align-items:center; justify-content:center; margin-bottom:8px; }
+  .badge-icon svg{ width:16px; height:16px; }
+  .float-card .label{ font-size:0.78rem; font-weight:600; }
+  .float-card .sub{ font-size:0.68rem; color:var(--mist); margin-top:2px; }
+  .badge-icon{ width:30px; height:30px; border-radius:9px; background:rgba(90,64,144,0.1); display:flex; align-items:center; justify-content:center; margin-bottom:8px; }
+  .badge-icon svg{ width:16px; height:16px; color:#5a4090; }
+  .float-card .label{ font-size:0.78rem; font-weight:600; color:#1a1a24; }
+  .float-card .sub{ font-size:0.68rem; color:#606078; margin-top:2px; }
+  @keyframes floaty{
+    0%,100%{ transform:translateY(0px) rotateX(4deg) rotateY(-6deg); }
+    50%{ transform:translateY(-18px) rotateX(-2deg) rotateY(4deg); }
+  }
+  @keyframes phoneFloat{
+    0%,100%{ transform:translateY(0) rotateY(-8deg) rotateX(4deg); }
+    50%{ transform:translateY(-14px) rotateY(6deg) rotateX(-2deg); }
+  }
+  @keyframes shimmer{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+
+  /* scroll reveal */
+  .reveal{ opacity:0; transform:translateY(36px); transition:opacity .8s var(--ease),transform .8s var(--ease); }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  .reveal-stagger > *{ opacity:0; transform:translateY(28px); transition:opacity .7s var(--ease),transform .7s var(--ease); }
+  .reveal-stagger.in > *{ opacity:1; transform:translateY(0); }
+  .reveal-stagger.in > *:nth-child(1){transition-delay:.02s;}
+  .reveal-stagger.in > *:nth-child(2){transition-delay:.1s;}
+  .reveal-stagger.in > *:nth-child(3){transition-delay:.18s;}
+  .reveal-stagger.in > *:nth-child(4){transition-delay:.26s;}
+  .reveal-stagger.in > *:nth-child(5){transition-delay:.34s;}
+  .reveal-stagger.in > *:nth-child(6){transition-delay:.42s;}
+
+  /* section heads */
+  .section-head{ text-align:center; max-width:640px; margin:0 auto 56px; }
+  .section-head h2{ font-size:clamp(1.9rem,3.6vw,2.7rem); margin:16px 0 14px; font-weight:700; }
+  .section-head p{ color:var(--mist); font-size:1.02rem; }
+  section{ padding:110px 0; }
+
+  /* features */
+  .feature-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; perspective:1400px; }
+  .feature-card{
+    background:linear-gradient(165deg,#e1f5fe,#b3e5fc);
+    border:1px solid rgba(0,120,180,0.15); border-radius:var(--radius-lg);
+    background:linear-gradient(165deg,#f8f0fc,#ece0f6);
+    border:1px solid rgba(130,80,180,0.12); border-radius:var(--radius-lg);
+    padding:32px 26px; transform-style:preserve-3d;
+    transition:transform .1s linear,box-shadow .4s ease,border-color .4s ease;
+    position:relative; overflow:hidden;
+    color: #01579b;
+    color: #2d1a45;
+  }
+  .feature-card h3{ font-size:1.18rem; margin-bottom:10px; transform:translateZ(20px); color:#01579b; }
+  .feature-card p{ color:#0277bd; font-size:0.92rem; transform:translateZ(20px); }
+  .feature-card h3{ font-size:1.18rem; margin-bottom:10px; transform:translateZ(20px); color:#2d1a45; }
+  .feature-card p{ color:#533d71; font-size:0.92rem; transform:translateZ(20px); }
+  .feature-card::before{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(0,150,200,0.15),transparent 60%);
+    background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(150,100,200,0.15),transparent 60%);
+    opacity:0; transition:opacity .4s ease; pointer-events:none;
+  }
+  .feature-card:hover::before{ opacity:1; }
+  .feature-card:hover{ border-color:rgba(0,150,200,0.4); box-shadow:0 30px 60px -25px rgba(0,120,180,0.4); }
+  .feature-card:hover{ border-color:rgba(150,100,200,0.4); box-shadow:0 30px 60px -25px rgba(130,80,180,0.3); }
+  .feature-icon{
+    width:52px; height:52px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:22px; transform:translateZ(30px);
+  }
+  .feature-card:nth-child(1) .feature-icon,.feature-card:nth-child(4) .feature-icon{
+    background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid));
+    box-shadow:0 12px 26px -10px rgba(255,122,41,0.50);
+  }
+  .feature-card:nth-child(2) .feature-icon,.feature-card:nth-child(5) .feature-icon{
+    background:linear-gradient(135deg,var(--blue-bright),var(--blue-mid));
+    box-shadow:0 12px 26px -10px rgba(120,170,224,0.50);
+  }
+  .feature-card:nth-child(3) .feature-icon,.feature-card:nth-child(6) .feature-icon{
+    background:linear-gradient(135deg,var(--lav-bright),var(--lav-mid));
+    box-shadow:0 12px 26px -10px rgba(192,170,232,0.50);
+  }
+  .feature-icon svg{ width:24px; height:24px; stroke:#0c0c0e; }
+  .feature-card h3{ font-size:1.18rem; margin-bottom:10px; transform:translateZ(20px); }
+  .feature-card p{ color:var(--mist); font-size:0.92rem; transform:translateZ(20px); }
+
+  /* how it works */
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:30px; position:relative; }
+  .steps::before{
+    content:""; position:absolute; top:34px; left:12%; right:12%; height:2px;
+    background:repeating-linear-gradient(90deg,rgba(120,170,224,0.45) 0 10px,transparent 10px 20px);
+    z-index:0;
+  }
+  .step{ position:relative; z-index:1; text-align:center; padding:0 10px; }
+  .step-num{
+    width:68px; height:68px; margin:0 auto 22px; border-radius:50%;
+    background:var(--bg-900); border:2px solid var(--blue-mid);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.3rem; color:var(--blue-bright);
+    box-shadow:0 0 0 8px rgba(120,170,224,0.07);
+    transition:transform .6s cubic-bezier(0.34, 1.56, 0.64, 1), border-color .3s ease, box-shadow .3s ease, color .3s ease;
+    transform-style:preserve-3d;
+    perspective:600px;
+    position:relative;
+  }
+  .step-num-front, .step-num-back{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:50%;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+    font-family:inherit; font-weight:inherit; font-size:inherit; color:inherit;
+  }
+  .step-num-front{
+    transform:rotateY(0deg) translateZ(1px);
+  }
+  .step-num-back{
+    transform:rotateY(180deg) translateZ(1px);
+  }
+  .step:hover .step-num{
+    transform:scale(1.12) rotateY(360deg);
+    border-color:var(--gold-bright);
+    box-shadow:0 0 0 8px rgba(255,122,41,0.18), 0 0 24px rgba(255,122,41,0.35);
+    color:var(--gold-bright);
+  }
+  .step h3{ font-size:1.1rem; margin-bottom:8px; }
+  .step p{ color:var(--mist); font-size:0.9rem; }
+
+  /* showcase / 3D carousel */
+  .showcase{ overflow:hidden; }
+  .carousel-stage{ height:560px; display:flex; align-items:center; justify-content:center; perspective:1600px; position:relative; }
+  .carousel{ position:relative; width:250px; height:500px; transform-style:preserve-3d; transition:transform 1s var(--ease); }
+  .cphone{
+    position:absolute; inset:0; border-radius:38px;
+    border:7px solid var(--bg-800);
+    background:linear-gradient(180deg,var(--bg-900),var(--bg-800));
+    overflow:hidden; backface-visibility:hidden;
+    box-shadow:0 40px 80px -30px rgba(0,0,0,0.8);
+  }
+  .cphone .top-bar{ display:flex; align-items:center; gap:8px; padding:16px 14px 10px; }
+  .cphone .top-bar .av{ width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,var(--gold-bright),var(--gold-dark)); }
+  .cphone .top-bar .tl{ flex:1; }
+  .cphone .body-media{ margin:0 12px 10px; height:220px; border-radius:16px; background:linear-gradient(135deg,var(--bg-700),var(--bg-600)); position:relative; overflow:hidden; }
+  .cphone .body-media::after{ content:""; position:absolute; inset:0; background:linear-gradient(120deg,transparent 20%,rgba(255,122,41,0.20) 50%,transparent 80%); background-size:200% 100%; animation:shimmer 4s linear infinite; }
+  .cphone .stripe{ height:8px; border-radius:5px; background:rgba(238,238,245,0.12); margin:8px 12px; }
+  .cphone .stripe.w50{ width:40%; }
+  .cphone .tag{ position:absolute; top:16px; right:16px; background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid)); color:#0c0c0e; font-size:0.62rem; font-weight:700; padding:5px 10px; border-radius:999px; letter-spacing:0.04em; }
+  .cphone .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:4px; margin:0 12px; }
+  .cphone .grid3 div{ aspect-ratio:1; border-radius:8px; background:linear-gradient(135deg,var(--bg-700),var(--bg-600)); }
+  .cphone .stories-row{ display:flex; gap:10px; padding:0 12px 10px; }
+  .cphone .story{ width:44px; height:44px; border-radius:50%; border:2px solid var(--lav-mid); flex-shrink:0; background:var(--bg-700); }
+  .carousel-nav{ display:flex; justify-content:center; gap:14px; margin-top:34px; }
+  .cnav-btn{
+    width:44px; height:44px; border-radius:50%;
+    border:1px solid rgba(238,238,245,0.16);
+    background:rgba(238,238,245,0.04);
+    display:flex; align-items:center; justify-content:center; transition:.3s ease;
+  }
+  .cnav-btn:hover{ background:linear-gradient(135deg,var(--lav-bright),var(--lav-mid)); color:#0c0c0e; border-color:transparent; }
+  .carousel-dots{ display:flex; gap:8px; align-items:center; justify-content:center; margin-top:16px; }
+  .carousel-dots span{ width:7px; height:7px; border-radius:50%; background:rgba(238,238,245,0.22); transition:.3s ease; }
+  .carousel-dots span.active{ background:var(--lav-bright); width:22px; border-radius:4px; }
+
+  /* stats */
+  .stat-strip{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:20px; padding:44px 36px;
+    background:linear-gradient(135deg,rgba(255,122,41,0.07),rgba(28,28,31,0.55));
+    border:1px solid rgba(255,122,41,0.18); border-radius:var(--radius-lg);
+  }
+  .stat{ text-align:center; }
+  .stat .num{ font-family:'Space Grotesk',sans-serif; font-size:clamp(1.8rem,3vw,2.6rem); font-weight:700; color:var(--gold-bright); }
+  .stat .lbl{ color:var(--mist); font-size:0.82rem; margin-top:6px; }
+
+  /* testimonials */
+  .marquee-wrap{ overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent); mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent); }
+  .marquee{ display:flex; gap:22px; width:max-content; animation:scroll-x 34s linear infinite; }
+  .marquee:hover{ animation-play-state:paused; }
+  @keyframes scroll-x{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+  .quote-card{
+    width:320px; flex-shrink:0;
+    background:var(--bg-900); border:1px solid rgba(238,238,245,0.07);
+    border-radius:var(--radius-md); padding:26px;
+  }
+  .quote-card .stars{ color:var(--gold-bright); font-size:0.9rem; margin-bottom:14px; letter-spacing:2px; }
+  .quote-card p{ color:var(--mist); font-size:0.92rem; margin-bottom:18px; }
+  .quote-person{ display:flex; align-items:center; gap:10px; }
+  .quote-person .qa{ width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--lav-bright),var(--lav-dark)); }
+  .quote-person b{ font-size:0.86rem; display:block; }
+  .quote-person small{ color:var(--mist); font-size:0.75rem; }
+
+  /* CTA */
+  .cta-section{ padding:70px 0 130px; }
+  .cta-box{
+    position:relative; border-radius:36px; padding:70px 40px;
+    text-align:center; overflow:hidden;
+    background:linear-gradient(145deg,var(--bg-900),var(--bg-800));
+    border:1px solid rgba(255,122,41,0.22);
+  }
+  .cta-box::before,.cta-box::after{
+    content:""; position:absolute; width:340px; height:340px;
+    border-radius:50%; filter:blur(10px); animation:blobmove 10s ease-in-out infinite;
+  }
+  .cta-box::before{ top:-160px; left:-120px; background:radial-gradient(circle,rgba(255,122,41,0.30),transparent 70%); }
+  .cta-box::after{ bottom:-160px; right:-120px; background:radial-gradient(circle,rgba(192,170,232,0.28),transparent 70%); animation-delay:3s; }
+  @keyframes blobmove{ 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(30px,-20px) scale(1.15);} }
+  .cta-box h2{ font-size:clamp(1.9rem,4vw,2.8rem); margin-bottom:16px; position:relative; z-index:2; }
+  .cta-box p{ color:var(--mist); margin-bottom:32px; position:relative; z-index:2; }
+  .cta-actions{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; position:relative; z-index:2; }
+
+  /* footer */
+  footer{ padding:60px 0 34px; border-top:1px solid rgba(238,238,245,0.07); }
+  .footer-grid{ display:grid; grid-template-columns:1.4fr repeat(3,1fr); gap:40px; margin-bottom:50px; }
+  .footer-brand p{ color:var(--mist); font-size:0.88rem; margin:16px 0 20px; max-width:280px; }
+  .social-row{ display:flex; gap:10px; }
+  .social-row a{ width:38px; height:38px; border-radius:10px; background:rgba(238,238,245,0.05); display:flex; align-items:center; justify-content:center; transition:.3s ease; border:1px solid rgba(238,238,245,0.08); }
+  .social-row a:nth-child(1):hover{ background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid)); color:#0c0c0e; transform:translateY(-3px); }
+  .social-row a:nth-child(2):hover{ background:linear-gradient(135deg,var(--blue-bright),var(--blue-mid)); color:#0c0c0e; transform:translateY(-3px); }
+  .social-row a:nth-child(3):hover{ background:linear-gradient(135deg,var(--lav-bright),var(--lav-mid)); color:#0c0c0e; transform:translateY(-3px); }
+  .footer-col h4{ font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--lav-bright); margin-bottom:16px; }
+  .footer-col a{ display:block; color:var(--mist); font-size:0.9rem; padding:6px 0; transition:.25s ease; }
+  .footer-col a:hover{ color:var(--cream); transform:translateX(4px); }
+  .footer-bottom{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; color:var(--mist); font-size:0.8rem; padding-top:26px; border-top:1px solid rgba(238,238,245,0.05); }
+
+  /* responsive */
+  @media(max-width:1024px){
+    .hero{ grid-template-columns:1fr; padding-top:130px; gap:24px; }
+    .hero-visual{ height:420px; order:-1; }
+    .feature-grid{ grid-template-columns:repeat(2,1fr); }
+    .footer-grid{ grid-template-columns:1fr 1fr; }
+  }
+  @media(max-width:760px){
+    nav ul{ display:none; }
+    .burger{ display:flex; }
+    .hero{ padding-top:100px; padding-bottom:40px; text-align:left; min-height:auto; }
+    .hero-visual{ height:380px; pointer-events:none; width:100%; overflow:hidden; }
+    .float-card{ pointer-events:none; }
+    .float-card.phone{ width:210px; height:350px; margin-left:-105px; margin-top:-175px; }
+    .float-card.phone .screen{ height:330px; }
+    .float-card.likes{ top:10px; left:10px; }
+    .float-card.reel{ bottom:10px; right:10px; }
+    .float-card.stories{ bottom:10px; left:10px; }
+    .hero h1{ font-size:clamp(2.1rem, 7.5vw, 3rem); margin:14px 0 16px; }
+    .hero p.lead{ max-width:100%; font-size:0.98rem; margin-bottom:24px; }
+    .feature-grid{ grid-template-columns:1fr; gap:16px; }
+    .steps{ grid-template-columns:1fr; gap:36px; }
+    .steps::before{ display:none; }
+    .stat-strip{ grid-template-columns:repeat(2,1fr); padding:24px 16px; gap:16px; }
+    .footer-grid{ grid-template-columns:1fr; gap:28px; }
+    .carousel{ width:195px; height:390px; }
+    .carousel-stage{ height:420px; width:100%; overflow:hidden; }
+    section{ padding:60px 0; }
+  }
+  @media(max-width:480px){
+    .nav-cta .btn-ghost{ display:none; }
+    .hero{ padding-top:90px; padding-bottom:30px; }
+    .hero-visual{ height:330px; }
+    .hero-actions{ flex-direction:column; width:100%; gap:12px; }
+    .hero-actions .btn{ width:100%; justify-content:center; padding:13px 20px; }
+    .float-card.phone{ width:180px; height:310px; margin-left:-90px; margin-top:-155px; }
+    .float-card.phone .screen{ height:295px; }
+    .float-card.likes{ top:4px; left:4px; transform:scale(0.8); }
+    .float-card.reel{ bottom:4px; right:4px; transform:scale(0.8); }
+    .float-card.stories{ bottom:4px; left:4px; transform:scale(0.8); }
+    .quote-card{ width:270px; padding:20px; }
+    .cta-box{ padding:36px 18px; border-radius:22px; }
+    .cta-actions .btn{ width:100%; }
+  }
+
+  a:focus-visible,button:focus-visible{ outline:2px solid var(--gold-bright); outline-offset:3px; border-radius:6px; }
+
+  /* ================= MOBILE LIQUID GLASS TOGGLE ================= */
+  .mobile-liquid-toggle-wrap {
+    display: none;
+    position: fixed;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    left: 0;
+    right: 0;
+    z-index: 99;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  @media (max-width: 760px) {
+    .mobile-liquid-toggle-wrap {
+      display: flex;
+    }
+  }
+
+  .liquid-glass-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+    background: rgba(18, 18, 24, 0.72);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    box-shadow: 
+      0 16px 40px -8px rgba(0, 0, 0, 0.75),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4);
+    pointer-events: auto;
+    transform: translateY(0);
+    transition: transform 0.3s var(--ease), box-shadow 0.3s ease;
+  }
+
+  .liquid-glass-toggle:active {
+    transform: scale(0.96);
+  }
+
+  .liquid-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--mist);
+    text-decoration: none;
+    transition: all 0.25s var(--ease);
+    white-space: nowrap;
+  }
+
+  .liquid-toggle-btn.active {
+    background: rgba(255, 255, 255, 0.10);
+    color: var(--cream);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .liquid-toggle-btn.launch-app {
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold-mid));
+    color: #0c0c0e;
+    box-shadow: 0 4px 16px rgba(255, 122, 41, 0.45);
+  }
+
+  .liquid-toggle-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.14);
+    margin: 0 2px;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .liquid-glass-toggle {
+      background: rgba(255, 255, 255, 0.80);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 
+        0 16px 36px -8px rgba(0, 0, 0, 0.15),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+    }
+    .liquid-toggle-btn.active {
+      background: rgba(24, 24, 30, 0.08);
+      color: var(--cream);
+    }
+  }
+</style>
+
+
+</head>
+
+<body>
+
+
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="grain"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ================= NAV ================= -->
+<header>
+  <div class="wrap nav-inner">
+    <a href="#top" class="logo">
+      <img src="logo.png" alt="MukaPuta Logo" style="height: 42px; width: auto; object-fit: contain;">
+    </a>
+    <nav>
+      <ul>
+        <li><a href="#top" class="active">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How it works</a></li>
+
+        <li><a href="#showcase">Inside the app</a></li>
+
+        <li><a href="#community">Community</a></li>
+
+      </ul>
+
+    </nav>
+
+    <div class="nav-cta">
+      <a href="login.html" class="btn btn-ghost">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="margin-right:2px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span>Log in</span>
+      </a>
+      <a href="login.html" class="btn btn-primary">Open App →</a>
+    </div>
+
+    <button class="burger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#top">Home</a>
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#showcase">Inside the app</a>
+    <a href="#community">Community</a>
+    <div class="mobile-menu-cta">
+      <a href="login.html" class="btn btn-ghost">Log in</a>
+      <a href="login.html" class="btn btn-primary">Open App →</a>
+    </div>
+  </div>
+
+</header>
+
+
+
+<main id="top">
+
+
+
+  <!-- ================= HERO ================= -->
+
+  <section class="hero wrap">
+
+    <div class="hero-copy">
+
+      <span class="eyebrow">Now welcoming new members</span>
+
+      <h1>Your circle,<br> <em class="accent">alive</em> in one place.</h1>
+
+      <p class="lead">MukaPuta is where you make friends, share what you're doing through posts, photos and videos, tell your story, and drop into reels — then watch the likes and comments roll in.</p>
+
+      <div class="hero-actions">
+
+        <a href="login.html" class="btn btn-primary">
+          Enter MukaPuta App
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+
+        <a href="index.html" class="btn btn-ghost btn-live-demo">
+          <span class="live-pulse-dot"></span>
+          <span>Explore Live Demo</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </a>
+
+        <a href="#showcase" class="btn btn-orange-highlight">See it in action</a>
+
+      </div>
+
+      <div class="trust-row">
+
+        <div class="avatar-stack">
+
+          <span>A</span><span>K</span><span>N</span><span>T</span>
+
+        </div>
+
+        <small>Friends are already posting stories, reels &amp; photos today</small>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="hero-visual">
+
+      <canvas id="hero-canvas"></canvas>
+
+
+
+      <div class="float-card phone" id="tiltPhone">
+
+        <div class="screen">
+
+          <div class="mini-row">
+
+            <div class="mini-dot"></div>
+
+            <div style="flex:1">
+
+              <div class="mini-line w60" style="margin-bottom:6px;"></div>
+
+              <div class="mini-line w40"></div>
+
+            </div>
+
+          </div>
+
+          <div class="mini-media"></div>
+
+          <div class="mini-actions">
+
+            <span>♥ <b>482</b></span>
+
+            <span>💬 <b>63</b></span>
+
+            <span>↗ Share</span>
+
+          </div>
+
+          <div class="mini-row" style="margin-top:14px;">
+
+            <div class="mini-dot" style="background:linear-gradient(135deg,var(--navy-600),var(--navy-700));"></div>
+
+            <div style="flex:1">
+
+              <div class="mini-line w40"></div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="float-card likes" id="tiltLikes">
+
+        <div class="badge-icon">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ff7a29" stroke-width="2.4"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+
+        </div>
+
+        <div class="label">New like</div>
+
+        <div class="sub">Sneha liked your reel</div>
+
+      </div>
+
+
+
+      <div class="float-card reel" id="tiltReel">
+
+        <div class="badge-icon">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ff7a29" stroke-width="2.4"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+
+        </div>
+
+        <div class="label">Reel posted</div>
+
+        <div class="sub">12.4K plays</div>
+
+      </div>
+
+
+
+      <div class="float-card stories" id="tiltStories">
+
+        <div class="stories-row" style="padding:0;">
+
+          <div class="story"></div>
+
+          <div class="story" style="border-color:var(--navy-600);"></div>
+
+          <div class="story" style="border-color:var(--navy-600);"></div>
+
+        </div>
+
+        <div class="label" style="margin-top:10px;">3 new stories</div>
+
+        <div class="sub">from your friends</div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ================= FEATURES ================= -->
+
+  <section id="features" class="wrap">
+
+    <div class="section-head reveal">
+
+      <span class="eyebrow">Everything social, one app</span>
+
+      <h2>Built for how you already connect</h2>
+
+      <p>Posts, photos, videos, stories, reels, likes and comments — MukaPuta brings every way you share into a single, familiar feed.</p>
+
+    </div>
+
+
+
+    <div class="feature-grid reveal-stagger">
+
+      <div class="feature-card" data-tilt>
+
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="7" r="4"/><path d="M17 11a4 4 0 1 0 0-8"/><path d="M1 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/><path d="M17 13a4 4 0 0 1 4 4v4"/></svg></div>
+
+        <h3>Friends &amp; connections</h3>
+
+        <p>Find people you know, send a friend request, and build a circle that grows with every new post.</p>
+
+      </div>
+
+      <div class="feature-card" data-tilt>
+
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 5-6 4 4"/></svg></div>
+
+        <h3>Posts</h3>
+
+        <p>Share what's on your mind — text, links or moments — right to your friends' feed in seconds.</p>
+
+      </div>
+
+      <div class="feature-card" data-tilt>
+
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="5" width="15" height="14" rx="2"/><path d="M17 10l5-3v10l-5-3"/></svg></div>
+
+        <h3>Photos &amp; videos</h3>
+
+        <p>Post pictures and clips in full quality, organised in a clean grid on your profile.</p>
+
+      </div>
+
+      <div class="feature-card" data-tilt>
+
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></div>
+
+        <h3>Stories</h3>
+
+        <p>Share a moment that lives for a day. Tap through your friends' stories the moment you open the app.</p>
+
+      </div>
+
+      <div class="feature-card" data-tilt>
+
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+
+        <h3>Reels</h3>
+
+        <p>Scroll an endless feed of short videos from your friends and discover new ones people are watching.</p>
+
+      </div>
+
+      <div class="feature-card" data-tilt>
+
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></div>
+
+        <h3>Likes &amp; comments</h3>
+
+        <p>React and reply in real time — every like and comment shows up instantly, so conversations keep going.</p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ================= HOW IT WORKS ================= -->
+
+  <section id="how" class="wrap">
+
+    <div class="section-head reveal">
+
+      <span class="eyebrow">Getting started</span>
+
+      <h2>You'll be posting in three steps</h2>
+
+      <p>No clutter, no confusing setup — just what you need to join your friends.</p>
+
+    </div>
+
+    <div class="steps reveal-stagger">
+
+      <div class="step">
+
+        <div class="step-num">
+          <span class="step-num-front">1</span>
+          <span class="step-num-back">1</span>
+        </div>
+
+        <h3>Create your profile</h3>
+
+        <p>Add a photo, a short bio, and you're ready to be found by friends.</p>
+
+      </div>
+
+      <div class="step">
+
+        <div class="step-num">
+          <span class="step-num-front">2</span>
+          <span class="step-num-back">2</span>
+        </div>
+
+        <h3>Connect with friends</h3>
+
+        <p>Send and accept friend requests to start building your circle.</p>
+
+      </div>
+
+      <div class="step">
+
+        <div class="step-num">
+          <span class="step-num-front">3</span>
+          <span class="step-num-back">3</span>
+        </div>
+
+        <h3>Share your moments</h3>
+
+        <p>Post photos, videos, stories and reels — then watch the likes come in.</p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ================= SHOWCASE ================= -->
+
+  <section id="showcase" class="wrap showcase">
+
+    <div class="section-head reveal">
+
+      <span class="eyebrow">Take a look inside</span>
+
+      <h2>One app, three ways to share</h2>
+
+      <p>Drag, tap the arrows, or just wait — the preview rotates through your feed, stories and reels.</p>
+
+    </div>
+
+
+
+    <div class="carousel-stage reveal">
+
+      <div class="carousel" id="carousel">
+
+        <div class="cphone" data-face="0" style="transform:rotateY(0deg) translateZ(280px);">
+
+          <span class="tag">FEED</span>
+
+          <div class="top-bar"><div class="av"></div><div class="tl"><div class="mini-line w60" style="margin-bottom:5px;"></div><div class="mini-line w40"></div></div></div>
+
+          <div class="body-media"></div>
+
+          <div class="stripe"></div>
+
+          <div class="stripe w50"></div>
+
+        </div>
+
+        <div class="cphone" data-face="1" style="transform:rotateY(120deg) translateZ(280px);">
+
+          <span class="tag">STORIES</span>
+
+          <div class="top-bar"><div class="av"></div><div class="tl"><div class="mini-line w60"></div></div></div>
+
+          <div class="stories-row">
+
+            <div class="story"></div><div class="story"></div><div class="story"></div><div class="story"></div>
+
+          </div>
+
+          <div class="body-media" style="height:270px;"></div>
+
+        </div>
+
+        <div class="cphone" data-face="2" style="transform:rotateY(240deg) translateZ(280px);">
+
+          <span class="tag">REELS</span>
+
+          <div class="body-media" style="height:340px; margin-top:16px;"></div>
+
+          <div class="grid3" style="margin-top:10px;">
+
+            <div></div><div></div><div></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="carousel-nav">
+
+      <button class="cnav-btn" id="prevBtn" aria-label="Previous">
+
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6"/></svg>
+
+      </button>
+
+      <button class="cnav-btn" id="nextBtn" aria-label="Next">
+
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
+
+      </button>
+
+    </div>
+
+    <div class="carousel-dots" id="dots">
+
+      <span class="active"></span><span></span><span></span>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ================= STATS ================= -->
+
+  <section class="wrap">
+
+    <div class="stat-strip reveal">
+
+      <div class="stat"><div class="num" data-count="6">0</div><div class="lbl">Ways to share: posts, photos, video, stories, reels &amp; comments</div></div>
+
+      <div class="stat"><div class="num" data-count="0" data-suffix="ads">0</div><div class="lbl">Ads in your feed today</div></div>
+
+      <div class="stat"><div class="num" data-count="60">0</div><div class="lbl">Seconds to create your profile</div></div>
+
+      <div class="stat"><div class="num" data-count="1">0</div><div class="lbl">Feed for every friend you make</div></div>
+
+    </div>
+
+  </section>
+
+  
+
+
+  <!-- ================= TESTIMONIALS ================= -->
+
+  <section id="community" class="wrap" style="padding-bottom:60px;">
+
+    <div class="section-head reveal">
+
+      <span class="eyebrow">Community</span>
+
+      <h2>People are already sharing</h2>
+
+      <p>A few notes from friends testing MukaPuta early.</p>
+
+    </div>
+
+  </section>
+
+  <div class="marquee-wrap reveal">
+
+    <div class="marquee" id="marquee">
+
+      <div class="quote-card"><div class="stars">★★★★★</div><p>Posting a reel and seeing comments come in within minutes made it feel like a real hangout, not just an app.</p><div class="quote-person"><div class="qa"></div><div><b>Dharnika..</b><small>Early member</small></div></div></div>
+
+      <div class="quote-card"><div class="stars">★★★★★</div><p>Stories disappearing after a day pushes me to actually post, instead of overthinking it.</p><div class="quote-person"><div class="qa"></div><div><b>Nanda Kambar.</b><small>Early member</small></div></div></div>
+
+      <div class="quote-card"><div class="stars">★★★★★</div><p>Found three old classmates in my first week just by browsing friends of friends.</p><div class="quote-person"><div class="qa"></div><div><b>Nikita Mandre.</b><small>Early member</small></div></div></div>
+
+      <div class="quote-card"><div class="stars">★★★★★</div><p>The feed feels calm — no clutter, just photos and updates from people I actually know.</p><div class="quote-person"><div class="qa"></div><div><b>Sneha Saliyan.</b><small>Early member</small></div></div></div>
+
+      <div class="quote-card"><div class="stars">★★★★★</div><p>Posting a reel and seeing comments come in within minutes made it feel like a real hangout, not just an app.</p><div class="quote-person"><div class="qa"></div><div><b>Rukminibai.</b><small>Early member</small></div></div></div>
+
+      <div class="quote-card"><div class="stars">★★★★★</div><p>Stories disappearing after a day pushes me to actually post, instead of overthinking it.</p><div class="quote-person"><div class="qa"></div><div><b>Varsha Kotur.</b><small>Early member</small></div></div></div>
+
+      <div class="quote-card"><div class="stars">★★★★★</div><p>Found three old classmates in my first week just by browsing friends of friends.</p><div class="quote-person"><div class="qa"></div><div><b>Tejaswini.</b><small>Early member</small></div></div></div>
+
+      <div class="quote-card"><div class="stars">★★★★★</div><p>The feed feels calm — no clutter, just photos and updates from people I actually know.</p><div class="quote-person"><div class="qa"></div><div><b>Chaya</b><small>Early member</small></div></div></div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ================= CTA ================= -->
+
+  <section id="join" class="wrap cta-section">
+
+    <div class="cta-box reveal">
+
+      <span class="eyebrow">Free to join</span>
+
+      <h2>Your friends are one tap away.</h2>
+
+      <p>Create your MukaPuta profile and start sharing posts, photos, stories and reels today.</p>
+
+      <div class="cta-actions">
+        <a href="login.html" class="btn btn-primary">Launch MukaPuta Web App 🚀</a>
+        <a href="index.html" class="btn btn-ghost btn-live-demo">
+          <span class="live-pulse-dot"></span>
+          <span>Explore Live Demo</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </a>
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="wrap">
+
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+
+      <a href="#top" class="logo">
+        <img src="logo.png" alt="MukaPuta Logo" style="height: 38px; width: auto; object-fit: contain;">
+      </a>
+
+      <p>The place to make friends, post photos and videos, share stories and reels, and stay close to your circle.</p>
+
+      <div class="social-row">
+
+        <a href="#" aria-label="Instagram-style"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/></svg></a>
+
+        <a href="#" aria-label="Bird icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4s-.7 2-2 3c1.4 8.5-6 12.5-13 9 2.5.1 5-.7 6.5-2C9 13.5 6 11 6 7c1.5 1.7 3.5 2.6 6 2.7-.5-2.3.6-4.7 3-5.5 1.7-.6 3.5 0 4.5 1.3C21 5 22 4 22 4z"/></svg></a>
+
+        <a href="#" aria-label="Video icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></a>
+
+      </div>
+
+    </div>
+
+    <div class="footer-col">
+
+      <h4>Product</h4>
+
+      <a href="#features">Features</a>
+
+      <a href="#how">How it works</a>
+
+      <a href="#showcase">Inside the app</a>
+
+    </div>
+
+    <div class="footer-col">
+
+      <h4>Company</h4>
+
+      <a href="#">About</a>
+
+      <a href="#">Community</a>
+
+      <a href="#">Careers</a>
+
+    </div>
+
+    <div class="footer-col">
+
+      <h4>Support</h4>
+
+      <a href="#">Help centre</a>
+
+      <a href="#">Safety</a>
+
+      <a href="#">Contact</a>
+
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+
+    <span>&copy; 2026 MukaPuta. All rights reserved.</span>
+
+    <span>Made for people who like staying close.</span>
+
+  </div>
+
+</footer>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+
+(function(){
+
+  "use strict";
+
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+
+
+  /* ---------------- MOBILE MENU ---------------- */
+
+  var burger = document.getElementById('burger');
+
+  var mobileMenu = document.getElementById('mobileMenu');
+
+  burger.addEventListener('click', function(){
+
+    burger.classList.toggle('open');
+
+    mobileMenu.classList.toggle('show');
+
+  });
+
+  mobileMenu.querySelectorAll('a').forEach(function(a){
+
+    a.addEventListener('click', function(){
+
+      burger.classList.remove('open');
+
+      mobileMenu.classList.remove('show');
+
+    });
+
+  });
+
+  /* ---------------- ACTIVE NAV SCROLLSPY ---------------- */
+  var navLinks = document.querySelectorAll('header nav ul a');
+  var spySections = [
+    document.getElementById('top'),
+    document.getElementById('features'),
+    document.getElementById('how'),
+    document.getElementById('showcase'),
+    document.getElementById('community')
+  ].filter(Boolean);
+
+  function updateActiveNav(){
+    var scrollPos = (window.pageYOffset || document.documentElement.scrollTop) + 160;
+    var currentId = 'top';
+    for(var i = 0; i < spySections.length; i++){
+      var sec = spySections[i];
+      if(sec.offsetTop <= scrollPos){
+        currentId = sec.getAttribute('id');
+      }
+    }
+    navLinks.forEach(function(link){
+      var target = link.getAttribute('href').replace('#', '');
+      if(target === currentId){
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+  updateActiveNav();
+
+
+
+  /* ---------------- CURSOR GLOW ---------------- */
+
+  var glow = document.getElementById('cursorGlow');
+
+  window.addEventListener('mousemove', function(e){
+
+    glow.style.left = e.clientX + 'px';
+
+    glow.style.top = e.clientY + 'px';
+
+  });
+
+
+
+  /* ---------------- SCROLL REVEAL ---------------- */
+
+  var revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+
+  if('IntersectionObserver' in window){
+
+    var io = new IntersectionObserver(function(entries){
+
+      entries.forEach(function(entry){
+
+        if(entry.isIntersecting){
+
+          entry.target.classList.add('in');
+
+          io.unobserve(entry.target);
+
+        }
+
+      });
+
+    }, { threshold: 0.15 });
+
+    revealEls.forEach(function(el){ io.observe(el); });
+
+  } else {
+
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+
+  }
+
+
+
+  /* ---------------- COUNT-UP STATS ---------------- */
+
+  var counted = false;
+
+  var statSection = document.querySelector('.stat-strip');
+
+  function animateCounts(){
+
+    if(counted) return;
+
+    counted = true;
+
+    document.querySelectorAll('.num').forEach(function(el){
+
+      var target = parseInt(el.getAttribute('data-count'), 10);
+
+      var dur = 1200, start = null;
+
+      function step(ts){
+
+        if(!start) start = ts;
+
+        var p = Math.min((ts - start)/dur, 1);
+
+        var eased = 1 - Math.pow(1-p, 3);
+
+        el.textContent = Math.round(eased * target);
+
+        if(p < 1) requestAnimationFrame(step);
+
+        else el.textContent = target;
+
+      }
+
+      requestAnimationFrame(step);
+
+    });
+
+  }
+
+  if(statSection){
+
+    if('IntersectionObserver' in window){
+
+      var statObs = new IntersectionObserver(function(entries){
+
+        entries.forEach(function(e){ if(e.isIntersecting){ animateCounts(); statObs.disconnect(); } });
+
+      }, { threshold: 0.4 });
+
+      statObs.observe(statSection);
+
+    } else { animateCounts(); }
+
+  }
+
+
+
+  /* ---------------- FEATURE CARD TILT ---------------- */
+
+  var tiltCards = document.querySelectorAll('[data-tilt]');
+
+  if(window.matchMedia('(hover:hover)').matches && !reduceMotion){
+
+    tiltCards.forEach(function(card){
+
+      card.addEventListener('mousemove', function(e){
+
+        var r = card.getBoundingClientRect();
+
+        var x = e.clientX - r.left, y = e.clientY - r.top;
+
+        var rx = ((y / r.height) - 0.5) * -14;
+
+        var ry = ((x / r.width) - 0.5) * 14;
+
+        card.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(0)';
+
+        card.style.setProperty('--mx', x + 'px');
+
+        card.style.setProperty('--my', y + 'px');
+
+      });
+
+      card.addEventListener('mouseleave', function(){
+
+        card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+
+      });
+
+    });
+
+  }
+
+
+
+  /* ---------------- HERO FLOAT CARD PARALLAX ---------------- */
+
+  var heroVisual = document.querySelector('.hero-visual');
+
+  var floatCards = [document.getElementById('tiltPhone'), document.getElementById('tiltLikes'), document.getElementById('tiltReel'), document.getElementById('tiltStories')];
+
+  if(heroVisual && window.matchMedia('(hover:hover)').matches && !reduceMotion){
+
+    heroVisual.addEventListener('mousemove', function(e){
+
+      var r = heroVisual.getBoundingClientRect();
+
+      var px = (e.clientX - r.left)/r.width - 0.5;
+
+      var py = (e.clientY - r.top)/r.height - 0.5;
+
+      floatCards.forEach(function(card, i){
+
+        if(!card) return;
+
+        var depth = (i+1) * 6;
+
+        card.style.marginLeft && null;
+
+        card.style.setProperty('transform', 'translate(' + (px*depth) + 'px,' + (py*depth) + 'px)');
+
+      });
+
+    });
+
+  }
+
+
+
+  /* ---------------- 3D CAROUSEL ---------------- */
+
+  var carousel = document.getElementById('carousel');
+
+  var dots = document.querySelectorAll('#dots span');
+
+  var faces = 3, current = 0, autoTimer;
+
+
+
+  function goTo(index){
+
+    current = ((index % faces) + faces) % faces;
+
+    carousel.style.transform = 'rotateY(' + (-current * 120) + 'deg)';
+
+    dots.forEach(function(d,i){ d.classList.toggle('active', i === current); });
+
+  }
+
+  document.getElementById('nextBtn').addEventListener('click', function(){ goTo(current+1); resetAuto(); });
+
+  document.getElementById('prevBtn').addEventListener('click', function(){ goTo(current-1); resetAuto(); });
+
+  dots.forEach(function(d,i){ d.addEventListener('click', function(){ goTo(i); resetAuto(); }); });
+
+
+
+  function resetAuto(){
+
+    clearInterval(autoTimer);
+
+    if(!reduceMotion){ autoTimer = setInterval(function(){ goTo(current+1); }, 4200); }
+
+  }
+
+  resetAuto();
+
+
+
+  // swipe support
+
+  var stage = document.querySelector('.carousel-stage');
+
+  var touchStartX = null;
+
+  stage.addEventListener('touchstart', function(e){ touchStartX = e.touches[0].clientX; }, {passive:true});
+
+  stage.addEventListener('touchend', function(e){
+
+    if(touchStartX === null) return;
+
+    var dx = e.changedTouches[0].clientX - touchStartX;
+
+    if(Math.abs(dx) > 40){ dx < 0 ? goTo(current+1) : goTo(current-1); resetAuto(); }
+
+    touchStartX = null;
+
+  });
+
+
+
+  /* ================= THREE.JS: AMBIENT BACKGROUND ================= */
+
+  function initBackground(){
+
+    var canvas = document.getElementById('bg-canvas');
+
+    if(!window.THREE || reduceMotion) return;
+
+    var renderer;
+
+    try{
+
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias:true });
+
+    }catch(err){ return; }
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.6));
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+
+
+    var scene = new THREE.Scene();
+
+    var camera = new THREE.PerspectiveCamera(55, window.innerWidth/window.innerHeight, 0.1, 100);
+
+    camera.position.z = 22;
+
+
+
+    var particleCount = window.innerWidth < 760 ? 90 : 220;
+
+    var geo = new THREE.BufferGeometry();
+
+    var positions = new Float32Array(particleCount * 3);
+
+    for(var i=0;i<particleCount;i++){
+
+      positions[i*3] = (Math.random()-0.5) * 60;
+
+      positions[i*3+1] = (Math.random()-0.5) * 40;
+
+      positions[i*3+2] = (Math.random()-0.5) * 40 - 8;
+
+    }
+
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    var mat = new THREE.PointsMaterial({ color: 0xff7a29, size: 0.14, transparent:true, opacity:0.75 });
+
+    var points = new THREE.Points(geo, mat);
+
+    scene.add(points);
+
+
+
+    // Faint connecting network sphere (signature motif)
+
+    var netGeo = new THREE.IcosahedronGeometry(8, 1);
+
+    var netMat = new THREE.MeshBasicMaterial({ color: 0xe85a0c, wireframe:true, transparent:true, opacity:0.10 });
+
+    var net = new THREE.Mesh(netGeo, netMat);
+
+    net.position.set(9, -3, -10);
+
+    scene.add(net);
+
+
+
+    var netGeo2 = new THREE.IcosahedronGeometry(4.5, 1);
+
+    var netMat2 = new THREE.MeshBasicMaterial({ color: 0x2a4880, wireframe:true, transparent:true, opacity:0.35 });
+
+    var net2 = new THREE.Mesh(netGeo2, netMat2);
+
+    net2.position.set(-11, 5, -6);
+
+    scene.add(net2);
+
+
+
+    var mouseX = 0, mouseY = 0;
+
+    window.addEventListener('mousemove', function(e){
+
+      mouseX = (e.clientX / window.innerWidth - 0.5);
+
+      mouseY = (e.clientY / window.innerHeight - 0.5);
+
+    });
+
+
+
+    function onResize(){
+
+      camera.aspect = window.innerWidth/window.innerHeight;
+
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+    }
+
+    window.addEventListener('resize', onResize);
+
+
+
+    var clock = new THREE.Clock();
+
+    function animate(){
+
+      requestAnimationFrame(animate);
+
+      var t = clock.getElapsedTime();
+
+      points.rotation.y = t * 0.02;
+
+      points.rotation.x = t * 0.01;
+
+      net.rotation.y = t * 0.05;
+
+      net.rotation.x = t * 0.03;
+
+      net2.rotation.y = -t * 0.04;
+
+      net2.rotation.x = t * 0.02;
+
+      camera.position.x += (mouseX * 3 - camera.position.x) * 0.02;
+
+      camera.position.y += (-mouseY * 3 - camera.position.y) * 0.02;
+
+      camera.lookAt(scene.position);
+
+      renderer.render(scene, camera);
+
+    }
+
+    animate();
+
+  }
+
+
+
+  /* ================= THREE.JS: HERO ORBIT NETWORK ================= */
+
+  function initHero(){
+
+    var canvas = document.getElementById('hero-canvas');
+
+    if(!window.THREE || reduceMotion) return;
+
+    var renderer;
+
+    try{
+
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha:true, antialias:true });
+
+    }catch(err){ return; }
+
+    var wrap = canvas.parentElement;
+
+    var w = wrap.clientWidth, h = wrap.clientHeight;
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.6));
+
+    renderer.setSize(w, h);
+
+
+
+    var scene = new THREE.Scene();
+
+    var camera = new THREE.PerspectiveCamera(50, w/h, 0.1, 100);
+
+    camera.position.set(0, 0, 15);
+
+
+
+    var group = new THREE.Group();
+
+    scene.add(group);
+
+
+
+    // nodes = "friends" orbiting a shared circle
+
+    var nodeCount = 22;
+
+    var nodes = [];
+
+    var nodeGeo = new THREE.SphereGeometry(0.11, 12, 12);
+
+    var nodeMatOrange = new THREE.MeshBasicMaterial({ color: 0xe85a0c });
+
+    var nodeMatBlue = new THREE.MeshBasicMaterial({ color: 0xc0aae8 });
+
+
+
+    var radius = 5.4;
+
+    for(var i=0;i<nodeCount;i++){
+
+      var phi = Math.acos(-1 + (2*i)/nodeCount);
+
+      var theta = Math.sqrt(nodeCount * Math.PI) * phi;
+
+      var x = radius * Math.cos(theta) * Math.sin(phi);
+
+      var y = radius * Math.sin(theta) * Math.sin(phi);
+
+      var z = radius * Math.cos(phi);
+
+      var mesh = new THREE.Mesh(nodeGeo, i % 4 === 0 ? nodeMatOrange : nodeMatBlue);
+
+      mesh.position.set(x,y,z);
+
+      group.add(mesh);
+
+      nodes.push(mesh);
+
+    }
+
+
+
+    // connecting lines between nearby nodes
+
+    var lineMat = new THREE.LineBasicMaterial({ color: 0xff7a29, transparent:true, opacity:0.18 });
+
+    var linePositions = [];
+
+    for(var a=0;a<nodes.length;a++){
+
+      for(var b=a+1;b<nodes.length;b++){
+
+        if(nodes[a].position.distanceTo(nodes[b].position) < 3.6){
+
+          linePositions.push(nodes[a].position.x, nodes[a].position.y, nodes[a].position.z);
+
+          linePositions.push(nodes[b].position.x, nodes[b].position.y, nodes[b].position.z);
+
+        }
+
+      }
+
+    }
+
+    var lineGeo = new THREE.BufferGeometry();
+
+    lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+
+    var lines = new THREE.LineSegments(lineGeo, lineMat);
+
+    group.add(lines);
+
+
+
+    // outer wire sphere shell
+
+    var shellGeo = new THREE.IcosahedronGeometry(6.6, 1);
+
+    var shellMat = new THREE.MeshBasicMaterial({ color: 0x2a4880, wireframe:true, transparent:true, opacity:0.28 });
+
+    var shell = new THREE.Mesh(shellGeo, shellMat);
+
+    group.add(shell);
+
+
+
+    var mouseX = 0, mouseY = 0;
+
+    wrap.addEventListener('mousemove', function(e){
+
+      var r = wrap.getBoundingClientRect();
+
+      mouseX = ((e.clientX - r.left)/r.width - 0.5);
+
+      mouseY = ((e.clientY - r.top)/r.height - 0.5);
+
+    });
+
+
+
+    function onResize(){
+
+      w = wrap.clientWidth; h = wrap.clientHeight;
+
+      camera.aspect = w/h;
+
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(w,h);
+
+    }
+
+    window.addEventListener('resize', onResize);
+
+
+
+    var clock = new THREE.Clock();
+
+    function animate(){
+
+      requestAnimationFrame(animate);
+
+      var t = clock.getElapsedTime();
+
+      group.rotation.y = t * 0.18 + mouseX * 0.6;
+
+      group.rotation.x = Math.sin(t*0.2)*0.15 + mouseY * 0.4;
+
+      shell.rotation.y = -t * 0.05;
+
+      renderer.render(scene, camera);
+
+    }
+
+    animate();
+
+  }
+
+
+
+  window.addEventListener('load', function(){
+
+    initBackground();
+
+    initHero();
+
+  });
+
+})();
+
+</script>
+
+
+
+
+  <!-- ================= MOBILE LIQUID GLASS BOTTOM TOGGLE ================= -->
+  <div class="mobile-liquid-toggle-wrap">
+    <div class="liquid-glass-toggle">
+      <a href="#top" class="liquid-toggle-btn active">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span>Website</span>
+      </a>
+      <div class="liquid-toggle-divider"></div>
+      <a href="index.html" class="liquid-toggle-btn launch-app">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <span>Open App &rarr;</span>
+      </a>
+    </div>
+  </div>
+
+</body>
+
+</html>

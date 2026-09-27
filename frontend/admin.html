@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mukaputa — Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+<!-- Mobile overlay -->
+<div class="adm-overlay" id="adm-overlay" onclick="closeSidebar()"></div>
+
+<div class="adm-layout">
+
+    <!-- ── Sidebar ── -->
+    <aside class="adm-sidebar" id="adm-sidebar">
+        <div class="adm-sidebar-logo">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>Admin Panel</span>
+        </div>
+
+        <nav class="adm-nav">
+            <div class="adm-nav-label">Overview</div>
+            <a class="adm-nav-item active" data-page="dashboard" onclick="showPage('dashboard',this)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+
+            <div class="adm-nav-label">Moderation</div>
+            <a class="adm-nav-item" data-page="users" onclick="showPage('users',this)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Users
+            </a>
+            <a class="adm-nav-item" data-page="reports" onclick="showPage('reports',this)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Reports
+                <span class="adm-nav-badge" id="reports-badge" style="display:none">0</span>
+            </a>
+
+            <div class="adm-nav-label">Marketing</div>
+            <a class="adm-nav-item" data-page="ads" onclick="showPage('ads',this)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                Advertisements
+            </a>
+        </nav>
+
+        <div class="adm-sidebar-footer">
+            <div class="adm-user-info">
+                <div class="adm-user-avatar" id="admin-avatar-initials">A</div>
+                <div>
+                    <div class="adm-user-name" id="admin-username">Admin</div>
+                    <div class="adm-user-role">Super Admin</div>
+                </div>
+            </div>
+            <button class="adm-logout-btn" onclick="doLogout()">Sign out</button>
+        </div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <main class="adm-main">
+        <div class="adm-topbar">
+            <button class="adm-hamburger" onclick="toggleSidebar()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <span class="adm-topbar-title" id="topbar-title">Dashboard</span>
+        </div>
+
+        <div class="adm-content">
+
+            <!-- ── DASHBOARD PAGE ── -->
+            <div class="adm-page active" id="page-dashboard">
+                <div class="adm-stats-grid" id="stats-grid">
+                    <!-- filled by JS -->
+                </div>
+                <p style="color:var(--adm-text-muted); font-size:13px; margin-top:8px;">
+                    Welcome to the Mukaputa Admin Panel. Use the sidebar to manage users, review reports, and manage advertisements.
+                </p>
+            </div>
+
+            <!-- ── USERS PAGE ── -->
+            <div class="adm-page" id="page-users">
+                <div class="adm-section-header">
+                    <span class="adm-section-title">User Management</span>
+                    <div class="adm-controls">
+                        <input class="adm-search" id="user-search" type="text" placeholder="Search users…" oninput="debounceUserSearch()">
+                    </div>
+                </div>
+                <div class="adm-table-wrap">
+                    <table class="adm-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody">
+                            <tr><td colspan="6" class="adm-empty"><p>Loading…</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="adm-pagination" id="users-pagination"></div>
+            </div>
+
+            <!-- ── REPORTS PAGE ── -->
+            <div class="adm-page" id="page-reports">
+                <div class="adm-section-header">
+                    <span class="adm-section-title">Content Reports</span>
+                    <div class="adm-controls">
+                        <select class="adm-select" id="report-status-filter" onchange="loadReports(1)">
+                            <option value="pending">Pending</option>
+                            <option value="all">All</option>
+                            <option value="removed">Removed</option>
+                            <option value="dismissed">Dismissed</option>
+                            <option value="reviewed">Reviewed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="adm-table-wrap">
+                    <table class="adm-table">
+                        <thead>
+                            <tr>
+                                <th>Reporter</th>
+                                <th>Content</th>
+                                <th>Preview</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reports-tbody">
+                            <tr><td colspan="7" class="adm-empty"><p>Loading…</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="adm-pagination" id="reports-pagination"></div>
+            </div>
+
+            <!-- ── ADS PAGE ── -->
+            <div class="adm-page" id="page-ads">
+                <div class="adm-section-header">
+                    <span class="adm-section-title">Advertisements</span>
+                    <div class="adm-controls">
+                        <button class="adm-btn adm-btn-primary" onclick="openAdModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            New Ad
+                        </button>
+                    </div>
+                </div>
+                <div class="adm-ads-grid" id="ads-grid">
+                    <p style="color:var(--adm-text-muted); font-size:13px;">Loading…</p>
+                </div>
+            </div>
+
+        </div><!-- /adm-content -->
+    </main>
+</div><!-- /adm-layout -->
+
+<!-- ── Ad Modal ── -->
+<div class="adm-modal-backdrop" id="ad-modal-backdrop" onclick="closeAdModalOnBackdrop(event)">
+    <div class="adm-modal">
+        <div class="adm-modal-title" id="ad-modal-title">New Advertisement</div>
+        <button class="adm-modal-close" onclick="closeAdModal()">×</button>
+        <input type="hidden" id="ad-modal-id">
+
+        <div class="adm-form-field">
+            <label>Title *</label>
+            <input type="text" id="ad-title" placeholder="Ad headline…">
+        </div>
+        <div class="adm-form-field">
+            <label>Body text</label>
+            <textarea id="ad-body" placeholder="Ad description…"></textarea>
+        </div>
+        <div class="adm-form-field">
+            <label>Image URL</label>
+            <input type="url" id="ad-image" placeholder="https://…">
+        </div>
+        <div class="adm-form-field">
+            <label>Destination URL</label>
+            <input type="url" id="ad-link" placeholder="https://…">
+        </div>
+        <div class="adm-form-field">
+            <label>Placement</label>
+            <select id="ad-placement">
+                <option value="feed">Feed</option>
+                <option value="sidebar">Sidebar</option>
+                <option value="stories">Stories</option>
+            </select>
+        </div>
+        <div class="adm-toggle-row">
+            <span class="adm-toggle-label">Active</span>
+            <label class="adm-toggle">
+                <input type="checkbox" id="ad-active" checked>
+                <span class="adm-toggle-slider"></span>
+            </label>
+        </div>
+
+        <div class="adm-modal-actions">
+            <button class="adm-btn" onclick="closeAdModal()" style="background:var(--adm-surface2);color:var(--adm-text);">Cancel</button>
+            <button class="adm-btn adm-btn-primary" onclick="saveAd()">Save Ad</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Toast container ── -->
+<div class="adm-toast-container" id="adm-toast-container"></div>
+
+<script src="/js/admin.js"></script>
+</body>
+</html>
