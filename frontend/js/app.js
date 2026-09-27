@@ -1997,16 +1997,29 @@ class App {
                 const urlMatch = m.text.match(/https:\/\/mukaputa\.com\/(reel|post)\/([a-zA-Z0-9_-]+)/);
                 if (urlMatch) {
                     const type = urlMatch[1];
-                    const btnLabel = type === 'reel' ? '▶ View Reel' : 'View Post';
-                    const viewTarget = type === 'reel' ? 'reels' : 'home';
+                    const linkId = urlMatch[2];
+                    let embedHtml = `<br><button type="button" style="margin-top: 8px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" onclick="app.switchView('${type === 'reel' ? 'reels' : 'home'}')">${type === 'reel' ? '▶ View Reel' : 'View Post'}</button>`;
                     
-                    // Replace the raw URL with a nice clickable button
-                    textContent = textContent.replace(
-                        urlMatch[0], 
-                        `<br><button type="button" style="margin-top: 8px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" onclick="app.switchView('${viewTarget}')">${btnLabel}</button>`
-                    );
+                    if (type === 'reel') {
+                        const reel = store.getReels().find(r => r.id === linkId);
+                        if (reel) {
+                            const author = store.getUser(reel.authorId);
+                            embedHtml = `
+                                <div style="margin-top: 8px; border-radius: 12px; overflow: hidden; background: #000; width: 180px; height: 320px; position: relative; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.5);" onclick="app.switchView('reels')">
+                                    <video src="${escapeHtml(reel.videoUrl)}" style="width: 100%; height: 100%; object-fit: cover;" muted autoplay loop playsinline></video>
+                                    <div style="position: absolute; bottom: 12px; left: 12px; display: flex; align-items: center; gap: 6px; z-index: 2;">
+                                        <img src="${escapeHtml(author?.avatar || '')}" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3);">
+                                        <span style="color: white; font-size: 12px; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${escapeHtml(author?.name || 'Unknown')}</span>
+                                    </div>
+                                    <div style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; backdrop-filter: blur(4px);">
+                                        Reel
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
                     
-                    // Replace newlines with <br> for the rest of the text
+                    textContent = textContent.replace(urlMatch[0], embedHtml);
                     textContent = textContent.replace(/\n/g, '<br>');
                 } else {
                     // Regular text
