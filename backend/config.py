@@ -20,6 +20,16 @@ class Config:
 
     SQLALCHEMY_DATABASE_URI = raw_db_url
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Supabase free tier limits session mode to 15 connections.
+    # Limit the pool to 2 connections (+3 overflow = max 5) so that
+    # zero-downtime deploys (2 active containers) don't exceed the 15 limit.
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_size": 2,
+        "max_overflow": 3,
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+    }
 
     SUPABASE_URL = os.environ.get("SUPABASE_URL")
     SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
