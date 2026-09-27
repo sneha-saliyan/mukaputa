@@ -55,6 +55,9 @@ def handle_call_invite(data):
     if not to_user or not call_id:
         return
 
+    # Debug ping back to caller so we know the server executed this
+    emit("call:debug", {"message": "Server routing call to " + to_user})
+
     emit("call:incoming", {
         "callId": call_id,
         "fromUserId": current_user.id,

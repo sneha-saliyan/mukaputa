@@ -94,6 +94,9 @@ const Calls = {
         this.socket.on('call:ended', (data) => this.onRemoteEnded(data));
         this.socket.on('call:unavailable', (data) => this.onUnavailable(data));
         this.socket.on('call:signal', (data) => this.onSignal(data));
+        this.socket.on('call:debug', (data) => {
+            if (typeof app !== 'undefined' && app.showToast) app.showToast(data.message, 'info');
+        });
     },
 
     // Resolves true once the socket is actually connected, waiting briefly
@@ -165,6 +168,9 @@ const Calls = {
     },
 
     onIncoming(data) {
+        console.log('[Calls] Incoming call signal received!', data);
+        if (typeof app !== 'undefined' && app.showToast) app.showToast('Call signal received!', 'info');
+
         if (this.currentCall) {
             this.socket.emit('call:decline', { toUserId: data.fromUserId, callId: data.callId });
             return;
