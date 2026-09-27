@@ -18,6 +18,11 @@ class Config:
     elif raw_db_url.startswith("postgresql://") and not raw_db_url.startswith("postgresql+"):
         raw_db_url = raw_db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
+    # Automatically switch Supabase from Session mode (port 5432, max 15)
+    # to Transaction mode (port 6543, max 200+) to fix deployment crashes.
+    if ".pooler.supabase.com" in raw_db_url and ":5432" in raw_db_url:
+        raw_db_url = raw_db_url.replace(":5432", ":6543")
+
     SQLALCHEMY_DATABASE_URI = raw_db_url
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
