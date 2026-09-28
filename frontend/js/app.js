@@ -3036,9 +3036,18 @@ class App {
     }
 
     // Story Creation Modal
+    triggerStoryUpload() {
+        const input = document.getElementById('story-image-upload');
+        if (input) {
+            input.value = ''; // clear so onchange always fires
+            input.click();
+        }
+    }
+
     openCreateStoryModal() {
         document.getElementById('create-story-modal').classList.remove('hidden');
         document.getElementById('story-preview-container').style.display = 'none';
+        document.getElementById('story-upload-box').style.display = 'block';
         document.getElementById('story-image-upload').value = '';
         this._pendingStoryFile = null;
         this._pendingStoryUpload = null;
@@ -3050,6 +3059,8 @@ class App {
             this._pendingStoryFile = file;
             document.getElementById('story-preview-img').src = URL.createObjectURL(file);
             document.getElementById('story-preview-container').style.display = 'block';
+            document.getElementById('story-upload-box').style.display = 'none';
+            document.getElementById('create-story-modal').classList.remove('hidden');
             this._pendingStoryUpload = this.uploadFile(file);
         }
     }

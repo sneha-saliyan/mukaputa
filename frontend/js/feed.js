@@ -47,7 +47,7 @@ class Feed {
                         <span class="story-name">Your Story</span>
                         
                         <!-- Mini add button to append to story -->
-                        <div onclick="event.stopPropagation(); app.openCreateStoryModal();" style="position: absolute; bottom: 32px; right: 8px; width: 28px; height: 28px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; border: 2px solid var(--bg-card); box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10;" title="Add to your story">
+                        <div onclick="event.stopPropagation(); app.triggerStoryUpload();" style="position: absolute; bottom: 32px; right: 8px; width: 28px; height: 28px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; border: 2px solid var(--bg-card); box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10;" title="Add to your story">
                             +
                         </div>
                     </div>
@@ -55,7 +55,7 @@ class Feed {
             } else {
                 // Standard create story card
                 myStoryCard = `
-                    <div class="story-card create-story-card" onclick="app.openCreateStoryModal()">
+                    <div class="story-card create-story-card" onclick="app.triggerStoryUpload()">
                         <img src="${currentUser.avatar}" alt="User" class="story-img">
                         <div class="create-story-footer">
                             <div class="add-story-btn">+</div>
@@ -300,4 +300,5 @@ class Feed {
 }
 
 const feed = new Feed();
+
 
