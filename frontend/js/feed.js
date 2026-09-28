@@ -81,7 +81,7 @@ class Feed {
                     <div class="card" style="background: linear-gradient(135deg, rgba(255,122,41,0.12) 0%, rgba(30,41,59,0.5) 100%); border-left: 4px solid var(--accent); margin-bottom: 16px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                             <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="font-size: 20px;">✨</span>
+                                <span style="font-size: 20px;"></span>
                                 <strong style="font-size: 15px; font-family: var(--font-heading); color: var(--accent);">On This Day — Memories</strong>
                             </div>
                             <span class="text-secondary" style="font-size: 12px;">2 years ago</span>
@@ -211,10 +211,10 @@ class Feed {
                 if (postEl) {
                     const postId = postEl.id.replace('post-', '');
                     const rect = mediaContainer.getBoundingClientRect();
-                    this.spawnReactionFloater('❤️', rect.left + rect.width / 2 - 16, rect.top + rect.height / 2 - 16);
+                    this.spawnReactionFloater('', rect.left + rect.width / 2 - 16, rect.top + rect.height / 2 - 16);
                     store.toggleReaction(postId, 'love', store.db.currentUserId);
                     app.forceRenderCurrentView();
-                    app.showToast('Loved post ❤️', 'success');
+                    app.showToast('Loved post ', 'success');
                 }
             }
 
@@ -235,12 +235,12 @@ class Feed {
 
                 const rect = postAction.getBoundingClientRect();
                 if (!currentReaction) {
-                    this.spawnReactionFloater('👍', rect.left + 20, rect.top - 10);
+                    this.spawnReactionFloater('', rect.left + 20, rect.top - 10);
                 }
 
                 store.toggleReaction(postId, currentReaction ? null : 'like', store.db.currentUserId);
                 app.forceRenderCurrentView();
-                if (!currentReaction) app.showToast('Liked post 👍', 'success');
+                if (!currentReaction) app.showToast('Liked post ', 'success');
             }
         });
 
@@ -261,7 +261,7 @@ class Feed {
                     });
                     e.target.value = '';
                     app.forceRenderCurrentView();
-                    app.showToast('Comment posted! 💬', 'success');
+                    app.showToast('Comment posted! ', 'success');
                 }
             }
         });
@@ -295,7 +295,7 @@ class Feed {
         };
         store.addPost(newPost);
         app.forceRenderCurrentView();
-        app.showToast('Post published to your feed! 🚀', 'success');
+        app.showToast('Post published to your feed! ', 'success');
     }
 }
 

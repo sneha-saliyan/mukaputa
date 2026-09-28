@@ -20,13 +20,13 @@ function timeAgo(dateString) {
 
 function getReactionEmoji(type) {
     switch (type) {
-        case 'like': return '👍';
-        case 'love': return '❤️';
-        case 'haha': return '😂';
-        case 'wow': return '😮';
-        case 'sad': return '😢';
-        case 'angry': return '😡';
-        default: return '👍';
+        case 'like': return '';
+        case 'love': return '';
+        case 'haha': return '';
+        case 'wow': return '';
+        case 'sad': return '';
+        case 'angry': return '';
+        default: return '';
     }
 }
 
@@ -151,7 +151,7 @@ function renderPost(post) {
                             ${author.name} ${feelingHtml}
                         </div>
                         <div class="post-meta">
-                            <span>${timeAgo(post.createdAt)}</span> · <span>🌐 Public</span>
+                            <span>${timeAgo(post.createdAt)}</span> · <span> Public</span>
                         </div>
                     </div>
                 </div>
@@ -205,12 +205,12 @@ function renderPost(post) {
             <div class="post-actions">
                 <div class="post-action ${actionColorClass}" data-action="react" data-post-id="${post.id}">
                     <div class="reaction-picker hidden" id="picker-${post.id}">
-                        <span class="reaction-icon" data-type="like" title="Like">👍</span>
-                        <span class="reaction-icon" data-type="love" title="Love">❤️</span>
-                        <span class="reaction-icon" data-type="haha" title="Haha">😂</span>
-                        <span class="reaction-icon" data-type="wow" title="Wow">😮</span>
-                        <span class="reaction-icon" data-type="sad" title="Sad">😢</span>
-                        <span class="reaction-icon" data-type="angry" title="Angry">😡</span>
+                        <span class="reaction-icon" data-type="like" title="Like"></span>
+                        <span class="reaction-icon" data-type="love" title="Love"></span>
+                        <span class="reaction-icon" data-type="haha" title="Haha"></span>
+                        <span class="reaction-icon" data-type="wow" title="Wow"></span>
+                        <span class="reaction-icon" data-type="sad" title="Sad"></span>
+                        <span class="reaction-icon" data-type="angry" title="Angry"></span>
                     </div>
                     ${actionEmoji ? `<span style="font-size: 18px;">${actionEmoji}</span>` : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>`}
                     <span>${actionText}</span>
@@ -424,7 +424,7 @@ function renderWatchVideo(video) {
                         </div>
                         <h3 style="font-size: 17px; font-weight: 700; line-height: 1.35; margin-bottom: 8px;">${escapeHtml(video.title)}</h3>
                         ${video.description ? `<p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">${escapeHtml(video.description)}</p>` : ''}
-                        <p class="text-secondary" style="font-size: 12px; margin-bottom: 12px;">👁️ ${video.views || '100K views'} · ${video.category}</p>
+                        <p class="text-secondary" style="font-size: 12px; margin-bottom: 12px;"> ${video.views || '100K views'} · ${video.category}</p>
                     </div>
                 </div>
                 <div style="display: flex; gap: 10px; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--border); flex-wrap: wrap;">
@@ -436,7 +436,7 @@ function renderWatchVideo(video) {
                         <a href="${video.url}" target="_blank" rel="noopener noreferrer" class="btn btn-sm" style="${buttonBg} border: none; border-radius: 20px; padding: 7px 16px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" onclick="event.stopPropagation();">
                             ${buttonLabel}
                         </a>
-                        <button class="btn btn-secondary btn-sm" style="border-radius: 20px; padding: 7px 14px;" onclick="event.stopPropagation(); app.copyText('${video.url}', 'Link copied to clipboard! 📋');">
+                        <button class="btn btn-secondary btn-sm" style="border-radius: 20px; padding: 7px 14px;" onclick="event.stopPropagation(); app.copyText('${video.url}', 'Link copied to clipboard! ');">
                             Share
                         </button>
                     </div>
@@ -466,7 +466,7 @@ function renderJobCard(job) {
                     <h3 class="job-title">${escapeHtml(job.title)}</h3>
                     <div class="job-company-name">${escapeHtml(job.company)}</div>
                     <div class="job-meta">
-                        <span>📍 ${job.location}</span>
+                        <span> ${job.location}</span>
                         <span class="job-remote-badge" style="background: ${remoteColor}20; color: ${remoteColor}; border: 1px solid ${remoteColor}40;">${job.remote}</span>
                     </div>
                 </div>
@@ -480,21 +480,21 @@ function renderJobCard(job) {
             <div class="job-tags">
                 <span class="job-tag">${job.category}</span>
                 <span class="job-tag">${job.type}</span>
-                ${job.requirements.slice(0, 2).map(r => `<span class="job-tag job-tag-req">✓ ${escapeHtml(r)}</span>`).join('')}
+                ${job.requirements.slice(0, 2).map(r => `<span class="job-tag job-tag-req"> ${escapeHtml(r)}</span>`).join('')}
             </div>
 
-            <div class="job-salary">💰 ${escapeHtml(job.salary)}</div>
+            <div class="job-salary"> ${escapeHtml(job.salary)}</div>
 
             <div class="job-footer">
                 <div class="job-footer-left">
                     <img src="${poster.avatar}" class="avatar-xs" alt="${poster.name}">
                     <span class="job-posted-by">Posted by <strong>${poster.name}</strong> · ${postedLabel}</span>
-                    <span class="job-applicants">👥 ${job.applicants} applicants</span>
+                    <span class="job-applicants"> ${job.applicants} applicants</span>
                 </div>
                 <div class="job-actions">
                     <button class="btn btn-outline btn-sm" onclick="app.viewJobDetails('${job.id}')">Details</button>
                     <button class="btn ${applied ? 'btn-secondary' : 'btn-primary'} btn-sm" onclick="app.applyToJob('${job.id}')">
-                        ${applied ? '✓ Applied' : 'Apply Now'}
+                        ${applied ? ' Applied' : 'Apply Now'}
                     </button>
                 </div>
             </div>
@@ -514,36 +514,36 @@ function renderJobDetailsModal(job) {
             <div>
                 <h2 style="font-size: 22px; font-weight: 800;">${escapeHtml(job.title)}</h2>
                 <div style="font-size: 16px; font-weight: 600; color: var(--accent); margin: 4px 0;">${escapeHtml(job.company)}</div>
-                <div style="color: var(--text-secondary); font-size: 14px;">📍 ${job.location} · ${job.remote} · ${job.type}</div>
+                <div style="color: var(--text-secondary); font-size: 14px;"> ${job.location} · ${job.remote} · ${job.type}</div>
             </div>
         </div>
 
-        <div class="job-detail-salary" style="font-size: 18px; font-weight: 700; margin: 16px 0; color: #22c55e;">💰 ${escapeHtml(job.salary)}</div>
+        <div class="job-detail-salary" style="font-size: 18px; font-weight: 700; margin: 16px 0; color: #22c55e;"> ${escapeHtml(job.salary)}</div>
 
         <h4 style="font-weight: 700; margin-bottom: 8px;">About the Role</h4>
         <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">${escapeHtml(job.description)}</p>
 
         <h4 style="font-weight: 700; margin-bottom: 10px;">Requirements</h4>
         <ul style="margin-bottom: 20px; padding-left: 20px;">
-            ${job.requirements.map(r => `<li style="color: var(--text-secondary); margin-bottom: 6px; line-height: 1.5;">✓ ${escapeHtml(r)}</li>`).join('')}
+            ${job.requirements.map(r => `<li style="color: var(--text-secondary); margin-bottom: 6px; line-height: 1.5;"> ${escapeHtml(r)}</li>`).join('')}
         </ul>
 
         <h4 style="font-weight: 700; margin-bottom: 10px;">Benefits & Perks</h4>
         <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">
-            ${job.benefits.map(b => `<span class="job-tag" style="background: var(--accent-light); color: var(--accent);">🎁 ${escapeHtml(b)}</span>`).join('')}
+            ${job.benefits.map(b => `<span class="job-tag" style="background: var(--accent-light); color: var(--accent);"> ${escapeHtml(b)}</span>`).join('')}
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding: 12px; background: var(--bg-secondary); border-radius: var(--radius-md);">
             <img src="${poster.avatar}" class="avatar-small" alt="${poster.name}">
             <div>
                 <div style="font-weight: 600; font-size: 14px;">Posted by ${escapeHtml(poster.name)}</div>
-                <div style="color: var(--text-secondary); font-size: 12px;">${daysAgo === 0 ? 'Today' : daysAgo + 'd ago'} · 👥 ${job.applicants} total applicants</div>
+                <div style="color: var(--text-secondary); font-size: 12px;">${daysAgo === 0 ? 'Today' : daysAgo + 'd ago'} ·  ${job.applicants} total applicants</div>
             </div>
             <button class="btn btn-outline btn-sm" style="margin-left: auto;" onclick="app.startChatWithUser('${poster.id}', 'Hi! I saw your job posting for ${job.title} at ${job.company}. I'd love to learn more.')">Message</button>
         </div>
 
         <button class="btn ${applied ? 'btn-secondary' : 'btn-primary'} full-width" style="font-size: 16px; padding: 14px;" onclick="app.applyToJob('${job.id}'); document.getElementById('job-details-modal').classList.add('hidden');">
-            ${applied ? '✓ Already Applied' : '🚀 Apply Now'}
+            ${applied ? ' Already Applied' : ' Apply Now'}
         </button>
     `;
 }
@@ -561,11 +561,11 @@ function renderGroup(group) {
             <img src="${group.cover}" style="width: 84px; height: 84px; border-radius: var(--radius-md); object-fit: cover;" alt="${group.name}">
             <div style="flex: 1;">
                 <h3 style="font-size: 17px; font-weight: 700; margin-bottom: 4px;">${group.name}</h3>
-                <p class="text-secondary" style="font-size: 13px; margin-bottom: 6px;">${group.memberIds ? group.memberIds.length : 0} members · ${group.private ? '🔒 Private' : '🌐 Public group'}</p>
+                <p class="text-secondary" style="font-size: 13px; margin-bottom: 6px;">${group.memberIds ? group.memberIds.length : 0} members · ${group.private ? ' Private' : ' Public group'}</p>
                 <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">${group.description}</p>
             </div>
             <button class="btn ${isMember ? 'btn-secondary' : 'btn-primary'}" onclick="app.toggleGroupMembership('${group.id}')">
-                ${isMember ? 'Joined ✓' : 'Join Group'}
+                ${isMember ? 'Joined ' : 'Join Group'}
             </button>
         </div>
     `;
@@ -587,7 +587,7 @@ function renderPage(page) {
                 <p style="font-size: 13px; color: var(--text-secondary);">${page.description}</p>
             </div>
             <button class="btn ${isFollowing ? 'btn-secondary' : 'btn-primary'}" onclick="app.togglePageFollow('${page.id}')">
-                ${isFollowing ? 'Following ✓' : 'Follow'}
+                ${isFollowing ? 'Following ' : 'Follow'}
             </button>
         </div>
     `;
@@ -616,12 +616,12 @@ function renderEvent(event) {
             <div style="flex: 1;">
                 <span style="font-size: 12px; font-weight: 600; color: var(--accent);">${dateStr}</span>
                 <h3 style="font-size: 17px; font-weight: 700; margin: 2px 0;">${event.title}</h3>
-                <p class="text-secondary" style="font-size: 13px;">📍 ${event.location} · Hosted by ${host.name}</p>
+                <p class="text-secondary" style="font-size: 13px;"> ${event.location} · Hosted by ${host.name}</p>
                 <p class="text-secondary" style="font-size: 12px; margin-top: 4px;">${(event.rsvps && event.rsvps.going) ? event.rsvps.going.length : 0} going · ${(event.rsvps && event.rsvps.interested) ? event.rsvps.interested.length : 0} interested</p>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
                 <button class="btn ${isGoing ? 'btn-primary' : 'btn-secondary'} btn-sm" onclick="app.rsvpEvent('${event.id}', 'going')">
-                    ${isGoing ? 'Going ✓' : 'Going'}
+                    ${isGoing ? 'Going ' : 'Going'}
                 </button>
                 <button class="btn ${isInterested ? 'btn-primary' : 'btn-outline'} btn-sm" onclick="app.rsvpEvent('${event.id}', 'interested')">
                     ${isInterested ? 'Interested ⭐' : 'Interested'}
@@ -676,11 +676,11 @@ function renderContact(user) {
 // ==========================================
 function renderNotificationItem(notif) {
     const actor = notif.actorId ? store.getUser(notif.actorId) : { name: "System Admin", avatar: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Check_green_icon.svg/120px-Check_green_icon.svg.png" };
-    let iconBadge = '👍';
-    if (notif.type === 'love') iconBadge = '❤️';
-    if (notif.type === 'comment') iconBadge = '💬';
-    if (notif.type === 'friend_request') iconBadge = '👥';
-    if (notif.type === 'event_invite') iconBadge = '📅';
+    let iconBadge = '';
+    if (notif.type === 'love') iconBadge = '';
+    if (notif.type === 'comment') iconBadge = '';
+    if (notif.type === 'friend_request') iconBadge = '';
+    if (notif.type === 'event_invite') iconBadge = '';
 
     return `
         <div class="menu-item ${notif.read ? '' : 'unread'}" style="padding: 10px; gap: 12px; position: relative;" onclick="app.handleNotificationClick('${notif.id}', '${notif.type}', '${notif.targetId}')">
@@ -777,7 +777,7 @@ function renderProfileView(user, currentTab = 'posts') {
 
                 <!-- Name & Username -->
                 <h2 class="profile-name">${escapeHtml(user.name)}</h2>
-                <div class="profile-username-row">@${user.username}${user.location ? ` · 📍 ${user.location}` : ''}</div>
+                <div class="profile-username-row">@${user.username}${user.location ? ` ·  ${user.location}` : ''}</div>
 
                 <!-- Bio -->
                 ${user.bio ? `<p class="profile-bio">${escapeHtml(user.bio)}</p>` : (isMe ? `<p class="profile-bio" style="color: var(--text-secondary); font-style: italic;">Add a bio to tell people about yourself</p>` : '')}
@@ -808,10 +808,10 @@ function renderProfileView(user, currentTab = 'posts') {
                     ` : `
                         <button class="btn ${isFriend ? 'btn-secondary' : 'btn-primary'}" 
                                 onclick="${isFriend ? `app.removeFriend('${user.id}')` : `app.addFriend('${user.id}')`}">
-                            ${isFriend ? '✓ Friends' : '+ Add Friend'}
+                            ${isFriend ? ' Friends' : '+ Add Friend'}
                         </button>
                         <button class="btn btn-secondary" onclick="app.startChatWithUser('${user.id}')">
-                            💬 Message
+                             Message
                         </button>
                         <button class="btn btn-outline btn-sm" onclick="app.toggleFollow('${user.id}')" title="Follow">
                             Follow
@@ -853,11 +853,11 @@ function renderProfileView(user, currentTab = 'posts') {
                         <div class="card" style="margin-bottom: 16px;">
                             <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">Intro</h3>
                             <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: var(--text-secondary);">
-                                ${user.work ? `<div style="display: flex; align-items: center; gap: 8px;">💼 <span>Works at <strong style="color: var(--text-primary);">${escapeHtml(user.work)}</strong></span></div>` : ''}
-                                ${user.education ? `<div style="display: flex; align-items: center; gap: 8px;">🎓 <span>Studied at <strong style="color: var(--text-primary);">${escapeHtml(user.education)}</strong></span></div>` : ''}
-                                <div style="display: flex; align-items: center; gap: 8px;">📍 <span>Lives in <strong style="color: var(--text-primary);">${user.location || 'San Francisco, CA'}</strong></span></div>
-                                <div style="display: flex; align-items: center; gap: 8px;">🗓️ <span><strong style="color: var(--text-primary);">${user.joined || 'Joined 2022'}</strong></span></div>
-                                ${isMe ? `<button class="btn btn-secondary btn-sm full-width" style="margin-top: 6px;" onclick="app.openEditProfileModal()">✏️ Edit details</button>` : ''}
+                                ${user.work ? `<div style="display: flex; align-items: center; gap: 8px;"> <span>Works at <strong style="color: var(--text-primary);">${escapeHtml(user.work)}</strong></span></div>` : ''}
+                                ${user.education ? `<div style="display: flex; align-items: center; gap: 8px;"> <span>Studied at <strong style="color: var(--text-primary);">${escapeHtml(user.education)}</strong></span></div>` : ''}
+                                <div style="display: flex; align-items: center; gap: 8px;"> <span>Lives in <strong style="color: var(--text-primary);">${user.location || 'San Francisco, CA'}</strong></span></div>
+                                <div style="display: flex; align-items: center; gap: 8px;"> <span><strong style="color: var(--text-primary);">${user.joined || 'Joined 2022'}</strong></span></div>
+                                ${isMe ? `<button class="btn btn-secondary btn-sm full-width" style="margin-top: 6px;" onclick="app.openEditProfileModal()"> Edit details</button>` : ''}
                             </div>
                         </div>
                     </div>
@@ -865,7 +865,7 @@ function renderProfileView(user, currentTab = 'posts') {
                         ${userPosts.length > 0 
                         ? userPosts.map(p => renderPost(p)).join('') 
                         : `<div class="card" style="text-align:center; padding: 48px 20px;">
-                               <div style="font-size: 40px; margin-bottom: 12px;">📝</div>
+                               <div style="font-size: 40px; margin-bottom: 12px;"></div>
                                <p class="text-secondary">No posts yet${isMe ? '. Share something!' : '.'}</p>
                                ${isMe ? `<button class="btn btn-primary" style="margin-top: 12px;" onclick="app.openCreatePostModal()">Create Post</button>` : ''}
                            </div>`}
@@ -889,7 +889,7 @@ function renderProfileView(user, currentTab = 'posts') {
                     </div>
                 ` : `
                     <div class="card" style="text-align:center; padding: 60px 20px;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">📷</div>
+                        <div style="font-size: 48px; margin-bottom: 12px;"></div>
                         <p class="text-secondary">No photos yet${isMe ? '. Add a post with a photo!' : '.'}</p>
                         ${isMe ? `<button class="btn btn-primary" style="margin-top: 12px;" onclick="app.openCreatePostModal('photo')">Upload Photo</button>` : ''}
                     </div>
@@ -904,7 +904,7 @@ function renderProfileView(user, currentTab = 'posts') {
                     </div>
                 ` : `
                     <div class="card" style="text-align:center; padding: 60px 20px;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">🎬</div>
+                        <div style="font-size: 48px; margin-bottom: 12px;"></div>
                         <p class="text-secondary">No reels yet${isMe ? '. Upload a reel!' : '.'}</p>
                         ${isMe ? `<button class="btn btn-primary" style="margin-top: 12px;" onclick="app.openCreateReelModal()">Upload Reel</button>` : ''}
                     </div>
@@ -917,35 +917,35 @@ function renderProfileView(user, currentTab = 'posts') {
                     <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 20px;">About ${escapeHtml(user.name)}</h3>
                     <div style="display: flex; flex-direction: column; gap: 18px;">
                         <div class="profile-about-item">
-                            <div class="profile-about-icon">💬</div>
+                            <div class="profile-about-icon"></div>
                             <div>
                                 <div class="profile-about-label">Bio</div>
                                 <div class="profile-about-value">${user.bio ? escapeHtml(user.bio) : '<em style="color:var(--text-secondary)">Not set</em>'}</div>
                             </div>
                         </div>
                         <div class="profile-about-item">
-                            <div class="profile-about-icon">💼</div>
+                            <div class="profile-about-icon"></div>
                             <div>
                                 <div class="profile-about-label">Work</div>
                                 <div class="profile-about-value">${user.work ? escapeHtml(user.work) : '<em style="color:var(--text-secondary)">Not set</em>'}</div>
                             </div>
                         </div>
                         <div class="profile-about-item">
-                            <div class="profile-about-icon">🎓</div>
+                            <div class="profile-about-icon"></div>
                             <div>
                                 <div class="profile-about-label">Education</div>
                                 <div class="profile-about-value">${user.education ? escapeHtml(user.education) : '<em style="color:var(--text-secondary)">Not set</em>'}</div>
                             </div>
                         </div>
                         <div class="profile-about-item">
-                            <div class="profile-about-icon">📍</div>
+                            <div class="profile-about-icon"></div>
                             <div>
                                 <div class="profile-about-label">Location</div>
                                 <div class="profile-about-value">${user.location ? escapeHtml(user.location) : '<em style="color:var(--text-secondary)">Not set</em>'}</div>
                             </div>
                         </div>
                         <div class="profile-about-item">
-                            <div class="profile-about-icon">🗓️</div>
+                            <div class="profile-about-icon"></div>
                             <div>
                                 <div class="profile-about-label">Joined</div>
                                 <div class="profile-about-value">${user.joined || 'Joined 2022'}</div>
@@ -953,7 +953,7 @@ function renderProfileView(user, currentTab = 'posts') {
                         </div>
                         ${isMe ? `
                             <button class="btn btn-secondary full-width" onclick="app.openEditProfileModal()">
-                                ✏️ Edit About Info
+                                 Edit About Info
                             </button>
                         ` : ''}
                     </div>
@@ -968,7 +968,7 @@ function renderProfileView(user, currentTab = 'posts') {
                     </div>
                 ` : `
                     <div class="card" style="text-align:center; padding: 60px 20px;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">👥</div>
+                        <div style="font-size: 48px; margin-bottom: 12px;"></div>
                         <p class="text-secondary">No friends yet.</p>
                         ${isMe ? `<button class="btn btn-primary" style="margin-top: 12px;" onclick="app.switchView('friends')">Find Friends</button>` : ''}
                     </div>
@@ -979,7 +979,7 @@ function renderProfileView(user, currentTab = 'posts') {
             ${currentTab === 'saved' && isMe ? `
                 ${savedPosts.length > 0 ? `
                     <div>
-                        <p class="text-secondary" style="font-size: 13px; margin-bottom: 16px;">🔒 ${savedPosts.length} saved item${savedPosts.length !== 1 ? 's' : ''} - only visible to you</p>
+                        <p class="text-secondary" style="font-size: 13px; margin-bottom: 16px;"> ${savedPosts.length} saved item${savedPosts.length !== 1 ? 's' : ''} - only visible to you</p>
                         <div class="saved-posts-grid">
                             ${savedPosts.map(p => {
                                 const author = store.getUser(p.authorId) || store.getUser(p.userId);
@@ -992,7 +992,7 @@ function renderProfileView(user, currentTab = 'posts') {
                                         mediaHtml = `<img src="${mediaUrl}" style="width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid var(--border-color);">`;
                                     }
                                 } else {
-                                    mediaHtml = `<div style="width: 100%; height: 160px; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border-color);"><span style="font-size: 32px; color: var(--text-secondary);">📝</span></div>`;
+                                    mediaHtml = `<div style="width: 100%; height: 160px; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border-color);"><span style="font-size: 32px; color: var(--text-secondary);"></span></div>`;
                                 }
 
                                 return `
@@ -1017,7 +1017,7 @@ function renderProfileView(user, currentTab = 'posts') {
                     </div>
                 ` : `
                     <div class="card" style="text-align:center; padding: 60px 20px;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">🔖</div>
+                        <div style="font-size: 48px; margin-bottom: 12px;"></div>
                         <p class="text-secondary">Nothing saved yet.</p>
                         <p class="text-secondary" style="font-size: 13px; margin-top: 6px;">Tap the bookmark icon on any post to save it here.</p>
                     </div>

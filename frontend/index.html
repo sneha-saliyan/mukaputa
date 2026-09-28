@@ -10,10 +10,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="css/variables.css?v=105">
-    <link rel="stylesheet" href="css/layout.css?v=105">
-    <link rel="stylesheet" href="css/components.css?v=105">
-    <link rel="stylesheet" href="css/feed.css?v=105">
+    <link rel="stylesheet" href="css/variables.css?v=106">
+    <link rel="stylesheet" href="css/layout.css?v=106">
+    <link rel="stylesheet" href="css/components.css?v=106">
+    <link rel="stylesheet" href="css/feed.css?v=106">
     <link rel="stylesheet" href="css/realtime.css">
     <style>
         #app-splash {
@@ -290,10 +290,10 @@
                 </div>
                 <div class="filter-pills" id="watch-filter-pills">
                     <div class="pill active" onclick="app.filterWatchVideos('All', this)">All</div>
-                    <div class="pill" onclick="app.filterWatchVideos('Education', this)">ðŸŽ“ Education</div>
-                    <div class="pill" onclick="app.filterWatchVideos('IT Field', this)">ðŸ’» IT Field</div>
+                    <div class="pill" onclick="app.filterWatchVideos('Education', this)"> Education</div>
+                    <div class="pill" onclick="app.filterWatchVideos('IT Field', this)"> IT Field</div>
                     <div class="pill" onclick="app.filterWatchVideos('YouTube', this)">â–¶ï¸ YouTube Tutorials</div>
-                    <div class="pill" onclick="app.filterWatchVideos('Google', this)">ðŸŒ Google Resources</div>
+                    <div class="pill" onclick="app.filterWatchVideos('Google', this)"> Google Resources</div>
                 </div>
             </div>
             <div id="watch-container"></div>
@@ -596,13 +596,13 @@
                     <div>
                         <strong class="current-user-name" style="font-size: 14px;">John Doe</strong>
                         <div style="display: flex; gap: 6px; margin-top: 2px;">
-                            <span class="pill" style="padding: 2px 8px; font-size: 11px;">ðŸŒ Public â–¾</span>
+                            <span class="pill" style="padding: 2px 8px; font-size: 11px;"> Public â–¾</span>
                             <select id="post-feeling-select" class="pill" style="padding: 2px 8px; font-size: 11px; border: none; background: var(--bg-secondary);">
-                                <option value="">ðŸ˜„ Feeling / Activity</option>
+                                <option value=""> Feeling / Activity</option>
                                 <option value="feeling excited">âœ¨ feeling excited</option>
-                                <option value="feeling happy">ðŸ˜Š feeling happy</option>
-                                <option value="feeling peaceful">ðŸŒ„ feeling peaceful</option>
-                                <option value="feeling motivated">ðŸš€ feeling motivated</option>
+                                <option value="feeling happy"> feeling happy</option>
+                                <option value="feeling peaceful"> feeling peaceful</option>
+                                <option value="feeling motivated"> feeling motivated</option>
                             </select>
                         </div>
                     </div>
@@ -646,7 +646,7 @@
                 </div>
                 <div style="display: flex; gap: 8px; align-items: center; z-index: 10;">
                     <button class="icon-btn-small" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 12px; padding: 4px 10px; border-radius: 12px; width: auto;" onclick="app.toggleStoryFit('viewer')">Fit/Fill</button>
-                    <button class="icon-btn-small hidden" id="story-delete-btn" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 14px;" onclick="app.deleteCurrentStory()" title="Delete Story">ðŸ—‘ï¸</button>
+                    <button class="icon-btn-small hidden" id="story-delete-btn" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 14px;" onclick="app.deleteCurrentStory()" title="Delete Story"></button>
                     <button class="icon-btn-small" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 14px;" onclick="app.openStorySettings()" title="Story Settings">âš™ï¸</button>
                     <button class="close-btn" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 18px; margin-left: 8px;" onclick="app.closeStoryViewer()">âœ•</button>
                 </div>
@@ -682,7 +682,7 @@
         <div class="live-studio-container">
             <video id="live-webcam-preview" class="live-video-stream" autoplay playsinline muted></video>
             
-            <div class="live-badge">ðŸ”´ LIVE</div>
+            <div class="live-badge"> LIVE</div>
             <div class="live-viewer-count" id="live-viewers-count">14 viewers</div>
 
             <div class="live-comments-stream" id="live-comments-stream"></div>
@@ -1005,8 +1005,8 @@
                 
                 <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Privacy</label>
                 <select id="create-group-privacy" class="input-text" style="width: 100%; box-sizing: border-box; margin-bottom: 16px;">
-                    <option value="public">ðŸŒ Public (Anyone can see who's in the group and what they post)</option>
-                    <option value="private">ðŸ”’ Private (Only members can see who's in the group and what they post)</option>
+                    <option value="public"> Public (Anyone can see who's in the group and what they post)</option>
+                    <option value="private"> Private (Only members can see who's in the group and what they post)</option>
                 </select>
 
                 <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Description</label>
@@ -1337,8 +1337,8 @@
                 
                 <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Privacy</label>
                 <select id="create-group-privacy" class="input-text" style="width: 100%; box-sizing: border-box; margin-bottom: 16px;">
-                    <option value="public">ðŸŒ Public (Anyone can see who's in the group and what they post)</option>
-                    <option value="private">ðŸ”’ Private (Only members can see who's in the group and what they post)</option>
+                    <option value="public"> Public (Anyone can see who's in the group and what they post)</option>
+                    <option value="private"> Private (Only members can see who's in the group and what they post)</option>
                 </select>
 
                 <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Description</label>
@@ -1531,14 +1531,15 @@
 
     <!-- Scripts -->
     <script src="js/vendor/socket.io.min.js"></script>
-    <script src="js/store.js?v=105"></script>
-    <script src="js/components.js?v=105"></script>
-    <script src="js/feed.js?v=105"></script>
-    <script src="js/app.js?v=105"></script>
+    <script src="js/store.js?v=106"></script>
+    <script src="js/components.js?v=106"></script>
+    <script src="js/feed.js?v=106"></script>
+    <script src="js/app.js?v=106"></script>
     <script src="js/calls.js"></script>
     <script src="js/boot.js"></script>
 </body>
 </html>
+
 
 
 

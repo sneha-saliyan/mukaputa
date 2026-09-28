@@ -103,7 +103,7 @@ class App {
                     localStorage.setItem('mukaputa_theme', newTheme);
                 } catch(e) {}
                 this.updateThemeIcon(newTheme);
-                this.showToast(`Switched to ${newTheme} mode 🌓`, 'info');
+                this.showToast(`Switched to ${newTheme} mode `, 'info');
             });
         }
     }
@@ -588,7 +588,7 @@ class App {
         container.innerHTML = jobs.length > 0
             ? jobs.map(j => renderJobCard(j)).join('')
             : `<div style="text-align:center; padding: 60px 20px;">
-                <div style="font-size: 48px; margin-bottom: 12px;">💼</div>
+                <div style="font-size: 48px; margin-bottom: 12px;"></div>
                 <p class="text-secondary">No jobs found in this category.</p>
               </div>`;
     }
@@ -622,7 +622,7 @@ class App {
         container.innerHTML = jobs.length > 0
             ? jobs.map(j => renderJobCard(j)).join('')
             : `<div style="text-align:center; padding: 60px 20px;">
-                <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
+                <div style="font-size: 48px; margin-bottom: 12px;"></div>
                 <p class="text-secondary">No jobs match "<strong>${query}</strong>"</p>
               </div>`;
     }
@@ -643,7 +643,7 @@ class App {
             <div class="card card-interactive" style="overflow: hidden; display: flex; flex-direction: column; cursor: pointer; padding: 0;" onclick="app.openGroupDetails('${group.id}')">
                 <div style="position: relative;">
                     <img src="${group.cover}" style="width: 100%; height: 140px; object-fit: cover;" alt="${group.name}">
-                    ${group.private ? `<div style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; backdrop-filter: blur(4px);">🔒 Private</div>` : ''}
+                    ${group.private ? `<div style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; backdrop-filter: blur(4px);"> Private</div>` : ''}
                 </div>
                 <div style="padding: 16px; flex: 1; display: flex; flex-direction: column;">
                     <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">${group.name}</h3>
@@ -718,7 +718,7 @@ class App {
                     mediaHtml = `<img src="${mediaUrl}" style="width: 100%; height: 180px; object-fit: cover; border-bottom: 1px solid var(--border-color);">`;
                 }
             } else {
-                mediaHtml = `<div style="width: 100%; height: 120px; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border-color);"><span style="font-size: 32px; color: var(--text-secondary);">📝</span></div>`;
+                mediaHtml = `<div style="width: 100%; height: 120px; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border-color);"><span style="font-size: 32px; color: var(--text-secondary);"></span></div>`;
             }
 
             return `
@@ -832,7 +832,7 @@ class App {
     // ==========================================
     savePost(id) {
         const isSaved = store.toggleSavePost(id);
-        this.showToast(isSaved ? 'Saved to your collection! 🔖' : 'Removed from saved items', 'info');
+        this.showToast(isSaved ? 'Saved to your collection! ' : 'Removed from saved items', 'info');
         if (this.activeView === 'saved') this.renderSavedView();
         else if (this.activeView === 'home') feed.render();
     }
@@ -846,7 +846,7 @@ class App {
             // Re-render whichever view is active
             if (this.activeView === 'home') feed.render();
             else if (this.activeView === 'profile') this.renderProfileView(store.db.currentUserId);
-            this.showToast('Post updated! ✏️', 'success');
+            this.showToast('Post updated! ', 'success');
         }
     }
 
@@ -947,7 +947,7 @@ class App {
         if (details.length > 0) {
             this.showToast(`Reactions:\n${details.join('\n')}`, 'info');
         } else {
-            this.showToast('No reactions yet. Be the first! 👍', 'info');
+            this.showToast('No reactions yet. Be the first! ', 'info');
         }
     }
 
@@ -970,7 +970,7 @@ class App {
         }
         store.applyToJob(jobId);
         const job = store.getJobVacancies().find(j => j.id === jobId);
-        this.showToast(`🚀 Application submitted to ${job.company}!`, 'success');
+        this.showToast(` Application submitted to ${job.company}!`, 'success');
         
         // Add a notification for job application
         store.addNotification({
@@ -994,7 +994,7 @@ class App {
             const applyBtn = card.querySelector('.btn-primary, .btn-secondary');
             if (applyBtn) {
                 applyBtn.className = 'btn btn-secondary btn-sm';
-                applyBtn.textContent = '✓ Applied';
+                applyBtn.textContent = ' Applied';
             }
         }
     }
@@ -1020,7 +1020,7 @@ class App {
         const user = store.getUser(userId);
         
         if (isFollowing) {
-            this.showToast(`Now following ${user.name} ✨`, 'success');
+            this.showToast(`Now following ${user.name} `, 'success');
         } else {
             this.showToast(`Unfollowed ${user.name}`, 'info');
         }
@@ -1040,7 +1040,7 @@ class App {
     }
 
     reactComment(postId, commentId) {
-        this.showToast('Liked comment 👍', 'success');
+        this.showToast('Liked comment ', 'success');
     }
 
     editCommentUI(postId, commentId, oldText) {
@@ -1167,7 +1167,7 @@ class App {
             this.showToast(`Left ${group.name}`, 'info');
         } else {
             store.joinGroup(groupId, store.db.currentUserId);
-            this.showToast(`Joined ${group.name}! 🎉`, 'success');
+            this.showToast(`Joined ${group.name}! `, 'success');
         }
         this.renderGroupsView();
         
@@ -1200,7 +1200,7 @@ class App {
                     <div>
                         <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">${group.name}</h2>
                         <div style="display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 14px;">
-                            <span>${group.private ? '🔒 Private Group' : '🌍 Public Group'}</span>
+                            <span>${group.private ? ' Private Group' : ' Public Group'}</span>
                             <span>•</span>
                             <span>${group.memberIds ? group.memberIds.length : 0} members</span>
                         </div>
@@ -1252,14 +1252,14 @@ class App {
 
     rsvpEvent(eventId, status) {
         store.rsvpEvent(eventId, status, store.db.currentUserId);
-        this.showToast(`RSVP updated to ${status === 'going' ? 'Going ✓' : 'Interested ⭐'}`, 'success');
+        this.showToast(`RSVP updated to ${status === 'going' ? 'Going ' : 'Interested ⭐'}`, 'success');
         this.renderEventsView();
     }
 
     addFriend(userId) {
         store.addFriend(userId);
         const user = store.getUser(userId);
-        this.showToast(`Connected with ${user.name}! 🤝`, 'success');
+        this.showToast(`Connected with ${user.name}! `, 'success');
         this.renderFriendsView();
     }
 
@@ -1526,7 +1526,7 @@ class App {
         document.getElementById('video-player-modal').classList.add('hidden');
         document.getElementById('video-player-container').innerHTML = '';
     }
-    copyText(text, message = 'Copied to clipboard! 📋') {
+    copyText(text, message = 'Copied to clipboard! ') {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
                 this.showToast(message, 'success');
@@ -1671,7 +1671,7 @@ class App {
             
             store.sendMessage(conv.id, messageText, store.db.currentUserId, 'text');
             
-            this.showToast(`Sent to ${friend.name}! 🚀`, "success");
+            this.showToast(`Sent to ${friend.name}! `, "success");
             this.closeShareModal();
         }
     }
@@ -1703,7 +1703,7 @@ class App {
             html += notifs.map(n => renderNotificationItem(n)).join('');
         } else {
             html += `<div style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                        <div style="font-size: 48px; margin-bottom: 12px;">🔔</div>
+                        <div style="font-size: 48px; margin-bottom: 12px;"></div>
                         <p>All caught up! No notifications.</p>
                      </div>`;
         }
@@ -1742,7 +1742,7 @@ class App {
             this.renderNotificationsView();
         }
         this.updateNotificationBadge();
-        this.showToast('All notifications marked as read ✔', 'info');
+        this.showToast('All notifications marked as read ', 'info');
     }
 
     updateNotificationBadge() {
@@ -1925,7 +1925,7 @@ class App {
                     if (lastMsg.type === 'call') {
                         try {
                             const callData = JSON.parse(lastMsg.text);
-                            const icon = callData.kind === 'video' ? '📹' : '📞';
+                            const icon = callData.kind === 'video' ? '' : '';
                             if (callData.status === 'missed' || callData.status === 'cancelled' || callData.status === 'unavailable') {
                                 previewText = `${icon} Missed call`;
                             } else if (callData.status === 'declined') {
@@ -1934,12 +1934,12 @@ class App {
                                 previewText = `${icon} ${callData.kind === 'video' ? 'Video' : 'Voice'} call`;
                             }
                         } catch (e) {
-                            previewText = '📞 Call';
+                            previewText = ' Call';
                         }
                     } else if (lastMsg.type === 'image') {
-                        previewText = '📷 Photo';
+                        previewText = ' Photo';
                     } else if (lastMsg.type === 'audio') {
-                        previewText = '🎤 Voice note';
+                        previewText = ' Voice note';
                     } else {
                         previewText = escapeHtml(lastMsg.text || 'Attachment');
                     }
@@ -2062,7 +2062,7 @@ class App {
                     </div>
                 </div>
                 <div class="chat-header-actions">
-                    <button class="icon-btn-small" onclick="event.stopPropagation(); app.closeFloatingChat('${convId}')">✕</button>
+                    <button class="icon-btn-small" onclick="event.stopPropagation(); app.closeFloatingChat('${convId}')"></button>
                 </div>
             </div>
             <div class="chat-body" id="chat-body-${convId}"></div>
@@ -2188,7 +2188,7 @@ class App {
             return `
                 <div class="chat-msg ${isMe ? 'sent' : 'received'}" style="position: relative; margin-bottom: 12px;" onmouseenter="this.querySelector('.msg-actions')?.style.setProperty('display', 'flex')" onmouseleave="this.querySelector('.msg-actions')?.style.setProperty('display', 'none')">
                     ${actionsHtml}
-                    <div class="chat-bubble" title="Double click to react ❤️" ondblclick="app.toggleReaction('${convId}', '${m.id}')" style="cursor: pointer; position: relative;">
+                    <div class="chat-bubble" title="Double click to react " ondblclick="app.toggleReaction('${convId}', '${m.id}')" style="cursor: pointer; position: relative;">
                         ${contentHtml}
                         ${reactionHtml}
                     </div>
@@ -2559,7 +2559,7 @@ class App {
     }
 
     toggleReaction(convId, msgId) {
-        store.toggleMessageReaction(convId, msgId, '❤️');
+        store.toggleMessageReaction(convId, msgId, '');
         this.renderChatMessages(convId);
     }
 
@@ -2580,7 +2580,7 @@ class App {
             banner.style.cssText = 'background: rgba(0,0,0,0.05); padding: 8px 12px; border-left: 3px solid var(--accent); display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary);';
             banner.innerHTML = `
                 <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Replying to: <strong>${escapeHtml(msg.text || 'Attachment')}</strong></div>
-                <button onclick="app.cancelReply('${convId}')" style="background: none; border: none; cursor: pointer; color: var(--text-tertiary);">✕</button>
+                <button onclick="app.cancelReply('${convId}')" style="background: none; border: none; cursor: pointer; color: var(--text-tertiary);"></button>
             `;
             inputContainer.parentElement.insertBefore(banner, inputContainer);
         }
@@ -2806,7 +2806,7 @@ class App {
         if (this.currentActiveStory) {
             const url = window.location.origin + '/?story=' + this.currentActiveStory.id;
             navigator.clipboard.writeText(url).then(() => {
-                this.showToast('Story link copied to clipboard! 🔗', 'success');
+                this.showToast('Story link copied to clipboard! ', 'success');
             }).catch(() => {
                 this.showToast('Failed to copy link', 'danger');
             });
@@ -2900,10 +2900,10 @@ class App {
         // Live comments simulation
         const commentsEl = document.getElementById('live-comments-stream');
         const cannedLiveComments = [
-            { user: "Jane Smith", text: "Hey John! Great stream 👏" },
+            { user: "Jane Smith", text: "Hey John! Great stream " },
             { user: "Michael Johnson", text: "Quality looks crystal clear!" },
             { user: "Sarah Connor", text: "Love the new UI changes!" },
-            { user: "Alex Turing", text: "Orange and Navy combo is fire 🔥" }
+            { user: "Alex Turing", text: "Orange and Navy combo is fire " }
         ];
 
         this.liveCommentsInterval = setInterval(() => {
@@ -2921,7 +2921,7 @@ class App {
         const container = document.querySelector('.live-studio-container');
         this.liveReactionsInterval = setInterval(() => {
             if (container) {
-                const emojis = ['❤️', '🔥', '👍', '🚀', '✨', '👏'];
+                const emojis = ['', '', '', '', '', ''];
                 const emoji = emojis[Math.floor(Math.random() * emojis.length)];
                 const floater = document.createElement('div');
                 floater.style.position = 'absolute';
@@ -2954,7 +2954,7 @@ class App {
         store.addPost({
             id: 'p_live_' + Date.now(),
             authorId: store.db.currentUserId,
-            text: "🔴 John was live: 'Mukaputa 2.0 Live Broadcast & Q&A' — Thanks everyone for tuning in!",
+            text: " John was live: 'Mukaputa 2.0 Live Broadcast & Q&A' — Thanks everyone for tuning in!",
             media: ["https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800"],
             createdAt: new Date().toISOString(),
             reactions: { like: ["u2", "u3", "u4"], love: ["u1"] },
@@ -2962,7 +2962,7 @@ class App {
         });
 
         feed.render();
-        this.showToast('Live stream published as video post! 🎥', 'success');
+        this.showToast('Live stream published as video post! ', 'success');
     }
 
     // ==========================================
@@ -3186,7 +3186,7 @@ class App {
             this._pendingStoryFile = null;
             this._pendingStoryUpload = null;
             if (captionInput) captionInput.value = '';
-            this.showToast('Story added to your tray! 🚀', 'success');
+            this.showToast('Story added to your tray! ', 'success');
         } else {
             this.showToast('Please select a photo or video first.', 'danger');
         }
@@ -3250,7 +3250,7 @@ class App {
 
         document.getElementById('create-reel-modal').classList.add('hidden');
         this.resetCreateReelModal();
-        this.showToast('Reel posted! 🎬', 'success');
+        this.showToast('Reel posted! ', 'success');
         if (this.activeView === 'reels') this.renderReelsView();
     }
 
@@ -3357,7 +3357,7 @@ class App {
         });
 
         this.renderEventsView();
-        this.showToast(`Event "${title}" published! 📅`, 'success');
+        this.showToast(`Event "${title}" published! `, 'success');
     }
 
     // Create Page Modal
@@ -3431,7 +3431,7 @@ class App {
         const requests = document.getElementById('privacy-requests').value;
         store.updateProfile({ privacySettings: { posts, requests } });
         document.getElementById('privacy-settings-modal').classList.add('hidden');
-        this.showToast('Privacy settings updated! 🔒', 'success');
+        this.showToast('Privacy settings updated! ', 'success');
     }
 
     // Blocked Accounts
@@ -3509,7 +3509,7 @@ class App {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        this.showToast('Your data download has started! 📁', 'success');
+        this.showToast('Your data download has started! ', 'success');
     }
 
     // Delete Account
@@ -3684,7 +3684,7 @@ class App {
         this.updateHeaderUserInfo();
         this.renderProfileView(store.db.currentUserId);
         document.getElementById('edit-profile-modal').classList.add('hidden');
-        this.showToast('Profile updated successfully! ✨', 'success');
+        this.showToast('Profile updated successfully! ', 'success');
     }
 
     async handleProfileImageUpdate(event, type) {
@@ -3745,10 +3745,10 @@ class App {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         
-        let icon = '🔔';
-        if (type === 'success') icon = '✓';
-        if (type === 'danger') icon = '✕';
-        if (type === 'info') icon = '✨';
+        let icon = '';
+        if (type === 'success') icon = '';
+        if (type === 'danger') icon = '';
+        if (type === 'info') icon = '';
 
         toast.innerHTML = `
             <span class="toast-icon">${icon}</span>
