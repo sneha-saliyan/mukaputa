@@ -474,6 +474,29 @@ class Message(db.Model):
 # ---------------------------------------------------------------------------
 # NOTIFICATIONS
 # ---------------------------------------------------------------------------
+class SupportTicket(db.Model):
+    __tablename__ = "support_tickets"
+    id = db.Column(db.String(64), primary_key=True, default=lambda: new_id("t"))
+    user_id = db.Column(db.String(64), db.ForeignKey("users.id"), nullable=False)
+    subject = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(20), default="Open") # Open, Closed
+    reply = db.Column(db.Text, default="")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        user = User.query.get(self.user_id)
+        return {
+            "id": self.id,
+            "userId": self.user_id,
+            "userName": user.name if user else "Unknown",
+            "subject": self.subject,
+            "message": self.message,
+            "status": self.status,
+            "reply": self.reply,
+            "createdAt": self.created_at.isoformat() + "Z"
+        }
+
 class Notification(db.Model):
     __tablename__ = "notifications"
     id = db.Column(db.String(64), primary_key=True, default=lambda: new_id("n"))

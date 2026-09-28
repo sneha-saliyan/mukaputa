@@ -3545,8 +3545,68 @@ class App {
     openNotificationSettingsModal() {
         document.getElementById('notification-settings-modal').classList.remove('hidden');
     }
+
+    // Help Center & Tickets
     openHelpModal() {
+        document.getElementById('help-default-view').classList.remove('hidden');
+        document.getElementById('help-ticket-view').classList.add('hidden');
+        document.getElementById('help-my-tickets-view').classList.add('hidden');
         document.getElementById('help-modal').classList.remove('hidden');
+    }
+
+    async submitSupportTicket() {
+        const btn = document.getElementById('ticket-submit-btn');
+        const subject = document.getElementById('ticket-subject').value;
+        const message = document.getElementById('ticket-message').value;
+        
+        btn.disabled = true;
+        btn.textContent = 'Submitting...';
+        
+        try {
+            const ticket = await store.submitTicket(subject, message);
+            if (ticket) {
+                this.showToast('Ticket submitted successfully! We will get back to you soon.', 'success');
+                document.getElementById('support-ticket-form').reset();
+                this.loadMyTickets();
+            } else {
+                this.showToast('Failed to submit ticket.', 'danger');
+            }
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Submit Ticket';
+        }
+    }
+
+    async loadMyTickets() {
+        document.getElementById('help-default-view').classList.add('hidden');
+        document.getElementById('help-ticket-view').classList.add('hidden');
+        const view = document.getElementById('help-my-tickets-view');
+        view.classList.remove('hidden');
+        
+        const list = document.getElementById('my-tickets-list');
+        list.innerHTML = '<div style="text-align: center; padding: 20px;">Loading tickets...</div>';
+        
+        const tickets = await store.getMyTickets();
+        if (tickets.length === 0) {
+            list.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">You have no support tickets.</div>';
+            return;
+        }
+        
+        list.innerHTML = tickets.map(t => `
+            <div class="card" style="padding: 16px; border: 1px solid var(--border-color); background: var(--bg-secondary);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                    <strong style="font-size: 14px;">${escapeHtml(t.subject)}</strong>
+                    <span class="badge ${t.status === 'Open' ? 'badge-warning' : 'badge-success'}">${t.status}</span>
+                </div>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; white-space: pre-wrap;">${escapeHtml(t.message)}</p>
+                ${t.reply ? `
+                    <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; border-left: 3px solid var(--primary-color);">
+                        <div style="font-size: 12px; font-weight: 600; margin-bottom: 4px;">Admin Reply:</div>
+                        <div style="font-size: 13px;">${escapeHtml(t.reply)}</div>
+                    </div>
+                ` : '<div style="font-size: 12px; color: var(--text-secondary); font-style: italic;">Awaiting admin response...</div>'}
+            </div>
+        `).join('');
     }
     openTermsModal() {
         document.getElementById('terms-modal').classList.remove('hidden');

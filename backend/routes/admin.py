@@ -292,3 +292,28 @@ def debug_sockets():
         "online_users_dict": {k: list(v) for k, v in online_users.items()},
         "engine_rooms": rooms
     })
+
+
+@admin_bp.get("/tickets")
+@admin_required
+def admin_get_tickets():
+    from ..models import SupportTicket
+    tickets = SupportTicket.query.order_by(SupportTicket.created_at.desc()).all()
+    return ok({"tickets": [t.to_dict() for t in tickets]})
+
+@admin_bp.post("/tickets/<ticket_id>/reply")
+@admin_required
+def admin_reply_ticket(ticket_id):
+    from ..models import SupportTicket
+    data = request.get_json(silent=True) or {}
+    reply_text = (data.get("reply") or "").strip()
+    status = (data.get("status") or "Closed")
+    
+    t = SupportTicket.query.get(ticket_id)
+    if not t:
+        return err("Ticket not found", 404)
+        
+    t.reply = reply_text
+    t.status = status
+    db.session.commit()
+    return ok({"ticket": t.to_dict()})

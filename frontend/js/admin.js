@@ -56,7 +56,7 @@ async function api(method, path, body) {
 }
 
 // ── Navigation ───────────────────────────────────────────────
-const PAGE_TITLES = { dashboard: 'Dashboard', users: 'User Management', reports: 'Content Reports', ads: 'Advertisements' };
+const PAGE_TITLES = { dashboard: 'Dashboard', users: 'User Management', reports: 'Content Reports', ads: 'Advertisements', tickets: 'Help Tickets' };
 
 function showPage(name, el) {
     document.querySelectorAll('.adm-page').forEach(p => p.classList.remove('active'));
@@ -70,6 +70,7 @@ function showPage(name, el) {
     if (name === 'users') loadUsers(1);
     if (name === 'reports') loadReports(1);
     if (name === 'ads') loadAds();
+    if (name === 'tickets') fetchTickets();
 
     closeSidebar();
 }
@@ -389,3 +390,91 @@ async function deleteAd(id, title) {
 
 // ── Init ─────────────────────────────────────────────────────
 loadStats();
+
+
+// ==========================================
+// SUPPORT TICKETS
+// ==========================================
+let allTickets = [];
+
+async function fetchTickets() {
+    const res = await api('GET', '/tickets');
+    if (res && res.tickets) {
+        allTickets = res.tickets;
+        renderTickets();
+    }
+}
+
+function renderTickets() {
+    const tbody = document.getElementById('tickets-tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    // Update badge
+    const openCount = allTickets.filter(t => t.status === 'Open').length;
+    const badge = document.getElementById('tickets-badge');
+    if (badge) {
+        badge.textContent = openCount;
+        badge.style.display = openCount > 0 ? 'inline-block' : 'none';
+    }
+
+    if (allTickets.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No support tickets.</td></tr>';
+        return;
+    }
+
+    allTickets.forEach(t => {
+        const tr = document.createElement('tr');
+        const badgeClass = t.status === 'Open' ? 'adm-badge-warn' : 'adm-badge-ok';
+        
+        tr.innerHTML = `
+            <td>${new Date(t.createdAt).toLocaleDateString()}</td>
+            <td><strong>${t.userName}</strong></td>
+            <td>${t.subject}</td>
+            <td><span class="adm-badge ${badgeClass}">${t.status}</span></td>
+            <td>
+                <button class="adm-btn adm-btn-sm" onclick="openReplyModal('${t.id}')">View & Reply</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function openReplyModal(ticketId) {
+    const t = allTickets.find(x => x.id === ticketId);
+    if (!t) return;
+    
+    document.getElementById('reply-ticket-id').value = t.id;
+    document.getElementById('ticket-status-select').value = t.status;
+    document.getElementById('ticket-reply-text').value = t.reply || '';
+    
+    document.getElementById('ticket-details').innerHTML = `
+        <div style="margin-bottom: 8px;"><strong>User:</strong> ${t.userName}</div>
+        <div style="margin-bottom: 8px;"><strong>Subject:</strong> ${t.subject}</div>
+        <div style="white-space: pre-wrap;"><strong>Message:</strong><br>${t.message}</div>
+    `;
+    
+    document.getElementById('ticket-modal').style.display = 'flex';
+}
+
+async function submitTicketReply() {
+    const id = document.getElementById('reply-ticket-id').value;
+    const replyText = document.getElementById('ticket-reply-text').value;
+    const status = document.getElementById('ticket-status-select').value;
+    
+    const res = await api('POST', `/tickets/${id}/reply`, {
+        reply: replyText,
+        status: status
+    });
+    
+    if (res && res.ticket) {
+        document.getElementById('ticket-modal').style.display = 'none';
+        fetchTickets();
+        toast('Ticket updated successfully!', 'success');
+    } else {
+        toast('Failed to update ticket', 'error');
+    }
+}
+
+

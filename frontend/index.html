@@ -10,10 +10,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="css/variables.css?v=104">
-    <link rel="stylesheet" href="css/layout.css?v=104">
-    <link rel="stylesheet" href="css/components.css?v=104">
-    <link rel="stylesheet" href="css/feed.css?v=104">
+    <link rel="stylesheet" href="css/variables.css?v=105">
+    <link rel="stylesheet" href="css/layout.css?v=105">
+    <link rel="stylesheet" href="css/components.css?v=105">
+    <link rel="stylesheet" href="css/feed.css?v=105">
     <link rel="stylesheet" href="css/realtime.css">
     <style>
         #app-splash {
@@ -907,18 +907,51 @@
 
     <!-- Help Center Modal -->
     <div class="modal-overlay hidden" id="help-modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <h2>Help Center</h2>
-                <button class="close-btn" onclick="document.getElementById('help-modal').classList.add('hidden')">&times;</button>
+        <div class="modal-content" style="max-width: 500px; max-height: 85vh; display: flex; flex-direction: column; padding: 0;">
+            <div class="modal-header" style="padding: 16px; border-bottom: 1px solid var(--border-color);">
+                <h2>Help Center & Support</h2>
+                <button class="icon-btn close-modal" onclick="document.getElementById('help-modal').classList.add('hidden')">&times;</button>
             </div>
-            <div class="modal-body" style="padding: 16px;">
-                <input type="text" class="input-text" placeholder="Search Help Center..." style="margin-bottom: 16px; width: 100%; box-sizing: border-box;">
-                <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary);">Popular Articles</h4>
-                <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">How to change my profile picture?</div>
-                <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">Recovering an old account</div>
-                <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">Privacy settings explained</div>
-                <button class="btn btn-secondary full-width" style="margin-top: 12px;" onclick="app.showToast('Contacting support...', 'info')">Contact Support</button>
+            <div class="modal-body" style="padding: 16px; overflow-y: auto; flex: 1;">
+                
+                <div id="help-default-view">
+                    <input type="text" class="input-text" placeholder="Search Help Center..." style="margin-bottom: 16px; width: 100%; box-sizing: border-box;">
+                    <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary);">Popular Articles</h4>
+                    <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">How to change my profile picture?</div>
+                    <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">Recovering an old account</div>
+                    <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">Privacy settings explained</div>
+                    
+                    <h4 style="margin-top: 24px; margin-bottom: 12px; color: var(--text-secondary);">Need more help?</h4>
+                    <button class="btn btn-primary full-width" onclick="document.getElementById('help-default-view').classList.add('hidden'); document.getElementById('help-ticket-view').classList.remove('hidden');">Contact Support</button>
+                    <button class="btn btn-secondary full-width" style="margin-top: 8px;" onclick="app.loadMyTickets()">View My Support Tickets</button>
+                </div>
+
+                <div id="help-ticket-view" class="hidden">
+                    <h4 style="margin-top: 0; margin-bottom: 16px;">Submit a Support Ticket</h4>
+                    <form id="support-ticket-form" onsubmit="event.preventDefault(); app.submitSupportTicket();">
+                        <label style="display:block; margin-bottom:4px; font-weight:600; font-size:13px;">Subject</label>
+                        <input type="text" id="ticket-subject" class="input-text" required placeholder="Brief description of the issue" style="width: 100%; box-sizing: border-box; margin-bottom: 16px;">
+                        
+                        <label style="display:block; margin-bottom:4px; font-weight:600; font-size:13px;">Message</label>
+                        <textarea id="ticket-message" class="input-text" required rows="5" placeholder="Please provide details so our admin team can help you..." style="width: 100%; box-sizing: border-box; margin-bottom: 16px; resize: vertical;"></textarea>
+                        
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="btn btn-outline" style="flex:1;" onclick="document.getElementById('help-ticket-view').classList.add('hidden'); document.getElementById('help-default-view').classList.remove('hidden');">Back</button>
+                            <button type="submit" class="btn btn-primary" style="flex:2;" id="ticket-submit-btn">Submit Ticket</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="help-my-tickets-view" class="hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h4 style="margin: 0;">My Support Tickets</h4>
+                        <button class="btn btn-outline btn-sm" onclick="document.getElementById('help-my-tickets-view').classList.add('hidden'); document.getElementById('help-default-view').classList.remove('hidden');">Back</button>
+                    </div>
+                    <div id="my-tickets-list" style="display: flex; flex-direction: column; gap: 12px;">
+                        <!-- tickets injected here -->
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -1206,18 +1239,51 @@
 
     <!-- Help Center Modal -->
     <div class="modal-overlay hidden" id="help-modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <h2>Help Center</h2>
-                <button class="close-btn" onclick="document.getElementById('help-modal').classList.add('hidden')">&times;</button>
+        <div class="modal-content" style="max-width: 500px; max-height: 85vh; display: flex; flex-direction: column; padding: 0;">
+            <div class="modal-header" style="padding: 16px; border-bottom: 1px solid var(--border-color);">
+                <h2>Help Center & Support</h2>
+                <button class="icon-btn close-modal" onclick="document.getElementById('help-modal').classList.add('hidden')">&times;</button>
             </div>
-            <div class="modal-body" style="padding: 16px;">
-                <input type="text" class="input-text" placeholder="Search Help Center..." style="margin-bottom: 16px; width: 100%; box-sizing: border-box;">
-                <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary);">Popular Articles</h4>
-                <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">How to change my profile picture?</div>
-                <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">Recovering an old account</div>
-                <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">Privacy settings explained</div>
-                <button class="btn btn-secondary full-width" style="margin-top: 12px;" onclick="app.showToast('Contacting support...', 'info')">Contact Support</button>
+            <div class="modal-body" style="padding: 16px; overflow-y: auto; flex: 1;">
+                
+                <div id="help-default-view">
+                    <input type="text" class="input-text" placeholder="Search Help Center..." style="margin-bottom: 16px; width: 100%; box-sizing: border-box;">
+                    <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary);">Popular Articles</h4>
+                    <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">How to change my profile picture?</div>
+                    <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">Recovering an old account</div>
+                    <div class="card card-interactive" style="padding: 12px; margin-bottom: 8px;">Privacy settings explained</div>
+                    
+                    <h4 style="margin-top: 24px; margin-bottom: 12px; color: var(--text-secondary);">Need more help?</h4>
+                    <button class="btn btn-primary full-width" onclick="document.getElementById('help-default-view').classList.add('hidden'); document.getElementById('help-ticket-view').classList.remove('hidden');">Contact Support</button>
+                    <button class="btn btn-secondary full-width" style="margin-top: 8px;" onclick="app.loadMyTickets()">View My Support Tickets</button>
+                </div>
+
+                <div id="help-ticket-view" class="hidden">
+                    <h4 style="margin-top: 0; margin-bottom: 16px;">Submit a Support Ticket</h4>
+                    <form id="support-ticket-form" onsubmit="event.preventDefault(); app.submitSupportTicket();">
+                        <label style="display:block; margin-bottom:4px; font-weight:600; font-size:13px;">Subject</label>
+                        <input type="text" id="ticket-subject" class="input-text" required placeholder="Brief description of the issue" style="width: 100%; box-sizing: border-box; margin-bottom: 16px;">
+                        
+                        <label style="display:block; margin-bottom:4px; font-weight:600; font-size:13px;">Message</label>
+                        <textarea id="ticket-message" class="input-text" required rows="5" placeholder="Please provide details so our admin team can help you..." style="width: 100%; box-sizing: border-box; margin-bottom: 16px; resize: vertical;"></textarea>
+                        
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="btn btn-outline" style="flex:1;" onclick="document.getElementById('help-ticket-view').classList.add('hidden'); document.getElementById('help-default-view').classList.remove('hidden');">Back</button>
+                            <button type="submit" class="btn btn-primary" style="flex:2;" id="ticket-submit-btn">Submit Ticket</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="help-my-tickets-view" class="hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h4 style="margin: 0;">My Support Tickets</h4>
+                        <button class="btn btn-outline btn-sm" onclick="document.getElementById('help-my-tickets-view').classList.add('hidden'); document.getElementById('help-default-view').classList.remove('hidden');">Back</button>
+                    </div>
+                    <div id="my-tickets-list" style="display: flex; flex-direction: column; gap: 12px;">
+                        <!-- tickets injected here -->
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -1465,14 +1531,15 @@
 
     <!-- Scripts -->
     <script src="js/vendor/socket.io.min.js"></script>
-    <script src="js/store.js?v=104"></script>
-    <script src="js/components.js?v=104"></script>
-    <script src="js/feed.js?v=104"></script>
-    <script src="js/app.js?v=104"></script>
+    <script src="js/store.js?v=105"></script>
+    <script src="js/components.js?v=105"></script>
+    <script src="js/feed.js?v=105"></script>
+    <script src="js/app.js?v=105"></script>
     <script src="js/calls.js"></script>
     <script src="js/boot.js"></script>
 </body>
 </html>
+
 
 
 

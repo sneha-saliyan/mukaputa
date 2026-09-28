@@ -128,3 +128,26 @@ def toggle_save(item_id):
         saved = True
     db.session.commit()
     return ok({"saved": saved})
+
+
+@social_bp.post("/tickets")
+@login_required
+def create_ticket():
+    from ..models import SupportTicket
+    data = request.get_json(silent=True) or {}
+    subject = (data.get("subject") or "").strip()
+    message = (data.get("message") or "").strip()
+    if not subject or not message:
+        return err("Subject and message are required.")
+    
+    t = SupportTicket(user_id=current_user.id, subject=subject, message=message)
+    db.session.add(t)
+    db.session.commit()
+    return ok({"ticket": t.to_dict()})
+
+@social_bp.get("/tickets")
+@login_required
+def get_my_tickets():
+    from ..models import SupportTicket
+    tickets = SupportTicket.query.filter_by(user_id=current_user.id).order_by(SupportTicket.created_at.desc()).all()
+    return ok({"tickets": [t.to_dict() for t in tickets]})
