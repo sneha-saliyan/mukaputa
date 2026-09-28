@@ -3340,6 +3340,8 @@ class App {
         const user = store.getCurrentUser();
         this._tempEditAvatar = null;
         this._tempEditCover = null;
+        document.getElementById('edit-profile-avatar-preview').src = user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150';
+        document.getElementById('edit-profile-cover-preview').src = user.cover || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200';
         document.getElementById('edit-profile-avatar').value = '';
         document.getElementById('edit-profile-cover').value = '';
         document.getElementById('edit-profile-name').value = user.name || "";
@@ -3400,9 +3402,13 @@ class App {
 
         if (type === 'avatar') {
             this._tempEditAvatar = url;
+            const preview = document.getElementById('edit-profile-avatar-preview');
+            if (preview) preview.src = url;
             this.showToast('Profile photo staged for saving', 'info');
         } else {
             this._tempEditCover = url;
+            const preview = document.getElementById('edit-profile-cover-preview');
+            if (preview) preview.src = url;
             this.showToast('Cover photo staged for saving', 'info');
         }
     }
