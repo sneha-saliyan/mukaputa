@@ -780,6 +780,9 @@ function renderProfileView(user, currentTab = 'posts') {
                         <button class="btn btn-outline btn-sm" onclick="app.toggleFollow('${user.id}')" title="Follow">
                             Follow
                         </button>
+                        <button class="btn btn-sm" style="background: var(--bg-secondary); color: var(--danger, #ff4d4d); border: 1px solid var(--border);" onclick="app.blockUser('${user.id}')" title="Block">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+                        </button>
                     `}
                 </div>
 

@@ -3427,6 +3427,33 @@ class App {
         this.openBlockedModal(); // Refresh list
     }
 
+    blockUser(id) {
+        if (!confirm('Are you sure you want to block this user? They will not be able to interact with you.')) return;
+        
+        const user = store.getCurrentUser();
+        if (!user.blockedUsers) user.blockedUsers = [];
+        
+        if (user.blockedUsers.find(b => b.id === id)) {
+            this.showToast('User is already blocked.', 'info');
+            return;
+        }
+
+        const blockedTarget = store.getUser(id);
+        if (!blockedTarget) return;
+
+        user.blockedUsers.push({ id, name: blockedTarget.name });
+        store.updateProfile({ blockedUsers: user.blockedUsers });
+        
+        // Remove from friends list if applicable
+        if (user.friends && user.friends.includes(id)) {
+            user.friends = user.friends.filter(fId => fId !== id);
+            store.updateProfile({ friends: user.friends });
+        }
+
+        this.showToast('User blocked successfully.', 'success');
+        this.switchView('home');
+    }
+
     // Data Portability
     downloadMyData() {
         const user = store.getCurrentUser();
