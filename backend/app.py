@@ -88,6 +88,15 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        
+        # Auto-migration for new viewers column on stories table
+        try:
+            from sqlalchemy import text
+            db.session.execute(text("ALTER TABLE stories ADD COLUMN viewers JSON"))
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+
         seed_if_empty()
 
         from .models import AdminUser
