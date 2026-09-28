@@ -1,10 +1,7 @@
 /* ==========================================================================
    HEADER / TOP NAV (LIQUID GLASS)
    ========================================================================== */
-body.reels-active .top-nav,
-body.messages-active .top-nav {
-    display: none !important;
-}
+
 body.reels-active .main-container,
 body.messages-active .main-container {
     padding-top: 0 !important;
@@ -817,7 +814,7 @@ body.messages-active .messages-view-container {
         display: none !important;
     }
     
-    body.reels-active .top-nav {
+    body.reels-active .top-nav, body.messages-active .top-nav {
         display: none !important;
     }
     
@@ -944,3 +941,5 @@ body.messages-active .messages-view-container {
         font-size: 12px;
     }
 }
+
+
