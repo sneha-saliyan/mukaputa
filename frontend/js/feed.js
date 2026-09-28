@@ -154,7 +154,7 @@ class Feed {
         if (!this.container) return;
 
         // Hover over like button to show reaction picker
-        this.container.addEventListener('mouseenter', (e) => {
+        document.body.addEventListener('mouseenter', (e) => {
             const reactAction = e.target.closest('[data-action="react"]');
             if (reactAction) {
                 const picker = reactAction.querySelector('.reaction-picker');
@@ -162,7 +162,7 @@ class Feed {
             }
         }, true);
 
-        this.container.addEventListener('mouseleave', (e) => {
+        document.body.addEventListener('mouseleave', (e) => {
             const reactAction = e.target.closest('[data-action="react"]');
             if (reactAction) {
                 const picker = reactAction.querySelector('.reaction-picker');
@@ -172,7 +172,7 @@ class Feed {
 
         // Click delegation for reactions
         let touchTimer = null;
-        this.container.addEventListener('touchstart', (e) => {
+        document.body.addEventListener('touchstart', (e) => {
             const reactAction = e.target.closest('[data-action="react"]');
             if (reactAction) {
                 touchTimer = setTimeout(() => {
@@ -182,11 +182,11 @@ class Feed {
             }
         }, { passive: true });
 
-        this.container.addEventListener('touchend', () => {
+        document.body.addEventListener('touchend', () => {
             if (touchTimer) clearTimeout(touchTimer);
         });
 
-        this.container.addEventListener('click', (e) => {
+        document.body.addEventListener('click', (e) => {
             // Reaction icon in picker
             const reactionIcon = e.target.closest('.reaction-icon');
             if (reactionIcon) {
@@ -199,7 +199,7 @@ class Feed {
                 this.spawnReactionFloater(getReactionEmoji(type), rect.left + 6, rect.top - 10);
                 
                 store.toggleReaction(postId, type, store.db.currentUserId);
-                this.render();
+                app.forceRenderCurrentView();
                 app.showToast(`Reacted with ${getReactionEmoji(type)}!`, 'success');
                 return;
             }
@@ -213,7 +213,7 @@ class Feed {
                     const rect = mediaContainer.getBoundingClientRect();
                     this.spawnReactionFloater('❤️', rect.left + rect.width / 2 - 16, rect.top + rect.height / 2 - 16);
                     store.toggleReaction(postId, 'love', store.db.currentUserId);
-                    this.render();
+                    app.forceRenderCurrentView();
                     app.showToast('Loved post ❤️', 'success');
                 }
             }
@@ -239,13 +239,13 @@ class Feed {
                 }
 
                 store.toggleReaction(postId, currentReaction ? null : 'like', store.db.currentUserId);
-                this.render();
+                app.forceRenderCurrentView();
                 if (!currentReaction) app.showToast('Liked post 👍', 'success');
             }
         });
 
         // Comment input enter key
-        this.container.addEventListener('keydown', (e) => {
+        document.body.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey && e.target.classList.contains('comment-input-field')) {
                 e.preventDefault();
                 const text = e.target.value.trim();
@@ -260,7 +260,7 @@ class Feed {
                         replies: []
                     });
                     e.target.value = '';
-                    this.render();
+                    app.forceRenderCurrentView();
                     app.showToast('Comment posted! 💬', 'success');
                 }
             }
@@ -294,9 +294,10 @@ class Feed {
             comments: []
         };
         store.addPost(newPost);
-        this.render();
+        app.forceRenderCurrentView();
         app.showToast('Post published to your feed! 🚀', 'success');
     }
 }
 
 const feed = new Feed();
+

@@ -259,6 +259,24 @@ class App {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    forceRenderCurrentView() {
+        try {
+            const savedState = JSON.parse(localStorage.getItem('mukaputa_active_view'));
+            const params = savedState ? (savedState.params || {}) : {};
+            switch (this.activeView) {
+                case 'home': feed.render(); break;
+                case 'profile': this.renderProfileView(params.userId || store.db.currentUserId, params.tab || 'posts'); break;
+                case 'saved': this.renderSavedView(); break;
+                case 'groups': this.renderGroupsView(); break;
+                case 'pages': this.renderPagesView(); break;
+                case 'watch': this.renderWatchView(); break;
+                // Add more if needed, for now home and profile are the main ones displaying posts
+            }
+        } catch(e) {
+            if (this.activeView === 'home') feed.render();
+        }
+    }
+
     bindNavigation() {
         document.querySelectorAll('.nav-tab, .tab-btn').forEach(tab => {
             tab.addEventListener('click', () => {
