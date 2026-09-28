@@ -417,7 +417,7 @@
             <div class="card" style="margin-bottom: 16px; padding: 0; overflow: hidden;">
                 <div class="sidebar-heading" style="padding: 16px 16px 8px;">Account Center</div>
                 <div class="menu-list">
-                    <div class="menu-item" onclick="app.openEditProfileModal()">
+                    <div class="menu-item" onclick="app.openPersonalDetailsModal()">
                         <div class="menu-item-icon" style="background: var(--bg-tertiary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
                         <div style="flex: 1;">
                             <div style="font-weight: 500;">Personal Details</div>
@@ -756,6 +756,28 @@
                 <input type="password" id="new-password-input" class="input-text" placeholder="New Password" style="margin-bottom: 12px; width: 100%; box-sizing: border-box;">
                 <input type="password" id="confirm-password-input" class="input-text" placeholder="Confirm New Password" style="margin-bottom: 16px; width: 100%; box-sizing: border-box;">
                 <button class="btn btn-primary full-width" onclick="app.submitPasswordChange()">Update Password</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personal Details Modal -->
+    <div class="modal-overlay hidden" id="personal-details-modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2>Personal Details</h2>
+                <button class="close-btn" onclick="document.getElementById('personal-details-modal').classList.add('hidden')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px;">Email Address</label>
+                <input type="email" id="personal-email-input" class="input-text" style="width: 100%; box-sizing: border-box; margin-bottom: 20px;" disabled>
+                
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px;">Phone Number</label>
+                <input type="text" id="personal-phone-input" class="input-text" placeholder="Add phone number" style="width: 100%; box-sizing: border-box; margin-bottom: 20px;">
+                
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px;">Date of Birth</label>
+                <input type="date" id="personal-dob-input" class="input-text" style="width: 100%; box-sizing: border-box; margin-bottom: 24px;">
+
+                <button class="btn btn-primary full-width" onclick="app.submitPersonalDetails()">Save Details</button>
             </div>
         </div>
     </div>
@@ -1245,11 +1267,15 @@
     <script src="js/store.js?v=3"></script>
     <script src="js/components.js?v=4"></script>
     <script src="js/feed.js?v=3"></script>
-    <script src="js/app.js?v=9"></script>
+    <script src="js/app.js?v=10"></script>
     <script src="js/calls.js"></script>
     <script src="js/boot.js"></script>
 </body>
 </html>
+
+
+
+
 
 
 

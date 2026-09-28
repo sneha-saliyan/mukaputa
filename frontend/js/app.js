@@ -3487,6 +3487,24 @@ class App {
         document.getElementById('terms-modal').classList.remove('hidden');
     }
 
+    openPersonalDetailsModal() {
+        const user = store.getCurrentUser();
+        // Just fill a dummy email and let them edit phone/dob
+        document.getElementById('personal-email-input').value = user.email || (user.username + '@example.com');
+        document.getElementById('personal-phone-input').value = user.phone || '';
+        document.getElementById('personal-dob-input').value = user.dob || '';
+        document.getElementById('personal-details-modal').classList.remove('hidden');
+    }
+
+    submitPersonalDetails() {
+        // Mock save
+        const user = store.getCurrentUser();
+        user.phone = document.getElementById('personal-phone-input').value;
+        user.dob = document.getElementById('personal-dob-input').value;
+        this.showToast('Personal details updated successfully.', 'success');
+        document.getElementById('personal-details-modal').classList.add('hidden');
+    }
+
     // Edit Profile Modal
     openEditProfileModal() {
         const user = store.getCurrentUser();
