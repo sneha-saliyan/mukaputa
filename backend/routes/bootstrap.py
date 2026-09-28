@@ -10,6 +10,8 @@ from ..utils import ok
 
 bootstrap_bp = Blueprint("bootstrap", __name__, url_prefix="/api")
 
+from datetime import datetime, timedelta
+
 @bootstrap_bp.get("/bootstrap")
 @login_required
 def bootstrap():
@@ -17,6 +19,15 @@ def bootstrap():
     app = current_app._get_current_object()
 
     with app.app_context():
+        # Cleanup old stories (older than 24 hours)
+        twenty_four_hours_ago = datetime.utcnow() - timedelta(hours=24)
+        from ..extensions import db
+        try:
+            Story.query.filter(Story.created_at < twenty_four_hours_ago).delete()
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+
         # Limit the number of records fetched to drastically improve dashboard load times
         users = [u.to_public_dict() for u in User.query.limit(200).all()]
         posts = [p.to_dict() for p in Post.query.order_by(Post.created_at.desc()).limit(50).all()]
