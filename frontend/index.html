@@ -10,10 +10,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="css/variables.css?v=101">
-    <link rel="stylesheet" href="css/layout.css?v=101">
-    <link rel="stylesheet" href="css/components.css?v=101">
-    <link rel="stylesheet" href="css/feed.css?v=101">
+    <link rel="stylesheet" href="css/variables.css?v=102">
+    <link rel="stylesheet" href="css/layout.css?v=102">
+    <link rel="stylesheet" href="css/components.css?v=102">
+    <link rel="stylesheet" href="css/feed.css?v=102">
     <link rel="stylesheet" href="css/realtime.css">
     <style>
         #app-splash {
@@ -1232,6 +1232,19 @@
         </div>
     </div>
 
+        <!-- Video Player Modal -->
+    <div class="modal-overlay hidden" id="video-player-modal" style="z-index: 100000; background: rgba(0,0,0,0.9);">
+        <div class="modal-content" style="max-width: 900px; padding: 0; background: transparent; box-shadow: none;">
+            <div class="modal-header" style="border: none; padding: 16px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); border-radius: 8px 8px 0 0;">
+                <h3 id="video-player-title" style="color: white; margin: 0; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;">Video</h3>
+                <button class="close-btn" style="color: white; background: rgba(255,255,255,0.2); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;" onclick="app.closeVideoModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0; aspect-ratio: 16/9; background: #000; border-radius: 0 0 8px 8px; overflow: hidden;" id="video-player-container">
+                <!-- iframe injected here -->
+            </div>
+        </div>
+    </div>
+
     <!-- Blocked Accounts Modal -->
     <div class="modal-overlay hidden" id="blocked-accounts-modal">
         <div class="modal-content" style="max-width: 500px; padding: 0;">
@@ -1264,14 +1277,16 @@
 
     <!-- Scripts -->
     <script src="js/vendor/socket.io.min.js"></script>
-    <script src="js/store.js?v=101"></script>
-    <script src="js/components.js?v=101"></script>
-    <script src="js/feed.js?v=101"></script>
-    <script src="js/app.js?v=101"></script>
+    <script src="js/store.js?v=102"></script>
+    <script src="js/components.js?v=102"></script>
+    <script src="js/feed.js?v=102"></script>
+    <script src="js/app.js?v=102"></script>
     <script src="js/calls.js"></script>
     <script src="js/boot.js"></script>
 </body>
 </html>
+
+
 
 
 

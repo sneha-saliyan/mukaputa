@@ -1494,15 +1494,38 @@ class App {
     playWatchVideo(videoId) {
         const v = store.getWatchVideos().find(x => x.id === videoId);
         if (v) {
-            if (v.url) {
-                this.showToast(`Opening ${v.platform || 'video'}: "${v.title}"... 🚀`, 'info');
+            let embedUrl = null;
+            if (v.platform === 'YouTube' || (v.url && v.url.includes('youtube.com'))) {
+                const match = (v.url || '').match(/(?:v=|\/)([0-9A-Za-z_-]{11}).*/);
+                const ytId = match ? match[1] : '8mAITcNt710';
+                embedUrl = 'https://www.youtube.com/embed/' + ytId + '?autoplay=1';
+            } else if (v.url && (v.url.endsWith('.mp4') || v.url.endsWith('.webm'))) {
+                embedUrl = v.url;
+            } else if (v.media && (v.media.endsWith('.mp4') || v.media.endsWith('.webm'))) {
+                embedUrl = v.media;
+            } else if (v.url) {
+                this.showToast('Opening resource in new tab... \uD83D\uDE80', 'info');
                 window.open(v.url, '_blank');
+                return;
             } else {
-                this.showToast(`Playing "${v.title}" in HD 4K... 🎬`, 'info');
+                this.showToast('Video stream unavailable.', 'danger');
+                return;
             }
+            this.openVideoModal(v.title, embedUrl, v.platform);
         }
     }
 
+    openVideoModal(title, url, platform) {
+        document.getElementById('video-player-title').textContent = title || 'Video Player';
+        const container = document.getElementById('video-player-container');
+        container.innerHTML = '<iframe width="100%" height="100%" src="' + url + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; height: 100%;"></iframe>';
+        document.getElementById('video-player-modal').classList.remove('hidden');
+    }
+
+    closeVideoModal() {
+        document.getElementById('video-player-modal').classList.add('hidden');
+        document.getElementById('video-player-container').innerHTML = '';
+    }
     copyText(text, message = 'Copied to clipboard! 📋') {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
@@ -3685,6 +3708,7 @@ window.addEventListener("resize", () => {
         }
     }
 });
+
 
 
 
