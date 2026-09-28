@@ -1,8 +1,8 @@
 /* =========================================================
-   Mukaputa Admin Dashboard — admin.js
+   Mukaputa Admin Dashboard  admin.js
    ========================================================= */
 
-// ── Auth guard ──────────────────────────────────────────────
+//  Auth guard 
 (async () => {
     try {
         const res = await fetch('/api/admin/me', { credentials: 'include' });
@@ -19,7 +19,7 @@
     }
 })();
 
-// ── Utility ─────────────────────────────────────────────────
+//  Utility 
 function toast(msg, type = 'success') {
     const container = document.getElementById('adm-toast-container');
     const el = document.createElement('div');
@@ -44,7 +44,7 @@ function escHtml(s) {
 }
 
 function fmtDate(iso) {
-    if (!iso) return '—';
+    if (!iso) return '';
     return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
@@ -55,7 +55,7 @@ async function api(method, path, body) {
     return res.json();
 }
 
-// ── Navigation ───────────────────────────────────────────────
+//  Navigation 
 const PAGE_TITLES = { dashboard: 'Dashboard', users: 'User Management', reports: 'Content Reports', ads: 'Advertisements', tickets: 'Help Tickets' };
 
 function showPage(name, el) {
@@ -75,7 +75,7 @@ function showPage(name, el) {
     closeSidebar();
 }
 
-// ── Sidebar (mobile) ────────────────────────────────────────
+//  Sidebar (mobile) 
 function toggleSidebar() {
     document.getElementById('adm-sidebar').classList.toggle('open');
     document.getElementById('adm-overlay').classList.toggle('open');
@@ -85,31 +85,31 @@ function closeSidebar() {
     document.getElementById('adm-overlay').classList.remove('open');
 }
 
-// ── Logout ───────────────────────────────────────────────────
+//  Logout 
 async function doLogout() {
     await api('POST', '/logout');
     window.location.href = '/admin_login.html';
 }
 
-// ── Pagination helper ────────────────────────────────────────
+//  Pagination helper 
 function renderPagination(containerId, currentPage, totalPages, loadFn) {
     const el = document.getElementById(containerId);
     if (!el) return;
     let html = '';
-    html += `<button class="adm-page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="${loadFn}(${currentPage - 1})">‹</button>`;
+    html += `<button class="adm-page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="${loadFn}(${currentPage - 1})"></button>`;
     const start = Math.max(1, currentPage - 2);
     const end = Math.min(totalPages, currentPage + 2);
     for (let i = start; i <= end; i++) {
         html += `<button class="adm-page-btn ${i === currentPage ? 'active' : ''}" onclick="${loadFn}(${i})">${i}</button>`;
     }
-    html += `<button class="adm-page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="${loadFn}(${currentPage + 1})">›</button>`;
+    html += `<button class="adm-page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="${loadFn}(${currentPage + 1})"></button>`;
     el.innerHTML = html;
 }
 
-// ── DASHBOARD ────────────────────────────────────────────────
+//  DASHBOARD 
 async function loadStats() {
     const grid = document.getElementById('stats-grid');
-    grid.innerHTML = '<p style="color:var(--adm-text-muted);font-size:13px;">Loading…</p>';
+    grid.innerHTML = '<p style="color:var(--adm-text-muted);font-size:13px;">Loading</p>';
     const data = await api('GET', '/stats');
     if (!data.ok) { grid.innerHTML = '<p style="color:var(--adm-danger);font-size:13px;">Failed to load stats.</p>'; return; }
     const s = data.stats;
@@ -140,7 +140,7 @@ async function loadStats() {
     `).join('');
 }
 
-// ── USERS ────────────────────────────────────────────────────
+//  USERS 
 let _userPage = 1;
 let _userSearchTimer = null;
 
@@ -152,7 +152,7 @@ function debounceUserSearch() {
 async function loadUsers(page = 1) {
     _userPage = page;
     const tbody = document.getElementById('users-tbody');
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--adm-text-muted);">Loading…</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--adm-text-muted);">Loading</td></tr>';
     const q = document.getElementById('user-search').value.trim();
     const params = new URLSearchParams({ page, per_page: 20, ...(q ? { q } : {}) });
     const data = await api('GET', `/users?${params}`);
@@ -212,13 +212,13 @@ async function deleteUser(id, username) {
     else toast(data.error || 'Failed.', 'error');
 }
 
-// ── REPORTS ──────────────────────────────────────────────────
+//  REPORTS 
 let _reportPage = 1;
 
 async function loadReports(page = 1) {
     _reportPage = page;
     const tbody = document.getElementById('reports-tbody');
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--adm-text-muted);">Loading…</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--adm-text-muted);">Loading</td></tr>';
     const status = document.getElementById('report-status-filter').value;
     const params = new URLSearchParams({ page, per_page: 20, status });
     const data = await api('GET', `/reports?${params}`);
@@ -236,7 +236,7 @@ async function loadReports(page = 1) {
                 </div>
             </td>
             <td><span style="text-transform:capitalize;">${escHtml(r.contentType)}</span></td>
-            <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(r.contentPreview || '—')}</td>
+            <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(r.contentPreview || '')}</td>
             <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(r.reason)}</td>
             <td><span class="adm-status adm-status-${r.status}">${r.status}</span></td>
             <td>${fmtDate(r.createdAt)}</td>
@@ -302,10 +302,10 @@ async function handleReport(id, action) {
     else toast(data.error || 'Failed.', 'error');
 }
 
-// ── ADS ──────────────────────────────────────────────────────
+//  ADS 
 async function loadAds() {
     const grid = document.getElementById('ads-grid');
-    grid.innerHTML = '<p style="color:var(--adm-text-muted);font-size:13px;">Loading…</p>';
+    grid.innerHTML = '<p style="color:var(--adm-text-muted);font-size:13px;">Loading</p>';
     const data = await api('GET', '/ads');
     if (!data.ok) { grid.innerHTML = '<p style="color:var(--adm-danger);font-size:13px;">Failed to load ads.</p>'; return; }
     if (!data.ads.length) {
@@ -388,7 +388,7 @@ async function deleteAd(id, title) {
     else toast(data.error || 'Failed.', 'error');
 }
 
-// ── Init ─────────────────────────────────────────────────────
+//  Init 
 loadStats();
 
 

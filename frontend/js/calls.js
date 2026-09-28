@@ -442,7 +442,7 @@ const Calls = {
         document.getElementById('call-video-stage').classList.add('hidden');
         document.getElementById('call-avatar').src = this.currentCall.otherAvatar;
         document.getElementById('call-name').textContent = this.currentCall.otherName;
-        document.getElementById('call-status').textContent = this.currentCall.video ? 'Video calling…' : 'Calling…';
+        document.getElementById('call-status').textContent = this.currentCall.video ? 'Video calling' : 'Calling';
         document.getElementById('call-controls-incoming').classList.add('hidden');
         document.getElementById('call-controls-active').classList.add('hidden');
         document.getElementById('call-controls-outgoing').classList.remove('hidden');
@@ -453,7 +453,7 @@ const Calls = {
         document.getElementById('call-video-stage').classList.add('hidden');
         document.getElementById('call-avatar').src = this.currentCall.otherAvatar;
         document.getElementById('call-name').textContent = this.currentCall.otherName;
-        document.getElementById('call-status').textContent = this.currentCall.video ? 'Incoming video call…' : 'Incoming call…';
+        document.getElementById('call-status').textContent = this.currentCall.video ? 'Incoming video call' : 'Incoming call';
         document.getElementById('call-controls-outgoing').classList.add('hidden');
         document.getElementById('call-controls-active').classList.add('hidden');
         document.getElementById('call-controls-incoming').classList.remove('hidden');
@@ -461,7 +461,7 @@ const Calls = {
 
     showActiveUI() {
         document.getElementById('call-overlay').classList.remove('hidden');
-        document.getElementById('call-status').textContent = 'Connecting…';
+        document.getElementById('call-status').textContent = 'Connecting';
         document.getElementById('call-controls-incoming').classList.add('hidden');
         document.getElementById('call-controls-outgoing').classList.add('hidden');
         document.getElementById('call-controls-active').classList.remove('hidden');
@@ -540,7 +540,7 @@ const Calls = {
 
     // ------------------------------------------------------------------
     // Call history -- logged as a normal chat message so both people see
-    // "Voice call · 2:15" / "Missed call" in their conversation history.
+    // "Voice call  2:15" / "Missed call" in their conversation history.
     // ------------------------------------------------------------------
     async logCall(status) {
         if (!this.currentCall) return;

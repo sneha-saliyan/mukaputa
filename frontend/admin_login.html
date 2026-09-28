@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mukaputa — Admin Login</title>
+    <title>Mukaputa  Admin Login</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <style>
@@ -138,7 +138,7 @@
             </div>
             <div class="form-field">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+                <input type="password" id="password" name="password" placeholder="" autocomplete="current-password" required>
             </div>
             <button type="submit" class="login-btn" id="login-btn">Sign In</button>
         </form>
@@ -153,7 +153,7 @@
             const password = document.getElementById('password').value;
 
             btn.disabled = true;
-            btn.textContent = 'Signing in…';
+            btn.textContent = 'Signing in';
             errEl.classList.remove('visible');
 
             try {

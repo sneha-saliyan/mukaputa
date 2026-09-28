@@ -1,5 +1,5 @@
 // ==========================================================================
-// MUKAPUTA — AUTHENTICATION & LOGIN/SIGNUP INTERACTIONS
+// MUKAPUTA  AUTHENTICATION & LOGIN/SIGNUP INTERACTIONS
 // ==========================================================================
 
 async function apiCall(method, url, body) {

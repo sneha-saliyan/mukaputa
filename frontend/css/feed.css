@@ -1103,7 +1103,7 @@
     }
 }
 
-/* Profile Nav Tabs — scrollable on mobile */
+/* Profile Nav Tabs  scrollable on mobile */
 .profile-nav-tabs {
     display: flex;
     border-top: 1px solid var(--border);

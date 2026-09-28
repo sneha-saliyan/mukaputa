@@ -82,7 +82,7 @@ class Feed {
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <span style="font-size: 20px;"></span>
-                                <strong style="font-size: 15px; font-family: var(--font-heading); color: var(--accent);">On This Day — Memories</strong>
+                                <strong style="font-size: 15px; font-family: var(--font-heading); color: var(--accent);">On This Day  Memories</strong>
                             </div>
                             <span class="text-secondary" style="font-size: 12px;">2 years ago</span>
                         </div>
