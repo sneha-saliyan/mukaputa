@@ -1731,6 +1731,41 @@ class App {
 
         const convs = store.getConversations();
         
+        const notes = store.getNotes() || [];
+        const myNote = notes.find(n => n.userId === store.db.currentUserId);
+        const otherNotes = notes.filter(n => n.userId !== store.db.currentUserId);
+        let notesHtml = `
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0;" onclick="app.promptAddNote()">
+                <div style="position: relative;">
+                    <img src="${store.getCurrentUser().avatar}" style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border);">
+                    ${myNote ? `
+                        <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--bg-card); padding: 4px 10px; border-radius: 14px; font-size: 11px; font-weight: 600; box-shadow: var(--shadow-sm); border: 1px solid var(--border); max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; z-index: 10;">
+                            ${escapeHtml(myNote.text)}
+                        </div>
+                    ` : `
+                        <div style="position: absolute; top: -4px; right: -4px; width: 20px; height: 20px; background: var(--bg-card); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border);">
+                            <span style="font-size: 14px; font-weight: bold; color: var(--text-secondary);">+</span>
+                        </div>
+                    `}
+                </div>
+                <span style="font-size: 11px; color: var(--text-secondary); max-width: 64px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${myNote ? 'Your Note' : 'Add Note'}</span>
+            </div>
+        `;
+        otherNotes.forEach(n => {
+            const u = store.getUser(n.userId);
+            notesHtml += `
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0;" onclick="app.viewUserProfile('${u.id}')">
+                <div style="position: relative;">
+                    <img src="${u.avatar}" style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border);">
+                    <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--bg-card); padding: 4px 10px; border-radius: 14px; font-size: 11px; font-weight: 600; box-shadow: var(--shadow-sm); border: 1px solid var(--border); max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; z-index: 10;">
+                        ${escapeHtml(n.text)}
+                    </div>
+                </div>
+                <span style="font-size: 11px; color: var(--text-secondary); max-width: 64px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${u.name.split(' ')[0]}</span>
+            </div>
+            `;
+        });
+
         let sidebarHtml = `
             <div class="messages-sidebar ${activeConvId ? 'hidden-on-mobile' : ''}">
                 <div class="messages-sidebar-header" style="display: flex; align-items: center; justify-content: space-between;">
@@ -1743,6 +1778,9 @@ class App {
                     <button class="icon-btn-small" onclick="app.showNewMessageModal()">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                     </button>
+                </div>
+                <div style="display: flex; gap: 14px; padding: 16px; overflow-x: auto; border-bottom: 1px solid var(--border-subtle); scrollbar-width: none;">
+                    ${notesHtml}
                 </div>
                 <div class="messages-list" id="messages-sidebar-list">
                 </div>
@@ -2797,6 +2835,27 @@ class App {
         } catch (e) {
             this.showToast('Upload failed. Please check your connection.', 'danger');
             return null;
+        }
+    }
+
+    promptAddNote() {
+        const text = prompt("What's on your mind? (Max 60 chars)");
+        if (text !== null) {
+            const cleanText = text.trim();
+            if (!cleanText) return;
+            if (cleanText.length > 60) {
+                this.showToast("Note is too long! Max 60 characters.", "error");
+                return;
+            }
+            store.createNote(cleanText).then(success => {
+                if (success) {
+                    this.showToast("Note added!");
+                    if (this.activeView === 'profile') this.renderProfileView(store.getCurrentUser().id);
+                    if (this.activeView === 'messages') this.renderMessagesView();
+                } else {
+                    this.showToast("Failed to add note", "error");
+                }
+            });
         }
     }
 

@@ -734,7 +734,13 @@ function renderProfileView(user, currentTab = 'posts') {
             <!-- Avatar + Header Info -->
             <div class="profile-header-body">
                 <!-- Avatar -->
-                <div class="profile-avatar-wrapper">
+                <div class="profile-avatar-wrapper" style="position: relative;">
+                    ${store.getNoteForUser(user.id) ? `
+                        <div style="position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background: var(--bg-card); color: var(--text-primary); padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; box-shadow: var(--shadow-md); white-space: nowrap; max-width: 180px; overflow: hidden; text-overflow: ellipsis; border: 1px solid var(--border); z-index: 10;">
+                            ${escapeHtml(store.getNoteForUser(user.id).text)}
+                            <div style="position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 10px; height: 10px; background: var(--bg-card); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);"></div>
+                        </div>
+                    ` : ''}
                     <img src="${user.avatar}" class="profile-avatar-img" id="profile-avatar-display" alt="${user.name}"
                          onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'">
                     ${isMe ? `
@@ -773,9 +779,9 @@ function renderProfileView(user, currentTab = 'posts') {
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             Edit Profile
                         </button>
-                        <button class="btn btn-secondary" onclick="app.openCreatePostModal()">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            Add Story
+                        <button class="btn btn-secondary" onclick="app.promptAddNote()">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            ${store.getNoteForUser(user.id) ? 'Update Note' : 'Add Note'}
                         </button>
                     ` : `
                         <button class="btn ${isFriend ? 'btn-secondary' : 'btn-primary'}" 

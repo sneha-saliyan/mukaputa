@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_login import login_required, current_user
 
 from ..extensions import db
-from ..models import Story, Reel, ReelLike, ReelComment, new_id
+from ..models import Story, Reel, ReelLike, ReelComment, Note, new_id
 from ..utils import err, ok, notify
 
 content_bp = Blueprint("content", __name__, url_prefix="/api")
@@ -148,3 +148,28 @@ def delete_reel_comment(reel_id, comment_id):
     db.session.delete(comment)
     db.session.commit()
     return ok()
+
+@content_bp.post("/notes")
+@login_required
+def create_note():
+    data = request.get_json(silent=True) or {}
+    text = data.get("text", "").strip()
+    if not text:
+        return err("Note text is required.")
+    if len(text) > 60:
+        return err("Note cannot exceed 60 characters.")
+
+    # Delete existing active notes for this user
+    Note.query.filter_by(user_id=current_user.id).delete()
+    
+    note = Note(id=data.get("id") or new_id("n"), user_id=current_user.id, text=text)
+    db.session.add(note)
+    db.session.commit()
+    return ok(note.to_dict())
+
+@content_bp.delete("/notes")
+@login_required
+def delete_note():
+    Note.query.filter_by(user_id=current_user.id).delete()
+    db.session.commit()
+    return ok({"success": True})

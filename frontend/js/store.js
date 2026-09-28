@@ -64,6 +64,50 @@ class Store {
     }
 
     // ==========================================
+    // NOTES METHODS
+    // ==========================================
+    getNotes() {
+        if (!this.db || !this.db.notes) return [];
+        return this.db.notes;
+    }
+
+    getNoteForUser(userId) {
+        if (!this.db || !this.db.notes) return null;
+        return this.db.notes.find(n => n.userId === userId) || null;
+    }
+
+    async createNote(text) {
+        if (!this.db) return false;
+        
+        if (!this.db.notes) this.db.notes = [];
+        this.db.notes = this.db.notes.filter(n => n.userId !== this.db.currentUserId);
+        
+        const tempNote = {
+            id: 'temp_n_' + Date.now(),
+            userId: this.db.currentUserId,
+            text: text,
+            createdAt: new Date().toISOString()
+        };
+        this.db.notes.push(tempNote);
+
+        const { ok, data } = await this._api('POST', '/api/notes', { text });
+        if (ok && data) {
+            this.db.notes = this.db.notes.map(n => n.id === tempNote.id ? data : n);
+            return true;
+        }
+        return false;
+    }
+
+    async deleteNote() {
+        if (!this.db) return false;
+        if (this.db.notes) {
+            this.db.notes = this.db.notes.filter(n => n.userId !== this.db.currentUserId);
+        }
+        await this._api('DELETE', '/api/notes');
+        return true;
+    }
+
+    // ==========================================
     // USER & AUTH METHODS
     // ==========================================
     getCurrentUser() {
@@ -664,3 +708,7 @@ class Store {
 }
 
 const store = new Store();
+
+    // ==========================================
+    // NOTES METHODS
+    // ==========================================

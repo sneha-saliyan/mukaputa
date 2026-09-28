@@ -227,6 +227,21 @@ class Story(db.Model):
             "createdAt": self.created_at.isoformat() + "Z",
         }
 
+class Note(db.Model):
+    __tablename__ = "notes"
+    id = db.Column(db.String(64), primary_key=True, default=lambda: new_id("n"))
+    user_id = db.Column(db.String(64), db.ForeignKey("users.id"), nullable=False)
+    text = db.Column(db.String(60), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "userId": self.user_id,
+            "text": self.text,
+            "createdAt": self.created_at.isoformat() + "Z",
+        }
+
 
 # ---------------------------------------------------------------------------
 # REELS
