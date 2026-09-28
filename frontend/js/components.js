@@ -723,12 +723,6 @@ function renderProfileView(user, currentTab = 'posts') {
                 <img src="${user.cover || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80'}" 
                      class="profile-cover-img" id="profile-cover-display" alt="Cover Photo"
                      onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200'">
-                ${isMe ? `
-                    <button class="btn btn-sm" 
-                            style="position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.65); color: white; border: none; backdrop-filter: blur(4px);" 
-                            onclick="app.triggerCoverUpload()">
-                        📷 Edit Cover
-                    </button>` : ''}
             </div>
 
             <!-- Avatar + Header Info -->
@@ -743,10 +737,6 @@ function renderProfileView(user, currentTab = 'posts') {
                     ` : ''}
                     <img src="${user.avatar}" class="profile-avatar-img" id="profile-avatar-display" alt="${user.name}"
                          onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'">
-                    ${isMe ? `
-                        <button class="btn btn-sm" 
-                                style="position: absolute; bottom: 2px; right: 2px; width: 30px; height: 30px; padding: 0; border-radius: 50%; background: var(--bg-card); border: 2px solid var(--border);" 
-                                onclick="app.triggerAvatarUpload()" title="Change photo">📷</button>` : ''}
                 </div>
 
                 <!-- Name & Username -->
@@ -1081,3 +1071,4 @@ function renderAd(ad) {
     </div>
     `;
 }
+
