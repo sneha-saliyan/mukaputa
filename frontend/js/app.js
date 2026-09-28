@@ -3409,7 +3409,7 @@ class App {
             container.innerHTML = user.blockedUsers.map(b => `
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border-color);">
                     <div style="display: flex; align-items: center; gap: 12px;">
-                        <img src="${b.avatar}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                        <img src="${b.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'">
                         <div style="font-weight: 600;">${b.name}</div>
                     </div>
                     <button class="btn btn-secondary btn-sm" onclick="app.unblockUser('${b.id}')">Unblock</button>
@@ -3685,6 +3685,7 @@ window.addEventListener("resize", () => {
         }
     }
 });
+
 
 
 
