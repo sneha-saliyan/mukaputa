@@ -701,6 +701,17 @@ function renderNotificationItem(notif) {
 // PROFILE VIEW RENDERER (Mobile-First)
 // ==========================================
 function renderProfileView(user, currentTab = 'posts') {
+    if (user.isBlockedPlaceholder) {
+        return `
+            <div class="card" style="text-align: center; padding: 60px 20px; margin-top: 20px;">
+                <div style="font-size: 48px; margin-bottom: 16px;">🚫</div>
+                <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Content Unavailable</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 24px;">This account cannot be found or is unavailable.</p>
+                <button class="btn btn-primary" onclick="app.switchView('home')">Go to Home</button>
+            </div>
+        `;
+    }
+
     const currentUser = store.getCurrentUser();
     const isMe = currentUser.id === user.id;
     const isFriend = currentUser.friends && currentUser.friends.includes(user.id);

@@ -68,7 +68,7 @@ class Store {
     // ==========================================
     getNotes() {
         if (!this.db || !this.db.notes) return [];
-        return this.db.notes;
+        return this.db.notes.filter(n => !this.isBlocked(n.userId));
     }
 
     getNoteForUser(userId) {
@@ -115,6 +115,15 @@ class Store {
         return this.db.users.find(u => u.id === this.db.currentUserId) || this.db.users[0];
     }
 
+    isBlocked(userId) {
+        if (!this.db || !this.db.currentUserId || !userId || userId === this.db.currentUserId) return false;
+        const currentUser = this.getCurrentUser();
+        const otherUser = this.db.users.find(u => u.id === userId);
+        const iBlockedThem = currentUser && currentUser.blockedUsers && currentUser.blockedUsers.some(b => b.id === userId);
+        const theyBlockedMe = otherUser && otherUser.blockedUsers && otherUser.blockedUsers.some(b => b.id === currentUser.id);
+        return iBlockedThem || theyBlockedMe;
+    }
+
     getUser(userId) {
         if (!this.db || !this.db.users) return { id: userId, name: 'User', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' };
         return this.db.users.find(u => u.id === userId) || { id: userId, name: 'Mukaputa User', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' };
@@ -158,7 +167,7 @@ class Store {
     // POSTS & FEED METHODS
     // ==========================================
     getPosts() {
-        return (this.db.posts || []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        return (this.db.posts || []).filter(p => !this.isBlocked(p.authorId)).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
 
     getPost(postId) {
@@ -274,7 +283,7 @@ class Store {
     // STORIES & REELS
     // ==========================================
     getStories() {
-        return this.db.stories || [];
+        return (this.db.stories || []).filter(s => !this.isBlocked(s.authorId));
     }
 
     addStory(story) {
@@ -298,7 +307,7 @@ class Store {
     }
 
     getReels() {
-        return this.db.reels || [];
+        return (this.db.reels || []).filter(r => !this.isBlocked(r.authorId));
     }
 
     addReel(reel) {
@@ -356,7 +365,7 @@ class Store {
     }
 
     getWatchVideos() {
-        return this.db.watchVideos || [];
+        return (this.db.watchVideos || []).filter(v => !this.isBlocked(v.authorId));
     }
 
     // ==========================================
@@ -485,13 +494,13 @@ class Store {
     getFriends(userId) {
         const user = this.getUser(userId);
         if (!user || !user.friends) return [];
-        return (this.db.users || []).filter(u => user.friends.includes(u.id));
+        return (this.db.users || []).filter(u => user.friends.includes(u.id) && !this.isBlocked(u.id));
     }
 
     getFriendSuggestions() {
         const currentUser = this.getCurrentUser();
         const friendIds = currentUser.friends || [];
-        return (this.db.users || []).filter(u => u.id !== currentUser.id && !friendIds.includes(u.id));
+        return (this.db.users || []).filter(u => u.id !== currentUser.id && !friendIds.includes(u.id) && !this.isBlocked(u.id));
     }
 
     addFriend(targetUserId) {
@@ -523,11 +532,16 @@ class Store {
     // MESSAGING
     // ==========================================
     getConversations() {
-        return this.db.conversations || [];
+        return (this.db.conversations || []).filter(c => { const otherId = c.participantIds.find(id => id !== this.db.currentUserId); return !this.isBlocked(otherId); });
     }
 
     getConversation(convId) {
-        return (this.db.conversations || []).find(c => c.id === convId);
+        const conv = (this.db.conversations || []).find(c => c.id === convId);
+        if (conv) {
+            const otherId = conv.participantIds.find(id => id !== this.db.currentUserId);
+            if (this.isBlocked(otherId)) return null;
+        }
+        return conv;
     }
 
     async getConversationWithUser(otherUserId) {
@@ -695,13 +709,13 @@ class Store {
         if (!query || !query.trim()) return { people: [], posts: [], groups: [], jobs: [] };
         const q = query.toLowerCase().trim();
 
-        const people = (this.db.users || []).filter(u =>
+        const people = (this.db.users || []).filter(u => !this.isBlocked(u.id) && (
             u.name.toLowerCase().includes(q) || u.username.toLowerCase().includes(q) || (u.bio && u.bio.toLowerCase().includes(q))
-        );
+        ));
 
-        const posts = (this.db.posts || []).filter(p =>
+        const posts = (this.db.posts || []).filter(p => !this.isBlocked(p.authorId) && (
             p.text.toLowerCase().includes(q)
-        );
+        ));
 
         const groups = (this.db.groups || []).filter(g =>
             g.name.toLowerCase().includes(q) || g.description.toLowerCase().includes(q)
@@ -721,3 +735,13 @@ const store = new Store();
     // ==========================================
     // NOTES METHODS
     // ==========================================
+
+
+
+
+
+
+
+
+
+
