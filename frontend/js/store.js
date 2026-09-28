@@ -126,7 +126,16 @@ class Store {
 
     getUser(userId) {
         if (!this.db || !this.db.users) return { id: userId, name: 'User', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' };
-        return this.db.users.find(u => u.id === userId) || { id: userId, name: 'Mukaputa User', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' };
+        
+        const actualUser = this.db.users.find(u => u.id === userId);
+        if (this.isBlocked(userId)) {
+            if (actualUser) {
+                return { ...actualUser, isBlockedPlaceholder: true };
+            }
+            return { id: userId, name: 'Mukaputa User', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', isBlockedPlaceholder: true };
+        }
+        
+        return actualUser || { id: userId, name: 'Mukaputa User', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' };
     }
 
     async updateProfile(updatedFields) {
