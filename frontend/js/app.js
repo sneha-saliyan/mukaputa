@@ -1897,6 +1897,34 @@ class App {
                 const isUnread = lastMsg && lastMsg.senderId !== store.db.currentUserId && Math.random() > 0.5;
                 const timeStr = lastMsg ? timeAgo(lastMsg.createdAt).replace(' ago', '') : '';
                 
+                let previewText = 'Start conversation...';
+                if (lastMsg) {
+                    if (lastMsg.type === 'call') {
+                        try {
+                            const callData = JSON.parse(lastMsg.text);
+                            const icon = callData.kind === 'video' ? '📹' : '📞';
+                            if (callData.status === 'missed' || callData.status === 'cancelled' || callData.status === 'unavailable') {
+                                previewText = `${icon} Missed call`;
+                            } else if (callData.status === 'declined') {
+                                previewText = `${icon} Call declined`;
+                            } else {
+                                previewText = `${icon} ${callData.kind === 'video' ? 'Video' : 'Voice'} call`;
+                            }
+                        } catch (e) {
+                            previewText = '📞 Call';
+                        }
+                    } else if (lastMsg.type === 'image') {
+                        previewText = '📷 Photo';
+                    } else if (lastMsg.type === 'audio') {
+                        previewText = '🎤 Voice note';
+                    } else {
+                        previewText = escapeHtml(lastMsg.text || 'Attachment');
+                    }
+                    if (lastMsg.senderId === store.db.currentUserId) {
+                        previewText = 'You: ' + previewText;
+                    }
+                }
+                
                 return `
                     <div class="menu-item ${isActive ? 'active' : ''}" style="padding: 12px; gap: 12px; border-radius: 8px;" onclick="app.renderMessagesView('${c.id}')">
                         <div style="position: relative;">
@@ -1907,7 +1935,7 @@ class App {
                             <h4 style="font-size: 15px; margin: 0; ${isUnread ? 'font-weight: 700;' : 'font-weight: 500;'}">${otherUser.name}</h4>
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <p style="font-size: 13px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ${isUnread ? 'font-weight: 600; color: var(--text-primary);' : 'color: var(--text-secondary);'}">
-                                    ${lastMsg ? (lastMsg.senderId === store.db.currentUserId ? 'You: ' + escapeHtml(lastMsg.text || 'Attachment') : escapeHtml(lastMsg.text || 'Attachment')) : 'Start conversation...'}
+                                    ${previewText}
                                 </p>
                                 <span style="font-size: 11px; color: var(--text-tertiary); margin-left: 6px; flex-shrink: 0;">${timeStr}</span>
                             </div>
