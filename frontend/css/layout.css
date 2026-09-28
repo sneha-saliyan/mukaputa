@@ -943,3 +943,59 @@ body.messages-active .messages-view-container {
 }
 
 
+
+/* ==========================================================================
+   DESKTOP: LOGO ONLY IN CHAT & REELS
+   ========================================================================== */
+@media (min-width: 901px) {
+    body.reels-active .top-nav,
+    body.messages-active .top-nav {
+        position: fixed !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        pointer-events: none;
+
+/* ==========================================================================
+   DESKTOP (PC GRID): LOGO ONLY IN CHAT & REELS
+   ========================================================================== */
+@media (min-width: 901px) {
+    /* Hide top nav background and right side items */
+    body.reels-active .top-nav,
+    body.messages-active .top-nav {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        backdrop-filter: none !important;
+        pointer-events: none;
+    }
+    
+    body.reels-active .top-nav .nav-left,
+    body.messages-active .top-nav .nav-left {
+        pointer-events: auto; /* Logo remains clickable */
+    }
+    
+    body.reels-active .top-nav .nav-center,
+    body.reels-active .top-nav .nav-right,
+    body.messages-active .top-nav .nav-center,
+    body.messages-active .top-nav .nav-right {
+        display: none !important;
+    }
+
+    /* Reels specific: make the transparent nav fixed so video takes full screen */
+    body.reels-active .top-nav {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 9999;
+    }
+    
+    body.reels-active .main-container {
+        padding-top: 0 !important;
+    }
+
+    /* Messages specific: let the transparent nav take up space so it doesn't overlap chat header */
+    body.messages-active .top-nav {
+        position: relative !important;
+    }
+}
