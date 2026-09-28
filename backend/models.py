@@ -59,17 +59,30 @@ class User(UserMixin, db.Model):
         blocked_ids = [b.blocked_id for b in self.blocked_links]
 
         # Fetch blocked user details (could still be a few queries, but rare)
+        import urllib.parse
+        encoded_seed = urllib.parse.quote(self.username or self.name or "user")
+        
+        avatar_url = self.avatar
+        if not avatar_url:
+            avatar_url = f"https://api.dicebear.com/9.x/notionists/svg?seed={encoded_seed}&backgroundColor=c0aede,b6e3f4,d1d4f9,ffdfbf"
+            
+        cover_url = self.cover
+        if not cover_url:
+            cover_url = f"https://api.dicebear.com/9.x/shapes/svg?seed={encoded_seed}cover&backgroundColor=0a0a0a,1a1a1a&shape1Color=c0aede,b6e3f4,d1d4f9"
+
         blocked_users = []
         if blocked_ids:
             for bu in User.query.filter(User.id.in_(blocked_ids)).all():
-                blocked_users.append({"id": bu.id, "name": bu.name, "avatar": bu.avatar})
+                bu_seed = urllib.parse.quote(bu.username or bu.name or "user")
+                bu_avatar = bu.avatar or f"https://api.dicebear.com/9.x/notionists/svg?seed={bu_seed}&backgroundColor=c0aede,b6e3f4,d1d4f9,ffdfbf"
+                blocked_users.append({"id": bu.id, "name": bu.name, "avatar": bu_avatar})
 
         data = {
             "id": self.id,
             "name": self.name,
             "username": self.username,
-            "avatar": self.avatar,
-            "cover": self.cover,
+            "avatar": avatar_url,
+            "cover": cover_url,
             "bio": self.bio,
             "work": self.work,
             "education": self.education,
