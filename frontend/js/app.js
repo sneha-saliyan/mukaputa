@@ -160,6 +160,29 @@ class App {
             document.body.classList.remove('reels-active');
         }
 
+        // Force hide nav-right for reels and messages to bypass any CSS caching
+        const navRight = document.querySelector('.top-nav .nav-right');
+        const topNav = document.querySelector('.top-nav');
+        if (navRight && topNav) {
+            if (viewName === 'messages' || viewName === 'reels') {
+                navRight.style.display = 'none';
+                if (window.innerWidth > 900) {
+                    topNav.style.background = 'transparent';
+                    topNav.style.boxShadow = 'none';
+                    topNav.style.border = 'none';
+                    topNav.style.pointerEvents = 'none';
+                    const navLeft = topNav.querySelector('.nav-left');
+                    if (navLeft) navLeft.style.pointerEvents = 'auto';
+                }
+            } else {
+                navRight.style.display = 'flex';
+                topNav.style.background = '';
+                topNav.style.boxShadow = '';
+                topNav.style.border = '';
+                topNav.style.pointerEvents = 'auto';
+            }
+        }
+
         // Reset nav tab active classes
         document.querySelectorAll('.nav-tab, .tab-btn, .menu-item[data-nav]').forEach(el => {
             el.classList.remove('active');
