@@ -999,3 +999,15 @@ body.messages-active .messages-view-container {
         position: relative !important;
     }
 }
+
+body.reels-active .nav-right,
+body.messages-active .nav-right,
+body.reels-active .nav-center,
+body.messages-active .nav-center {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
