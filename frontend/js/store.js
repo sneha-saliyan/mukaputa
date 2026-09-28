@@ -465,6 +465,16 @@ class Store {
         this._api('POST', '/api/jobs', job);
     }
 
+    async postJob(jobPayload) {
+        const { ok, data } = await this._api('POST', '/api/jobs', jobPayload);
+        if (ok && data && data.job) {
+            if (!this.db.jobVacancies) this.db.jobVacancies = [];
+            this.db.jobVacancies.unshift(data.job);
+            return data.job;
+        }
+        return null;
+    }
+
     toggleJobSaved(jobId) {
         const job = (this.db.jobVacancies || []).find(j => j.id === jobId);
         if (job) {

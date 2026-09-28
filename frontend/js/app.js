@@ -3256,38 +3256,53 @@ class App {
 
     // Post Job Modal
     openPostJobModal() {
-        const title = prompt("Job Title (e.g. Senior Frontend Engineer):");
-        if (!title) return;
-        const company = prompt("Company Name:", "My Company");
-        if (!company) return;
-        const salary = prompt("Salary Range (e.g. $80,000 – $120,000/yr):", "$80,000 – $120,000/yr");
-        const category = prompt("Category (Engineering / Design / AI-ML / DevOps / Marketing / Sales):", "Engineering");
-        const remote = prompt("Work Type (Remote / Hybrid / On-site):", "Hybrid");
-        const location = prompt("Location (e.g. San Francisco, CA):", "Remote");
-        const description = prompt("Brief job description:", "We are looking for a talented professional to join our growing team.");
+        document.getElementById('post-job-form').reset();
+        document.getElementById('post-job-modal').classList.remove('hidden');
+    }
 
-        store.addJobVacancy({
-            id: 'j_' + Date.now(),
-            postedBy: store.db.currentUserId,
-            company: company,
-            logo: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=200&auto=format&fit=crop&q=80",
-            title: title,
-            type: "Full-Time",
-            location: location || "Remote",
-            remote: remote || "Hybrid",
-            salary: salary || "Competitive",
-            category: category || "Engineering",
-            description: description || "Join our team and make an impact.",
-            requirements: ["Relevant experience", "Strong communication skills"],
-            benefits: ["Competitive salary", "Health insurance", "Flexible hours"],
-            applicants: 0,
-            appliedBy: [],
-            postedAt: new Date().toISOString(),
-            saved: false
-        });
+    closePostJobModal() {
+        document.getElementById('post-job-modal').classList.add('hidden');
+    }
 
-        this.renderJobsView();
-        this.showToast(`💼 Job posted: ${title} at ${company}!`, 'success');
+    async submitJobPost() {
+        const btn = document.getElementById('submit-job-btn');
+        btn.disabled = true;
+        btn.textContent = 'Posting...';
+
+        const reqs = document.getElementById('job-requirements').value.split(',').map(r => r.trim()).filter(Boolean);
+        const benefits = document.getElementById('job-benefits').value.split(',').map(b => b.trim()).filter(Boolean);
+
+        const payload = {
+            title: document.getElementById('job-title').value,
+            company: document.getElementById('job-company').value,
+            logo: document.getElementById('job-logo').value,
+            type: document.getElementById('job-type').value,
+            remote: document.getElementById('job-remote').value,
+            category: document.getElementById('job-category').value,
+            location: document.getElementById('job-location').value,
+            salary: document.getElementById('job-salary').value,
+            description: document.getElementById('job-description').value,
+            requirements: reqs,
+            benefits: benefits
+        };
+
+        try {
+            const res = await store.postJob(payload);
+            if (res) {
+                this.showToast('Job posted successfully! ??', 'success');
+                this.closePostJobModal();
+                if (this.activeView === 'jobs') {
+                    this.switchView('jobs');
+                }
+            } else {
+                this.showToast('Failed to post job. Please try again.', 'danger');
+            }
+        } catch (e) {
+            this.showToast('Error posting job.', 'danger');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Post Job';
+        }
     }
 
     // Create Group Modal

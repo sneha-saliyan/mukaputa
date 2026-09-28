@@ -1,19 +1,19 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mukaputa — Next-Gen Social Connection</title>
+    <title>Mukaputa â€” Next-Gen Social Connection</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <!-- Fonts: Space Grotesk (Headings) + Inter (UI/Body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="css/variables.css?v=102">
-    <link rel="stylesheet" href="css/layout.css?v=102">
-    <link rel="stylesheet" href="css/components.css?v=102">
-    <link rel="stylesheet" href="css/feed.css?v=102">
+    <link rel="stylesheet" href="css/variables.css?v=103">
+    <link rel="stylesheet" href="css/layout.css?v=103">
+    <link rel="stylesheet" href="css/components.css?v=103">
+    <link rel="stylesheet" href="css/feed.css?v=103">
     <link rel="stylesheet" href="css/realtime.css">
     <style>
         #app-splash {
@@ -290,10 +290,10 @@
                 </div>
                 <div class="filter-pills" id="watch-filter-pills">
                     <div class="pill active" onclick="app.filterWatchVideos('All', this)">All</div>
-                    <div class="pill" onclick="app.filterWatchVideos('Education', this)">🎓 Education</div>
-                    <div class="pill" onclick="app.filterWatchVideos('IT Field', this)">💻 IT Field</div>
-                    <div class="pill" onclick="app.filterWatchVideos('YouTube', this)">▶️ YouTube Tutorials</div>
-                    <div class="pill" onclick="app.filterWatchVideos('Google', this)">🌐 Google Resources</div>
+                    <div class="pill" onclick="app.filterWatchVideos('Education', this)">ðŸŽ“ Education</div>
+                    <div class="pill" onclick="app.filterWatchVideos('IT Field', this)">ðŸ’» IT Field</div>
+                    <div class="pill" onclick="app.filterWatchVideos('YouTube', this)">â–¶ï¸ YouTube Tutorials</div>
+                    <div class="pill" onclick="app.filterWatchVideos('Google', this)">ðŸŒ Google Resources</div>
                 </div>
             </div>
             <div id="watch-container"></div>
@@ -327,7 +327,7 @@
                 <div class="pill" onclick="app.filterJobsByCategory('AI / ML', this)">AI / ML</div>
                 <div class="pill" onclick="app.filterJobsByCategory('DevOps', this)">DevOps</div>
                 <div class="pill" onclick="app.filterJobsByCategory('Remote', this)">Remote Only</div>
-                <div class="pill" onclick="app.filterJobsByCategory('Saved', this)">⭐ Saved</div>
+                <div class="pill" onclick="app.filterJobsByCategory('Saved', this)">â­ Saved</div>
             </div>
 
             <div id="jobs-container" style="margin-top: 16px;"></div>
@@ -588,7 +588,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Create Post</h2>
-                <button class="close-btn" id="close-post-modal">✕</button>
+                <button class="close-btn" id="close-post-modal">âœ•</button>
             </div>
             <div class="modal-body">
                 <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
@@ -596,13 +596,13 @@
                     <div>
                         <strong class="current-user-name" style="font-size: 14px;">John Doe</strong>
                         <div style="display: flex; gap: 6px; margin-top: 2px;">
-                            <span class="pill" style="padding: 2px 8px; font-size: 11px;">🌐 Public ▾</span>
+                            <span class="pill" style="padding: 2px 8px; font-size: 11px;">ðŸŒ Public â–¾</span>
                             <select id="post-feeling-select" class="pill" style="padding: 2px 8px; font-size: 11px; border: none; background: var(--bg-secondary);">
-                                <option value="">😄 Feeling / Activity</option>
-                                <option value="feeling excited">✨ feeling excited</option>
-                                <option value="feeling happy">😊 feeling happy</option>
-                                <option value="feeling peaceful">🌄 feeling peaceful</option>
-                                <option value="feeling motivated">🚀 feeling motivated</option>
+                                <option value="">ðŸ˜„ Feeling / Activity</option>
+                                <option value="feeling excited">âœ¨ feeling excited</option>
+                                <option value="feeling happy">ðŸ˜Š feeling happy</option>
+                                <option value="feeling peaceful">ðŸŒ„ feeling peaceful</option>
+                                <option value="feeling motivated">ðŸš€ feeling motivated</option>
                             </select>
                         </div>
                     </div>
@@ -612,7 +612,7 @@
 
                 <div id="post-image-preview-container" style="display: none; position: relative; margin-top: 12px; border-radius: var(--radius-md); overflow: hidden;">
                     <img id="post-image-preview-src" src="" style="width: 100%; max-height: 250px; object-fit: cover;" alt="Upload Preview">
-                    <button class="close-btn" style="position: absolute; top: 8px; right: 8px;" onclick="app.removePostImagePreview()">✕</button>
+                    <button class="close-btn" style="position: absolute; top: 8px; right: 8px;" onclick="app.removePostImagePreview()">âœ•</button>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px 14px; margin-top: 16px;">
@@ -646,9 +646,9 @@
                 </div>
                 <div style="display: flex; gap: 8px; align-items: center; z-index: 10;">
                     <button class="icon-btn-small" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 12px; padding: 4px 10px; border-radius: 12px; width: auto;" onclick="app.toggleStoryFit('viewer')">Fit/Fill</button>
-                    <button class="icon-btn-small hidden" id="story-delete-btn" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 14px;" onclick="app.deleteCurrentStory()" title="Delete Story">🗑️</button>
-                    <button class="icon-btn-small" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 14px;" onclick="app.openStorySettings()" title="Story Settings">⚙️</button>
-                    <button class="close-btn" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 18px; margin-left: 8px;" onclick="app.closeStoryViewer()">✕</button>
+                    <button class="icon-btn-small hidden" id="story-delete-btn" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 14px;" onclick="app.deleteCurrentStory()" title="Delete Story">ðŸ—‘ï¸</button>
+                    <button class="icon-btn-small" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 14px;" onclick="app.openStorySettings()" title="Story Settings">âš™ï¸</button>
+                    <button class="close-btn" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 18px; margin-left: 8px;" onclick="app.closeStoryViewer()">âœ•</button>
                 </div>
             </div>
 
@@ -672,8 +672,8 @@
             <div style="position: absolute; top: 0; left: 0; width: 40%; height: 100%; cursor: pointer; z-index: 5;" onclick="app.prevStory()"></div>
             <div style="position: absolute; top: 0; right: 0; width: 60%; height: 100%; cursor: pointer; z-index: 5;" onclick="app.nextStory()"></div>
             
-            <button class="story-nav-btn story-nav-left" onclick="app.prevStory()">‹</button>
-            <button class="story-nav-btn story-nav-right" onclick="app.nextStory()">›</button>
+            <button class="story-nav-btn story-nav-left" onclick="app.prevStory()">â€¹</button>
+            <button class="story-nav-btn story-nav-right" onclick="app.nextStory()">â€º</button>
         </div>
     </div>
 
@@ -682,14 +682,14 @@
         <div class="live-studio-container">
             <video id="live-webcam-preview" class="live-video-stream" autoplay playsinline muted></video>
             
-            <div class="live-badge">🔴 LIVE</div>
+            <div class="live-badge">ðŸ”´ LIVE</div>
             <div class="live-viewer-count" id="live-viewers-count">14 viewers</div>
 
             <div class="live-comments-stream" id="live-comments-stream"></div>
 
             <div class="live-footer-controls">
                 <div style="color: white; font-size: 14px; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">
-                    <strong>Mukaputa Live Studio</strong> · Broadcasting to your followers
+                    <strong>Mukaputa Live Studio</strong> Â· Broadcasting to your followers
                 </div>
                 <button class="btn btn-danger" onclick="app.endLiveStudio()">End Broadcast</button>
             </div>
@@ -708,12 +708,106 @@
 
     <!-- Photo Viewer Lightbox -->
     <div class="photo-viewer-overlay hidden" id="photo-viewer-overlay">
-        <button class="photo-viewer-close" onclick="app.closePhotoViewer()">✕</button>
+        <button class="photo-viewer-close" onclick="app.closePhotoViewer()">âœ•</button>
         <img class="photo-viewer-img" id="photo-viewer-img" src="" alt="Photo">
         <div class="photo-viewer-controls">
-            <button class="photo-viewer-btn" onclick="app.prevPhoto()">‹</button>
+            <button class="photo-viewer-btn" onclick="app.prevPhoto()">â€¹</button>
             <span class="photo-viewer-counter" id="photo-viewer-counter">1 / 1</span>
-            <button class="photo-viewer-btn" onclick="app.nextPhoto()">›</button>
+            <button class="photo-viewer-btn" onclick="app.nextPhoto()">â€º</button>
+        </div>
+    </div>
+
+        <!-- Post Job Modal -->
+    <div class="modal-overlay hidden" id="post-job-modal">
+        <div class="modal-content" style="max-width: 600px; padding: 0;">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border); padding: 16px;">
+                <h2 style="font-size: 18px;">Post a Job</h2>
+                <button class="icon-btn close-modal" onclick="app.closePostJobModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 24px; max-height: 70vh; overflow-y: auto;">
+                <form id="post-job-form" onsubmit="event.preventDefault(); app.submitJobPost();">
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Job Title *</label>
+                            <input type="text" id="job-title" class="input-text" required placeholder="e.g. Senior Frontend Engineer" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Company Name *</label>
+                            <input type="text" id="job-company" class="input-text" required placeholder="e.g. Google" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Company Logo URL</label>
+                        <input type="url" id="job-logo" class="input-text" placeholder="https://example.com/logo.png" style="width: 100%; box-sizing: border-box;">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Job Type</label>
+                            <select id="job-type" class="input-text" style="width: 100%; box-sizing: border-box;">
+                                <option>Full-Time</option>
+                                <option>Part-Time</option>
+                                <option>Contract</option>
+                                <option>Freelance</option>
+                                <option>Internship</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Workplace</label>
+                            <select id="job-remote" class="input-text" style="width: 100%; box-sizing: border-box;">
+                                <option>Remote</option>
+                                <option>Hybrid</option>
+                                <option>On-Site</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Category</label>
+                            <select id="job-category" class="input-text" style="width: 100%; box-sizing: border-box;">
+                                <option>Engineering</option>
+                                <option>Design</option>
+                                <option>Product</option>
+                                <option>Marketing</option>
+                                <option>Sales</option>
+                                <option>Data</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Location</label>
+                            <input type="text" id="job-location" class="input-text" placeholder="e.g. San Francisco, CA" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Salary Range</label>
+                            <input type="text" id="job-salary" class="input-text" placeholder="e.g. $120k - $150k" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Job Description *</label>
+                        <textarea id="job-description" class="input-text" required rows="4" placeholder="Describe the role, responsibilities, and team..." style="width: 100%; box-sizing: border-box; resize: vertical;"></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Requirements (comma separated)</label>
+                        <input type="text" id="job-requirements" class="input-text" placeholder="e.g. 3+ years React, TypeScript, Team player" style="width: 100%; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Benefits (comma separated)</label>
+                        <input type="text" id="job-benefits" class="input-text" placeholder="e.g. 401k match, Remote work, Health insurance" style="width: 100%; box-sizing: border-box;">
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                        <button type="button" class="btn btn-outline" onclick="app.closePostJobModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submit-job-btn">Post Job</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -722,7 +816,7 @@
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
                 <h2>Job Details</h2>
-                <button class="close-btn" onclick="document.getElementById('job-details-modal').classList.add('hidden')">✕</button>
+                <button class="close-btn" onclick="document.getElementById('job-details-modal').classList.add('hidden')">âœ•</button>
             </div>
             <div class="modal-body" id="job-details-content" style="max-height: 80vh; overflow-y: auto;"></div>
         </div>
@@ -878,8 +972,8 @@
                 
                 <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Privacy</label>
                 <select id="create-group-privacy" class="input-text" style="width: 100%; box-sizing: border-box; margin-bottom: 16px;">
-                    <option value="public">🌍 Public (Anyone can see who's in the group and what they post)</option>
-                    <option value="private">🔒 Private (Only members can see who's in the group and what they post)</option>
+                    <option value="public">ðŸŒ Public (Anyone can see who's in the group and what they post)</option>
+                    <option value="private">ðŸ”’ Private (Only members can see who's in the group and what they post)</option>
                 </select>
 
                 <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Description</label>
@@ -950,12 +1044,106 @@
 
     <!-- Photo Viewer Lightbox -->
     <div class="photo-viewer-overlay hidden" id="photo-viewer-overlay">
-        <button class="photo-viewer-close" onclick="app.closePhotoViewer()">✕</button>
+        <button class="photo-viewer-close" onclick="app.closePhotoViewer()">âœ•</button>
         <img class="photo-viewer-img" id="photo-viewer-img" src="" alt="Photo">
         <div class="photo-viewer-controls">
-            <button class="photo-viewer-btn" onclick="app.prevPhoto()">‹</button>
+            <button class="photo-viewer-btn" onclick="app.prevPhoto()">â€¹</button>
             <span class="photo-viewer-counter" id="photo-viewer-counter">1 / 1</span>
-            <button class="photo-viewer-btn" onclick="app.nextPhoto()">›</button>
+            <button class="photo-viewer-btn" onclick="app.nextPhoto()">â€º</button>
+        </div>
+    </div>
+
+        <!-- Post Job Modal -->
+    <div class="modal-overlay hidden" id="post-job-modal">
+        <div class="modal-content" style="max-width: 600px; padding: 0;">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border); padding: 16px;">
+                <h2 style="font-size: 18px;">Post a Job</h2>
+                <button class="icon-btn close-modal" onclick="app.closePostJobModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 24px; max-height: 70vh; overflow-y: auto;">
+                <form id="post-job-form" onsubmit="event.preventDefault(); app.submitJobPost();">
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Job Title *</label>
+                            <input type="text" id="job-title" class="input-text" required placeholder="e.g. Senior Frontend Engineer" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Company Name *</label>
+                            <input type="text" id="job-company" class="input-text" required placeholder="e.g. Google" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Company Logo URL</label>
+                        <input type="url" id="job-logo" class="input-text" placeholder="https://example.com/logo.png" style="width: 100%; box-sizing: border-box;">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Job Type</label>
+                            <select id="job-type" class="input-text" style="width: 100%; box-sizing: border-box;">
+                                <option>Full-Time</option>
+                                <option>Part-Time</option>
+                                <option>Contract</option>
+                                <option>Freelance</option>
+                                <option>Internship</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Workplace</label>
+                            <select id="job-remote" class="input-text" style="width: 100%; box-sizing: border-box;">
+                                <option>Remote</option>
+                                <option>Hybrid</option>
+                                <option>On-Site</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Category</label>
+                            <select id="job-category" class="input-text" style="width: 100%; box-sizing: border-box;">
+                                <option>Engineering</option>
+                                <option>Design</option>
+                                <option>Product</option>
+                                <option>Marketing</option>
+                                <option>Sales</option>
+                                <option>Data</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Location</label>
+                            <input type="text" id="job-location" class="input-text" placeholder="e.g. San Francisco, CA" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Salary Range</label>
+                            <input type="text" id="job-salary" class="input-text" placeholder="e.g. $120k - $150k" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Job Description *</label>
+                        <textarea id="job-description" class="input-text" required rows="4" placeholder="Describe the role, responsibilities, and team..." style="width: 100%; box-sizing: border-box; resize: vertical;"></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Requirements (comma separated)</label>
+                        <input type="text" id="job-requirements" class="input-text" placeholder="e.g. 3+ years React, TypeScript, Team player" style="width: 100%; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Benefits (comma separated)</label>
+                        <input type="text" id="job-benefits" class="input-text" placeholder="e.g. 401k match, Remote work, Health insurance" style="width: 100%; box-sizing: border-box;">
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                        <button type="button" class="btn btn-outline" onclick="app.closePostJobModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submit-job-btn">Post Job</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -964,7 +1152,7 @@
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
                 <h2>Job Details</h2>
-                <button class="close-btn" onclick="document.getElementById('job-details-modal').classList.add('hidden')">✕</button>
+                <button class="close-btn" onclick="document.getElementById('job-details-modal').classList.add('hidden')">âœ•</button>
             </div>
             <div class="modal-body" id="job-details-content" style="max-height: 80vh; overflow-y: auto;"></div>
         </div>
@@ -1083,8 +1271,8 @@
                 
                 <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Privacy</label>
                 <select id="create-group-privacy" class="input-text" style="width: 100%; box-sizing: border-box; margin-bottom: 16px;">
-                    <option value="public">🌍 Public (Anyone can see who's in the group and what they post)</option>
-                    <option value="private">🔒 Private (Only members can see who's in the group and what they post)</option>
+                    <option value="public">ðŸŒ Public (Anyone can see who's in the group and what they post)</option>
+                    <option value="private">ðŸ”’ Private (Only members can see who's in the group and what they post)</option>
                 </select>
 
                 <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Description</label>
@@ -1164,7 +1352,7 @@
         <div class="modal-content" style="max-width: 500px; padding: 0;">
             <div class="modal-header" style="padding: 16px; border-bottom: 1px solid var(--border-color);">
                 <h2>Edit Profile</h2>
-                <button class="icon-btn close-modal" onclick="document.getElementById('edit-profile-modal').classList.add('hidden')">✕</button>
+                <button class="icon-btn close-modal" onclick="document.getElementById('edit-profile-modal').classList.add('hidden')">âœ•</button>
             </div>
             <div style="padding: 24px; max-height: 70vh; overflow-y: auto;">
                 
@@ -1211,7 +1399,7 @@
         <div class="modal-content" style="max-width: 500px; padding: 0;">
             <div class="modal-header" style="padding: 16px; border-bottom: 1px solid var(--border-color);">
                 <h2>Profile Privacy</h2>
-                <button class="icon-btn close-modal" onclick="document.getElementById('privacy-settings-modal').classList.add('hidden')">✕</button>
+                <button class="icon-btn close-modal" onclick="document.getElementById('privacy-settings-modal').classList.add('hidden')">âœ•</button>
             </div>
             <div style="padding: 24px;">
                 <label style="display: block; margin-bottom: 8px; font-weight: 600;">Who can see your future posts?</label>
@@ -1250,7 +1438,7 @@
         <div class="modal-content" style="max-width: 500px; padding: 0;">
             <div class="modal-header" style="padding: 16px; border-bottom: 1px solid var(--border-color);">
                 <h2>Blocked Accounts</h2>
-                <button class="icon-btn close-modal" onclick="document.getElementById('blocked-accounts-modal').classList.add('hidden')">✕</button>
+                <button class="icon-btn close-modal" onclick="document.getElementById('blocked-accounts-modal').classList.add('hidden')">âœ•</button>
             </div>
             <div style="padding: 24px; max-height: 400px; overflow-y: auto;" id="blocked-accounts-list">
                 <!-- Dynamically populated -->
@@ -1263,7 +1451,7 @@
         <div class="modal-content" style="max-width: 500px; padding: 0;">
             <div class="modal-header" style="padding: 16px; border-bottom: 1px solid var(--border-color);">
                 <h2>Deactivate or Delete</h2>
-                <button class="icon-btn close-modal" onclick="document.getElementById('delete-account-modal').classList.add('hidden')">✕</button>
+                <button class="icon-btn close-modal" onclick="document.getElementById('delete-account-modal').classList.add('hidden')">âœ•</button>
             </div>
             <div style="padding: 24px;">
                 <div style="padding: 16px; border: 1px solid var(--danger); border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: var(--danger); margin-bottom: 24px;">
@@ -1277,14 +1465,16 @@
 
     <!-- Scripts -->
     <script src="js/vendor/socket.io.min.js"></script>
-    <script src="js/store.js?v=102"></script>
-    <script src="js/components.js?v=102"></script>
-    <script src="js/feed.js?v=102"></script>
-    <script src="js/app.js?v=102"></script>
+    <script src="js/store.js?v=103"></script>
+    <script src="js/components.js?v=103"></script>
+    <script src="js/feed.js?v=103"></script>
+    <script src="js/app.js?v=103"></script>
     <script src="js/calls.js"></script>
     <script src="js/boot.js"></script>
 </body>
 </html>
+
+
 
 
 
