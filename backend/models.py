@@ -216,6 +216,7 @@ class Story(db.Model):
     author_id = db.Column(db.String(64), db.ForeignKey("users.id"), nullable=False)
     media = db.Column(db.Text, nullable=False)
     caption = db.Column(db.Text, default="")
+    viewers = db.Column(db.JSON, default=list)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -224,6 +225,7 @@ class Story(db.Model):
             "authorId": self.author_id,
             "media": self.media,
             "caption": self.caption or "",
+            "viewers": self.viewers or [],
             "createdAt": self.created_at.isoformat() + "Z",
         }
 

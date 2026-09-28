@@ -2637,6 +2637,10 @@ class App {
         const story = userStories[this.currentStoryItemIndex];
         this.currentActiveStory = story; // Track for deletion
         const author = store.getUser(story.authorId);
+        
+        if (story.authorId !== store.db.currentUserId) {
+            store.viewStory(story.id);
+        }
 
         const deleteBtn = document.getElementById('story-delete-btn');
         if (deleteBtn) {
@@ -2649,6 +2653,20 @@ class App {
 
         const mediaEl = document.getElementById('story-viewer-media') || document.getElementById('story-viewer-img');
         if (mediaEl) mediaEl.src = story.media;
+        
+        const captionEl = document.getElementById('story-viewer-caption');
+        if (captionEl) captionEl.textContent = story.caption || '';
+        
+        const viewsContainer = document.getElementById('story-viewer-views');
+        const viewsCount = document.getElementById('story-viewer-views-count');
+        if (viewsContainer && viewsCount) {
+            if (story.authorId === store.db.currentUserId) {
+                viewsContainer.classList.remove('hidden');
+                viewsCount.textContent = (story.viewers || []).length;
+            } else {
+                viewsContainer.classList.add('hidden');
+            }
+        }
         
         const avatarEl = document.getElementById('story-viewer-avatar');
         if (avatarEl) avatarEl.src = author.avatar;
@@ -2716,6 +2734,34 @@ class App {
         if (this.storyTimer) clearTimeout(this.storyTimer);
         alert('Story settings: \n- Privacy: Public\n- Allow Replies: Yes\n(Demo)');
         // Resume timer after closing alert
+        this.renderStorySlide();
+    }
+    
+    shareCurrentStory() {
+        if (this.storyTimer) clearTimeout(this.storyTimer);
+        if (this.currentActiveStory) {
+            const url = window.location.origin + '/?story=' + this.currentActiveStory.id;
+            navigator.clipboard.writeText(url).then(() => {
+                this.showToast('Story link copied to clipboard! 🔗', 'success');
+            }).catch(() => {
+                this.showToast('Failed to copy link', 'danger');
+            });
+        }
+        // Resume
+        setTimeout(() => this.renderStorySlide(), 1000);
+    }
+    
+    showStoryViewers() {
+        if (this.storyTimer) clearTimeout(this.storyTimer);
+        if (this.currentActiveStory && this.currentActiveStory.viewers) {
+            const count = this.currentActiveStory.viewers.length;
+            if (count === 0) {
+                alert("No one has seen your story yet.");
+            } else {
+                alert(`${count} people have seen your story.`);
+                // We could render a modal list here, but a simple alert works for MVP.
+            }
+        }
         this.renderStorySlide();
     }
 
@@ -3015,6 +3061,8 @@ class App {
             if (submitBtn) submitBtn.disabled = true;
 
             const url = this._pendingStoryUpload ? await this._pendingStoryUpload : await this.uploadFile(this._pendingStoryFile);
+            const captionInput = document.getElementById('story-caption-input');
+            const caption = captionInput ? captionInput.value.trim() : "";
 
             if (submitBtn) submitBtn.disabled = false;
             if (!url) return;
@@ -3023,12 +3071,15 @@ class App {
                 id: 's_' + Date.now(),
                 authorId: store.db.currentUserId,
                 media: url,
+                caption: caption,
+                viewers: [],
                 createdAt: new Date().toISOString()
             });
             feed.render();
             document.getElementById('create-story-modal').classList.add('hidden');
             this._pendingStoryFile = null;
             this._pendingStoryUpload = null;
+            if (captionInput) captionInput.value = '';
             this.showToast('Story added to your tray! 🚀', 'success');
         } else {
             this.showToast('Please select a photo or video first.', 'danger');

@@ -288,6 +288,15 @@ class Store {
         this._api('DELETE', `/api/stories/${storyId}`);
     }
 
+    async viewStory(storyId) {
+        const story = (this.db.stories || []).find(s => s.id === storyId);
+        if (story && !story.viewers) story.viewers = [];
+        if (story && story.authorId !== this.db.currentUserId && !story.viewers.includes(this.db.currentUserId)) {
+            story.viewers.push(this.db.currentUserId);
+            this._api('POST', `/api/stories/${storyId}/view`).catch(e => console.error(e));
+        }
+    }
+
     getReels() {
         return this.db.reels || [];
     }

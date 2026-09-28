@@ -38,6 +38,22 @@ def delete_story(story_id):
     db.session.commit()
     return ok()
 
+@content_bp.post("/stories/<story_id>/view")
+@login_required
+def view_story(story_id):
+    story = Story.query.get(story_id)
+    if not story:
+        return err("Story not found.", 404)
+    
+    viewers = story.viewers or []
+    if current_user.id not in viewers and current_user.id != story.author_id:
+        viewers.append(current_user.id)
+        # SQLAlchemy JSON columns sometimes need reassignment to register changes
+        story.viewers = list(viewers) 
+        db.session.commit()
+    
+    return ok({"viewers": story.viewers})
+
 
 @content_bp.post("/reels")
 @login_required
