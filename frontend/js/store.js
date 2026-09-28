@@ -176,7 +176,23 @@ class Store {
     // POSTS & FEED METHODS
     // ==========================================
     getPosts() {
-        return (this.db.posts || []).filter(p => !this.isBlocked(p.authorId)).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const currentUser = this.getCurrentUser();
+        if (!currentUser) return [];
+        const myId = currentUser.id;
+        const myFriends = currentUser.friends || [];
+
+        return (this.db.posts || [])
+            .filter(p => !this.isBlocked(p.authorId))
+            .filter(p => {
+                if (p.authorId === myId) return true; // always see own posts
+                const author = this.getUser(p.authorId);
+                if (!author) return false;
+                const privacy = (author.privacySettings && author.privacySettings.posts) || 'public';
+                if (privacy === 'private') return false;
+                if (privacy === 'friends' && !myFriends.includes(p.authorId)) return false;
+                return true;
+            })
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
 
     getPost(postId) {

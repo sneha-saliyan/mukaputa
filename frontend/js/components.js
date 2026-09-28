@@ -731,16 +731,25 @@ function renderProfileView(user, currentTab = 'posts') {
     const currentUser = store.getCurrentUser();
     const isMe = currentUser.id === user.id;
     const isFriend = currentUser.friends && currentUser.friends.includes(user.id);
-    const userPosts = store.getPosts().filter(p => p.authorId === user.id);
-    const friends = store.getFriends(user.id);
+    
+    // Privacy check
+    const privacy = (user.privacySettings && user.privacySettings.posts) || 'public';
+    let isPrivate = false;
+    if (!isMe) {
+        if (privacy === 'private') isPrivate = true;
+        if (privacy === 'friends' && !isFriend) isPrivate = true;
+    }
+
+    const userPosts = isPrivate ? [] : store.getPosts().filter(p => p.authorId === user.id);
+    const friends = isPrivate ? [] : store.getFriends(user.id);
     const savedPosts = isMe ? store.getPosts().filter(p => store.isPostSaved(p.id)) : [];
 
     // Collect photos from posts that have media
-    const photos = store.getPosts()
+    const photos = isPrivate ? [] : store.getPosts()
         .filter(p => p.authorId === user.id && p.media && p.media.length > 0)
         .flatMap(p => p.media);
 
-    const userReels = store.getReels().filter(r => r.authorId === user.id);
+    const userReels = isPrivate ? [] : store.getReels().filter(r => r.authorId === user.id);
 
     return `
         <!-- Profile Card Header -->
@@ -828,9 +837,16 @@ function renderProfileView(user, currentTab = 'posts') {
 
         <!-- Tab Contents -->
         <div id="profile-tab-content">
+            ${isPrivate ? `
+                <div class="card" style="text-align: center; padding: 60px 20px; margin-top: 16px;">
+                    <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;">??</div>
+                    <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">This account is private</h2>
+                    <p style="color: var(--text-secondary);">Follow this user or become friends to see their posts and photos.</p>
+                </div>
+            ` : ''}
 
             <!-- POSTS TAB -->
-            ${currentTab === 'posts' ? `
+            ${(currentTab === 'posts' && !isPrivate) ? `
                 <div class="profile-posts-layout">
                     <!-- Intro card: Desktop only -->
                     <div class="profile-sidebar desktop-only">
@@ -858,7 +874,7 @@ function renderProfileView(user, currentTab = 'posts') {
             ` : ''}
 
             <!-- PHOTOS TAB -->
-            ${currentTab === 'photos' ? `
+            ${(currentTab === 'photos' && !isPrivate) ? `
                 ${photos.length > 0 ? `
                     <div class="profile-photos-grid">
                         ${photos.map((src, i) => `
@@ -881,7 +897,7 @@ function renderProfileView(user, currentTab = 'posts') {
             ` : ''}
 
             <!-- REELS TAB -->
-            ${currentTab === 'reels' ? `
+            ${(currentTab === 'reels' && !isPrivate) ? `
                 ${userReels.length > 0 ? `
                     <div class="reels-feed profile-reels-feed" style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; align-items: center;">
                         ${userReels.map(r => renderReel(r)).join('')}
@@ -896,7 +912,7 @@ function renderProfileView(user, currentTab = 'posts') {
             ` : ''}
 
             <!-- ABOUT TAB -->
-            ${currentTab === 'about' ? `
+            ${(currentTab === 'about' && !isPrivate) ? `
                 <div class="card">
                     <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 20px;">About ${escapeHtml(user.name)}</h3>
                     <div style="display: flex; flex-direction: column; gap: 18px;">
@@ -945,7 +961,7 @@ function renderProfileView(user, currentTab = 'posts') {
             ` : ''}
 
             <!-- FRIENDS TAB -->
-            ${currentTab === 'friends' ? `
+            ${(currentTab === 'friends' && !isPrivate) ? `
                 ${friends.length > 0 ? `
                     <div class="friends-grid">
                         ${friends.map(f => renderFriendCard(f, true)).join('')}
