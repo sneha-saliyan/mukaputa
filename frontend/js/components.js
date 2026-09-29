@@ -153,11 +153,15 @@ function renderPost(post) {
 
 
 
-    const mediaHtml = (post.media && post.media.length > 0) 
-
-        ? `<div class="post-media-container"><img src="${post.media[0]}" class="post-media" alt="Post media" loading="lazy"></div>` 
-
-        : '';
+    let mediaHtml = '';
+    if (post.media && post.media.length > 0) {
+        const url = post.media[0];
+        if (url.match(/\.(mp4|webm)$/i) || url.startsWith('blob:')) {
+            mediaHtml = `<div class="post-media-container"><video src="${url}" class="post-media" controls playsinline style="max-height: 500px; width: 100%; object-fit: contain; background: black;"></video></div>`;
+        } else {
+            mediaHtml = `<div class="post-media-container"><img src="${url}" class="post-media" alt="Post media" loading="lazy"></div>`;
+        }
+    }
 
 
 

@@ -5684,194 +5684,115 @@ class App {
     // ==========================================
 
     openLiveStudio() {
-
         const modal = document.getElementById('live-studio-modal');
-
         if (!modal) return;
-
         modal.classList.remove('hidden');
 
-
-
-        // Try getting real camera stream, otherwise show animated canvas
-
+        // Reset live stats
+        const commentsStream = document.getElementById('live-comments-stream');
+        if (commentsStream) commentsStream.innerHTML = '';
+        
+        // Try getting real camera stream
         const video = document.getElementById('live-webcam-preview');
-
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-
-            navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
                 .then(stream => {
-
                     video.srcObject = stream;
-
                     video.play();
-
+                    
+                    // Initialize real MediaRecorder
+                    this.recordedChunks = [];
+                    try {
+                        this.mediaRecorder = new MediaRecorder(stream);
+                    } catch (e) {
+                        console.warn("MediaRecorder failed:", e);
+                    }
+                    if (this.mediaRecorder) {
+                        this.mediaRecorder.ondataavailable = (e) => {
+                            if (e.data.size > 0) this.recordedChunks.push(e.data);
+                        };
+                        this.mediaRecorder.start();
+                    }
                 })
-
-                .catch(() => {
-
-                    console.log("Webcam permission not granted; using simulated stream.");
-
+                .catch(err => {
+                    console.log("Webcam permission not granted; using simulated stream.", err);
+                    this.showToast('Camera/Microphone access required for real live video.', 'danger');
                 });
-
         }
-
-
 
         // Live stats simulation
-
         let viewers = 14;
-
         const countEl = document.getElementById('live-viewers-count');
-
         this.liveStreamInterval = setInterval(() => {
-
             viewers += Math.floor(Math.random() * 5) - 1;
-
             if (viewers < 5) viewers = 5;
-
             if (countEl) countEl.textContent = `${viewers} viewers`;
-
         }, 2000);
 
-
-
-        // Live comments simulation
-
-        const commentsEl = document.getElementById('live-comments-stream');
-
-        const cannedLiveComments = [
-
-            { user: "Jane Smith", text: "Hey John! Great stream " },
-
-            { user: "Michael Johnson", text: "Quality looks crystal clear!" },
-
-            { user: "Sarah Connor", text: "Love the new UI changes!" },
-
-            { user: "Alex Turing", text: "Orange and Navy combo is fire " }
-
-        ];
-
-
-
+        // Fake live comments
+        const fakeUsers = ["Alice", "Bob", "Charlie", "Dave", "Eve"];
+        const fakeComments = ["Love this! 😍", "Where are you broadcasting from?", "Hello!", "This is so cool.", "Wait, is this real?", "Incredible quality!", "Hi everyone!"];
+        
         this.liveCommentsInterval = setInterval(() => {
-
-            if (commentsEl) {
-
-                const comment = cannedLiveComments[Math.floor(Math.random() * cannedLiveComments.length)];
-
-                const bubble = document.createElement('div');
-
-                bubble.className = 'live-comment-bubble';
-
-                bubble.innerHTML = `<strong>${comment.user}:</strong> ${comment.text}`;
-
-                commentsEl.appendChild(bubble);
-
-                commentsEl.scrollTop = commentsEl.scrollHeight;
-
+            if (commentsStream) {
+                const cEl = document.createElement('div');
+                cEl.style.padding = '4px 0';
+                cEl.style.fontSize = '14px';
+                cEl.style.animation = 'splashIn 0.3s ease forwards';
+                const u = fakeUsers[Math.floor(Math.random()*fakeUsers.length)];
+                const msg = fakeComments[Math.floor(Math.random()*fakeComments.length)];
+                cEl.innerHTML = `<strong style="color:var(--accent)">${u}:</strong> <span style="color:white">${msg}</span>`;
+                commentsStream.appendChild(cEl);
+                commentsStream.scrollTop = commentsStream.scrollHeight;
             }
-
-        }, 2600);
-
-
-
-        // Floating live reactions (hearts, fires, likes)
-
-        const container = document.querySelector('.live-studio-container');
-
-        this.liveReactionsInterval = setInterval(() => {
-
-            if (container) {
-
-                const emojis = ['', '', '', '', '', ''];
-
-                const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-
-                const floater = document.createElement('div');
-
-                floater.style.position = 'absolute';
-
-                floater.style.bottom = '80px';
-
-                floater.style.right = `${20 + Math.random() * 40}px`;
-
-                floater.style.fontSize = '26px';
-
-                floater.style.pointerEvents = 'none';
-
-                floater.style.zIndex = '50';
-
-                floater.style.animation = 'floatUp 2.2s ease-out forwards';
-
-                floater.textContent = emoji;
-
-                container.appendChild(floater);
-
-                setTimeout(() => floater.remove(), 2200);
-
-            }
-
-        }, 1200);
-
+        }, 3500);
     }
 
-
-
     endLiveStudio() {
-
         clearInterval(this.liveStreamInterval);
-
         clearInterval(this.liveCommentsInterval);
-
         clearInterval(this.liveReactionsInterval);
 
-
-
         const video = document.getElementById('live-webcam-preview');
+        let processRecording = false;
 
-        if (video && video.srcObject) {
-
-            video.srcObject.getTracks().forEach(t => t.stop());
-
+        if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+            processRecording = true;
+            this.mediaRecorder.onstop = () => {
+                const blob = new Blob(this.recordedChunks, { type: 'video/webm' });
+                const videoUrl = URL.createObjectURL(blob);
+                
+                const user = store.getCurrentUser();
+                store.addPost({
+                    id: 'p_live_' + Date.now(),
+                    authorId: store.db.currentUserId,
+                    text: `🔴 ${user.name} was live! Catch up on the broadcast recording here.`,
+                    media: [videoUrl],
+                    createdAt: new Date().toISOString(),
+                    reactions: { like: [], love: [] },
+                    comments: []
+                });
+                
+                this.recordedChunks = [];
+                this.mediaRecorder = null;
+                
+                app.forceRenderCurrentView();
+                this.showToast('Live stream published to your feed as a video! 🎬', 'success');
+            };
+            this.mediaRecorder.stop();
         }
 
-
+        if (video && video.srcObject) {
+            video.srcObject.getTracks().forEach(t => t.stop());
+            video.srcObject = null;
+        }
 
         document.getElementById('live-studio-modal')?.classList.add('hidden');
 
-
-
-        // Post the recorded broadcast to feed
-
-        store.addPost({
-
-            id: 'p_live_' + Date.now(),
-
-            authorId: store.db.currentUserId,
-
-            text: " John was live: 'Mukaputa 2.0 Live Broadcast & Q&A'  Thanks everyone for tuning in!",
-
-            media: ["https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800"],
-
-            createdAt: new Date().toISOString(),
-
-            reactions: { like: ["u2", "u3", "u4"], love: ["u1"] },
-
-            comments: []
-
-        });
-
-
-
-        feed.render();
-
-        this.showToast('Live stream published as video post! ', 'success');
-
+        if (!processRecording) {
+            this.showToast('Broadcast ended.', 'info');
+        }
     }
-
-
 
     // ==========================================
 
