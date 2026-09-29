@@ -1405,173 +1405,124 @@ class App {
 
 
     renderSavedView() {
-
         const container = document.getElementById('saved-container');
-
         if (!container) return;
-
         const savedPosts = store.getPosts().filter(p => store.isPostSaved(p.id));
-
         const savedJobs = store.getJobVacancies().filter(j => store.isJobSaved(j.id));
-
-
+        const savedReels = store.getReels().filter(r => store.isPostSaved(r.id));
 
         const renderSavedPostCard = (p) => {
-
             const author = store.getUser(p.authorId) || store.getUser(p.userId);
-
             let mediaHtml = '';
-
             if (p.media && p.media.length > 0) {
-
                 const mediaUrl = p.media[0];
-
                 if (mediaUrl.match(/\.(mp4|webm)$/i)) {
-
                     mediaHtml = `<video src="${mediaUrl}" style="width: 100%; height: 180px; object-fit: cover; border-bottom: 1px solid var(--border-color);" muted></video>`;
-
                 } else {
-
                     mediaHtml = `<img src="${mediaUrl}" style="width: 100%; height: 180px; object-fit: cover; border-bottom: 1px solid var(--border-color);">`;
-
                 }
-
             } else {
-
                 mediaHtml = `<div style="width: 100%; height: 120px; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border-color);"><span style="font-size: 32px; color: var(--text-secondary);"></span></div>`;
-
             }
 
-
-
             return `
-
                 <div class="card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s; position: relative;" onclick="app.viewUserProfile('${author.id}')" onmouseenter="this.style.transform='scale(1.02)'" onmouseleave="this.style.transform='scale(1)'">
-
                     ${mediaHtml}
-
                     <div style="padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-
                         <div>
-
                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-
                                 <img src="${author.avatar}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
-
                                 <span style="font-size: 13px; font-weight: 600;">${author.name}</span>
-
                             </div>
-
                             <p style="font-size: 13px; color: var(--text-primary); margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(p.text || p.caption || '')}</p>
-
                         </div>
-
                     </div>
-
-                    <button class="icon-btn-small" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; border: none; backdrop-filter: blur(4px);" onclick="event.stopPropagation(); app.savePost('${p.id}')">
-
+                    <button class="icon-btn-small" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; border: none; backdrop-filter: blur(4px);" onclick="event.stopPropagation(); app.savePost('${p.id}'); app.renderSavedView();">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-
                     </button>
-
                 </div>
-
             `;
-
         };
-
-
+        
+        const renderSavedReelCard = (r) => {
+            const author = store.getUser(r.authorId);
+            return `
+                <div class="card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s; position: relative;" onclick="app.viewUserProfile('${author.id}')" onmouseenter="this.style.transform='scale(1.02)'" onmouseleave="this.style.transform='scale(1)'">
+                    <video src="${r.media}" style="width: 100%; height: 240px; object-fit: cover; border-bottom: 1px solid var(--border-color);" muted></video>
+                    <div style="padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <img src="${author.avatar}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
+                                <span style="font-size: 13px; font-weight: 600;">${author.name}</span>
+                            </div>
+                            <p style="font-size: 13px; color: var(--text-primary); margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(r.caption || '')}</p>
+                        </div>
+                    </div>
+                    <button class="icon-btn-small" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: var(--accent); border: none; backdrop-filter: blur(4px);" onclick="event.stopPropagation(); app.saveReel('${r.id}'); app.renderSavedView();">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                    </button>
+                    <div style="position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">?? Reel</div>
+                </div>
+            `;
+        };
 
         const renderSavedJobCard = (j) => {
-
             return `
-
                 <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 12px; cursor: pointer; transition: transform 0.2s; position: relative;" onmouseenter="this.style.transform='scale(1.02)'" onmouseleave="this.style.transform='scale(1)'" onclick="app.viewJobDetails('${j.id}')">
-
                     <div style="display: flex; align-items: center; gap: 12px;">
-
                         <div style="width: 48px; height: 48px; background: var(--accent); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">
-
                             ${j.company.charAt(0)}
-
                         </div>
-
                         <div style="flex: 1; overflow: hidden;">
-
                             <h4 style="font-size: 15px; margin: 0 0 4px 0; font-weight: 600;">${j.title}</h4>
-
                             <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">${j.company}  ${j.location}</p>
-
                         </div>
-
                     </div>
-
                     <p style="font-size: 12px; color: var(--success); margin: 0; font-weight: 600;">${j.salary || 'Salary Negotiable'}</p>
-
-                    <button class="icon-btn-small" style="position: absolute; top: 12px; right: 12px; color: var(--accent); background: var(--bg-secondary);" onclick="event.stopPropagation(); app.toggleJobSave('${j.id}')">
-
+                    <button class="icon-btn-small" style="position: absolute; top: 12px; right: 12px; color: var(--accent); background: var(--bg-secondary);" onclick="event.stopPropagation(); app.toggleJobSave('${j.id}'); app.renderSavedView();">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-
                     </button>
-
                 </div>
-
             `;
-
         };
 
-
-
         container.innerHTML = `
-
             <div style="margin-bottom: 32px;">
-
                 <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-
-                    Saved Posts (${savedPosts.length})
-
+                    Saved Reels (${savedReels.length})
                 </h3>
-
-                ${savedPosts.length > 0 
-
+                ${savedReels.length > 0 
                     ? `<div class="saved-posts-grid">
-
-                        ${savedPosts.map(p => renderSavedPostCard(p)).join('')}
-
+                        ${savedReels.map(r => renderSavedReelCard(r)).join('')}
                        </div>`
-
-                    : '<p class="text-secondary" style="padding: 32px; background: var(--bg-card); border-radius: 12px; text-align: center; border: 1px dashed var(--border-color);">No saved posts yet.</p>'}
-
+                    : '<p class="text-secondary" style="padding: 32px; background: var(--bg-card); border-radius: 12px; text-align: center; border: 1px dashed var(--border-color);">No saved reels yet.</p>'}
             </div>
-
-
+            
+            <div style="margin-bottom: 32px;">
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                    Saved Posts (${savedPosts.length})
+                </h3>
+                ${savedPosts.length > 0 
+                    ? `<div class="saved-posts-grid">
+                        ${savedPosts.map(p => renderSavedPostCard(p)).join('')}
+                       </div>`
+                    : '<p class="text-secondary" style="padding: 32px; background: var(--bg-card); border-radius: 12px; text-align: center; border: 1px dashed var(--border-color);">No saved posts yet.</p>'}
+            </div>
 
             <div>
-
                 <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-
                     Saved Jobs (${savedJobs.length})
-
                 </h3>
-
                 ${savedJobs.length > 0 
-
                     ? `<div class="saved-jobs-grid">
-
                         ${savedJobs.map(j => renderSavedJobCard(j)).join('')}
-
                        </div>`
-
                     : '<p class="text-secondary" style="padding: 32px; background: var(--bg-card); border-radius: 12px; text-align: center; border: 1px dashed var(--border-color);">No saved jobs yet.</p>'}
-
             </div>
-
         `;
-
     }
 
 
