@@ -214,37 +214,75 @@ def deactivate_account():
 def delete_account():
     uid = current_user.id
 
-    # Clean up everything owned by / referencing this user.
-    PostReaction.query.filter_by(user_id=uid).delete()
-    CommentReply.query.filter_by(author_id=uid).delete()
-    Comment.query.filter_by(author_id=uid).delete()
-    for p in Post.query.filter_by(author_id=uid).all():
-        db.session.delete(p)
-    ReelLike.query.filter_by(user_id=uid).delete()
-    ReelComment.query.filter_by(author_id=uid).delete()
-    for r in Reel.query.filter_by(author_id=uid).all():
-        db.session.delete(r)
-    Story.query.filter_by(author_id=uid).delete()
-    FriendLink.query.filter((FriendLink.user_id == uid) | (FriendLink.friend_id == uid)).delete()
-    Follow.query.filter((Follow.follower_id == uid) | (Follow.followee_id == uid)).delete()
-    BlockedUser.query.filter((BlockedUser.user_id == uid) | (BlockedUser.blocked_id == uid)).delete()
-    SavedItem.query.filter_by(user_id=uid).delete()
-    Notification.query.filter((Notification.user_id == uid) | (Notification.actor_id == uid)).delete()
-    JobApplication.query.filter_by(user_id=uid).delete()
+    try:
+        # 1. First, delete child records directly linked to user
+        from ..models import SupportTicket, Note, JobVacancy, Message, ConversationParticipant, Conversation, WatchVideo, Page, PageFollower, Report, Ad
+        
+        # New additions that were causing FK failures
+        SupportTicket.query.filter_by(user_id=uid).delete(synchronize_session=False)
+        Note.query.filter_by(author_id=uid).delete(synchronize_session=False)
+        JobVacancy.query.filter_by(poster_id=uid).delete(synchronize_session=False)
+        PageFollower.query.filter_by(follower_id=uid).delete(synchronize_session=False)
+        Report.query.filter_by(reporter_id=uid).delete(synchronize_session=False)
+        for page in Page.query.filter_by(owner_id=uid).all():
+            PageFollower.query.filter_by(page_id=page.id).delete(synchronize_session=False)
+            db.session.delete(page)
+        Ad.query.filter_by(advertiser_id=uid).delete(synchronize_session=False)
+        
+        # Original cleanups
+        PostReaction.query.filter_by(user_id=uid).delete(synchronize_session=False)
+        CommentReply.query.filter_by(author_id=uid).delete(synchronize_session=False)
+        Comment.query.filter_by(author_id=uid).delete(synchronize_session=False)
+        for p in Post.query.filter_by(author_id=uid).all():
+            db.session.delete(p)
+            
+        ReelLike.query.filter_by(user_id=uid).delete(synchronize_session=False)
+        ReelComment.query.filter_by(author_id=uid).delete(synchronize_session=False)
+        for r in Reel.query.filter_by(author_id=uid).all():
+            db.session.delete(r)
+            
+        Story.query.filter_by(author_id=uid).delete(synchronize_session=False)
+        FriendLink.query.filter((FriendLink.user_id == uid) | (FriendLink.friend_id == uid)).delete(synchronize_session=False)
+        Follow.query.filter((Follow.follower_id == uid) | (Follow.followee_id == uid)).delete(synchronize_session=False)
+        BlockedUser.query.filter((BlockedUser.user_id == uid) | (BlockedUser.blocked_id == uid)).delete(synchronize_session=False)
+        SavedItem.query.filter_by(user_id=uid).delete(synchronize_session=False)
+        Notification.query.filter((Notification.user_id == uid) | (Notification.actor_id == uid)).delete(synchronize_session=False)
+        JobApplication.query.filter_by(user_id=uid).delete(synchronize_session=False)
 
-    my_conv_ids = [cp.conversation_id for cp in ConversationParticipant.query.filter_by(user_id=uid).all()]
-    for cid in my_conv_ids:
-        conv = Conversation.query.get(cid)
-        if conv:
-            db.session.delete(conv)
+        # Messaging cleanup: delete user's messages first
+        Message.query.filter_by(sender_id=uid).delete(synchronize_session=False)
+        
+        my_conv_ids = [cp.conversation_id for cp in ConversationParticipant.query.filter_by(user_id=uid).all()]
+        # Remove user from conversations
+        ConversationParticipant.query.filter_by(user_id=uid).delete(synchronize_session=False)
+        
+        # Only delete conversations where NO participants are left
+        for cid in my_conv_ids:
+            remaining = ConversationParticipant.query.filter_by(conversation_id=cid).count()
+            if remaining == 0:
+                Message.query.filter_by(conversation_id=cid).delete(synchronize_session=False)
+                conv = Conversation.query.get(cid)
+                if conv:
+                    db.session.delete(conv)
 
-    user = User.query.get(uid)
-    logout_user()
-    session.clear()
-    if user:
-        db.session.delete(user)
-    db.session.commit()
-    return ok({"message": "Account deleted."})
+        user = User.query.get(uid)
+        
+        logout_user()
+        session.clear()
+        
+        if user:
+            db.session.delete(user)
+            
+        db.session.commit()
+        return ok({"message": "Account deleted."})
+        
+    except Exception as e:
+        db.session.rollback()
+        import traceback
+        err_msg = str(e)
+        print("Delete Account Error:", traceback.format_exc())
+        return err(f"Database error preventing deletion: {err_msg}", 500)
+
 
 import os
 import requests
