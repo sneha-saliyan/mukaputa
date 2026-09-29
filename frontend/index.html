@@ -22,124 +22,85 @@
 
     
 
-    <link rel="stylesheet" href="css/variables.css?v=111">
+    <link rel="stylesheet" href="css/variables.css?v=112">
 
-    <link rel="stylesheet" href="css/layout.css?v=111">
+    <link rel="stylesheet" href="css/layout.css?v=112">
 
-    <link rel="stylesheet" href="css/components.css?v=111">
+    <link rel="stylesheet" href="css/components.css?v=112">
 
-    <link rel="stylesheet" href="css/feed.css?v=111">
+    <link rel="stylesheet" href="css/feed.css?v=112">
 
     <link rel="stylesheet" href="css/realtime.css">
 
     <style>
-
         #app-splash {
-
             position: fixed;
-
             inset: 0;
-
             z-index: 99999;
-
             display: flex;
-
             flex-direction: column;
-
             align-items: center;
-
             justify-content: center;
-
-            gap: 40px;
-
             background: #ffffff;
-
-            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        body.dark-theme #app-splash { background: #0a0a0a; }
+        
+        #app-splash.fade-out {
+            opacity: 0;
+            transform: scale(1.05);
+            pointer-events: none;
         }
 
-        body.dark-theme #app-splash { background: #0d0d0d; }
-
-        #app-splash.fade-out {
-
-            opacity: 0;
-
-            pointer-events: none;
-
+        #app-splash .splash-logo-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #app-splash .splash-logo {
-
-            width: 72px;
-
-            height: 72px;
-
+            width: 84px;
+            height: 84px;
             object-fit: contain;
-
             opacity: 0;
-
-            transform: translateY(6px);
-
-            animation: splashIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
-
+            z-index: 2;
+            animation: splashIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards, splashPulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.8s;
+            filter: drop-shadow(0 4px 12px rgba(255, 122, 0, 0.15));
         }
 
-        #app-splash .splash-bar {
-
-            width: 40px;
-
-            height: 2px;
-
-            background: rgba(0,0,0,0.08);
-
-            border-radius: 2px;
-
-            overflow: hidden;
-
+        #app-splash .splash-glow {
+            position: absolute;
+            width: 84px;
+            height: 84px;
+            background: radial-gradient(circle, rgba(255, 122, 0, 0.15) 0%, rgba(255, 122, 0, 0) 70%);
+            border-radius: 50%;
+            z-index: 1;
             opacity: 0;
-
-            animation: splashIn 0.4s ease 0.4s forwards;
-
-        }
-
-        #app-splash .splash-bar-fill {
-
-            height: 100%;
-
-            width: 0%;
-
-            background: #FF7A00;
-
-            border-radius: 2px;
-
-            animation: loadBar 1.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s infinite;
-
+            animation: splashIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards, glowPulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.8s;
         }
 
         @keyframes splashIn {
-
-            to { opacity: 1; transform: translateY(0); }
-
+            0% { opacity: 0; transform: scale(0.85) translateY(12px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        @keyframes loadBar {
+        @keyframes splashPulse {
+            0% { transform: scale(1); filter: drop-shadow(0 4px 12px rgba(255, 122, 0, 0.15)); }
+            50% { transform: scale(1.06); filter: drop-shadow(0 8px 24px rgba(255, 122, 0, 0.3)); }
+            100% { transform: scale(1); filter: drop-shadow(0 4px 12px rgba(255, 122, 0, 0.15)); }
+        }
 
-            0%   { width: 0%;   margin-left: 0; }
-
-            50%  { width: 80%;  margin-left: 10%; }
-
-            100% { width: 0%;   margin-left: 100%; }
-
+        @keyframes glowPulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.5); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.5; }
         }
 
         @media (prefers-color-scheme: dark) {
-
-            #app-splash { background: #0d0d0d; }
-
-            #app-splash .splash-bar { background: rgba(255,255,255,0.08); }
-
+            #app-splash { background: #0a0a0a; }
+            #app-splash .splash-glow { background: radial-gradient(circle, rgba(255, 122, 0, 0.25) 0%, rgba(255, 122, 0, 0) 70%); }
         }
-
     </style>
 
 </head>
@@ -147,10 +108,11 @@
 <body>
 
     <div id="app-splash">
-
-        <img src="logo.png" alt="Mukaputa" class="splash-logo" onerror="this.style.opacity='0'">
-
-        <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+        <div class="splash-logo-container">
+            <div class="splash-glow"></div>
+            <img src="logo.png" alt="Mukaputa" class="splash-logo" onerror="this.style.opacity='0'">
+        </div>
+    </div></div>
 
     </div>
 
@@ -3062,13 +3024,13 @@
 
     <script src="js/vendor/socket.io.min.js"></script>
 
-    <script src="js/store.js?v=111"></script>
+    <script src="js/store.js?v=112"></script>
 
-    <script src="js/components.js?v=111"></script>
+    <script src="js/components.js?v=112"></script>
 
-    <script src="js/feed.js?v=111"></script>
+    <script src="js/feed.js?v=112"></script>
 
-    <script src="js/app.js?v=111"></script>
+    <script src="js/app.js?v=112"></script>
 
     <script src="js/calls.js"></script>
 
@@ -3077,6 +3039,7 @@
 </body>
 
 </html>
+
 
 
 
