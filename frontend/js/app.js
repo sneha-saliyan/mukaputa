@@ -6989,39 +6989,76 @@ class App {
     // Data Portability
 
     downloadMyData() {
-
         const user = store.getCurrentUser();
+        const posts = store.getPosts().filter(p => p.authorId === user.id);
+        
+        let html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Mukaputa Data</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #1c1e21; line-height: 1.5; padding: 20px; margin: 0; }
+        .container { max-width: 680px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        h1 { margin: 0 0 10px 0; color: #ff6b35; }
+        h2 { border-bottom: 2px solid #f0f2f5; padding-bottom: 8px; margin-top: 0; }
+        img.avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 16px; border: 4px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .profile-info p { margin: 8px 0; }
+        .post-date { font-size: 13px; color: #65676b; margin-bottom: 12px; display: block; }
+        .post-text { font-size: 15px; margin-bottom: 12px; white-space: pre-wrap; }
+        .post-media { width: 100%; border-radius: 8px; margin-top: 10px; max-height: 500px; object-fit: contain; background: #000; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Mukaputa Data Archive</h1>
+            <p style="color: #65676b; margin: 0;">Generated on ${new Date().toLocaleString()}</p>
+        </div>
 
-        const data = {
+        <div class="card">
+            <h2>Profile Information</h2>
+            <div style="text-align: center;">
+                ${user.avatar ? `<img class="avatar" src="${user.avatar}" alt="Avatar">` : ''}
+            </div>
+            <div class="profile-info">
+                <p><strong>Name:</strong> ${escapeHtml(user.name || 'N/A')}</p>
+                <p><strong>Username:</strong> @${escapeHtml(user.username || 'N/A')}</p>
+                <p><strong>Email:</strong> ${escapeHtml(user.email || 'N/A')}</p>
+                <p><strong>Bio:</strong> ${escapeHtml(user.bio || 'No bio provided')}</p>
+                <p><strong>Work:</strong> ${escapeHtml(user.work || 'N/A')}</p>
+                <p><strong>Education:</strong> ${escapeHtml(user.education || 'N/A')}</p>
+                <p><strong>Location:</strong> ${escapeHtml(user.location || 'N/A')}</p>
+                <p><strong>Joined:</strong> ${escapeHtml(user.joined || 'N/A')}</p>
+            </div>
+        </div>
 
-            profile: user,
+        <h2>Your Posts (${posts.length})</h2>
+        ${posts.length === 0 ? '<div class="card"><p>You haven\'t created any posts yet.</p></div>' : ''}
+        ${posts.map(p => `
+            <div class="card">
+                <span class="post-date">${new Date(p.createdAt).toLocaleString()}</span>
+                ${p.text ? `<div class="post-text">${escapeHtml(p.text)}</div>` : ''}
+                ${p.media && p.media.length > 0 ? `<img class="post-media" src="${p.media[0]}" alt="Post attachment">` : ''}
+            </div>
+        `).join('')}
+    </div>
+</body>
+</html>`;
 
-            posts: store.getPosts().filter(p => p.authorId === user.id),
-
-            timestamp: new Date().toISOString()
-
-        };
-
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-
+        const blob = new Blob([html], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
-
         const a = document.createElement('a');
-
         a.href = url;
-
-        a.download = `mukaputa_data_${user.username}.json`;
-
+        a.download = `Mukaputa_Data_${user.username}.html`;
         document.body.appendChild(a);
-
         a.click();
-
         document.body.removeChild(a);
-
         URL.revokeObjectURL(url);
-
-        this.showToast('Your data download has started! ', 'success');
-
+        this.showToast('Your data archive has been generated! ??', 'success');
     }
 
 
