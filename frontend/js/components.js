@@ -40,13 +40,13 @@ function timeAgo(dateString) {
 
 function getReactionEmoji(type) {
     switch (type) {
-        case 'like': return '??';
-        case 'love': return '??';
-        case 'haha': return '??';
-        case 'wow': return '??';
-        case 'sad': return '??';
-        case 'angry': return '??';
-        default: return '??';
+        case 'like': return '👍';
+        case 'love': return '❤️';
+        case 'haha': return '😂';
+        case 'wow': return '😮';
+        case 'sad': return '😢';
+        case 'angry': return '😡';
+        default: return '👍';
     }
 }
 
@@ -162,9 +162,7 @@ function renderPost(post) {
 
 
     const feelingHtml = post.feeling 
-
-        ? `<span style="font-weight: normal; color: var(--text-secondary);"> is ${post.feeling}</span>` 
-
+        ? `<span style="font-weight: normal; color: var(--text-secondary);"> is ☺️ ${post.feeling}</span>` 
         : '';
 
 
@@ -1697,15 +1695,15 @@ function renderProfileView(user, currentTab = 'posts') {
 
                             <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: var(--text-secondary);">
 
-                                ${user.work ? `<div style="display: flex; align-items: center; gap: 8px;"> <span>Works at <strong style="color: var(--text-primary);">${escapeHtml(user.work)}</strong></span></div>` : ''}
+                                ${user.work ? `<div style="display: flex; align-items: center; gap: 8px;">💼 <span>Works at <strong style="color: var(--text-primary);">${escapeHtml(user.work)}</strong></span></div>` : ''}
 
-                                ${user.education ? `<div style="display: flex; align-items: center; gap: 8px;"> <span>Studied at <strong style="color: var(--text-primary);">${escapeHtml(user.education)}</strong></span></div>` : ''}
+                                ${user.education ? `<div style="display: flex; align-items: center; gap: 8px;">🎓 <span>Studied at <strong style="color: var(--text-primary);">${escapeHtml(user.education)}</strong></span></div>` : ''}
 
-                                <div style="display: flex; align-items: center; gap: 8px;"> <span>Lives in <strong style="color: var(--text-primary);">${user.location || 'San Francisco, CA'}</strong></span></div>
+                                <div style="display: flex; align-items: center; gap: 8px;">📍 <span>Lives in <strong style="color: var(--text-primary);">${user.location || 'San Francisco, CA'}</strong></span></div>
 
-                                <div style="display: flex; align-items: center; gap: 8px;"> <span><strong style="color: var(--text-primary);">${user.joined || 'Joined 2022'}</strong></span></div>
+                                <div style="display: flex; align-items: center; gap: 8px;">🗓️ <span><strong style="color: var(--text-primary);">${user.joined || 'Joined 2022'}</strong></span></div>
 
-                                ${isMe ? `<button class="btn btn-secondary btn-sm full-width" style="margin-top: 6px;" onclick="app.openEditProfileModal()"> Edit details</button>` : ''}
+                                ${isMe ? `<button class="btn btn-secondary btn-sm full-width" style="margin-top: 6px;" onclick="app.openEditProfileModal()">✏️ Edit details</button>` : ''}
 
                             </div>
 
@@ -1721,8 +1719,7 @@ function renderProfileView(user, currentTab = 'posts') {
 
                         : `<div class="card" style="text-align:center; padding: 48px 20px;">
 
-                               <div style="font-size: 40px; margin-bottom: 12px;"></div>
-
+                               <div style="font-size: 40px; margin-bottom: 12px;">📝</div>
                                <p class="text-secondary">No posts yet${isMe ? '. Share something!' : '.'}</p>
 
                                ${isMe ? `<button class="btn btn-primary" style="margin-top: 12px;" onclick="app.openCreatePostModal()">Create Post</button>` : ''}
