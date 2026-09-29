@@ -5162,7 +5162,7 @@ class App {
 
                 <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Replying to: <strong>${escapeHtml(msg.text || 'Attachment')}</strong></div>
 
-                <button onclick="app.cancelReply('${convId}')" style="background: none; border: none; cursor: pointer; color: var(--text-tertiary);">&times;</button>
+                <button onclick="app.cancelReply('${convId}')" style="background: none; border: none; cursor: pointer; color: var(--text-tertiary);">✕</button>
 
             `;
 
