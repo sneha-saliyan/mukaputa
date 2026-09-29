@@ -1760,19 +1760,16 @@ class App {
 
 
     togglePostMenu(postId) {
-
         // Close all other open menus first
-
         document.querySelectorAll('.post-dropdown:not(.hidden)').forEach(m => {
-
             if (m.id !== `post-menu-${postId}`) m.classList.add('hidden');
-
         });
-
-        const menu = document.getElementById(`post-menu-${postId}`);
-
-        if (menu) menu.classList.toggle('hidden');
-
+        const menus = document.querySelectorAll(`[id="post-menu-${postId}"]`);
+        menus.forEach(menu => {
+            if (menu.closest('.view-container.active') || menu.closest('.modal-overlay:not(.hidden)')) {
+                menu.classList.toggle('hidden');
+            }
+        });
     }
 
     
@@ -2128,23 +2125,16 @@ class App {
 
 
     toggleComments(postId) {
-
-        const commentsSection = document.getElementById(`comments-${postId}`);
-
-        if (commentsSection) {
-
-            commentsSection.classList.toggle('hidden');
-
-            if (!commentsSection.classList.contains('hidden')) {
-
-                const input = document.getElementById(`comment-input-${postId}`);
-
-                if (input) input.focus();
-
+        const commentsSections = document.querySelectorAll(`[id="comments-${postId}"]`);
+        commentsSections.forEach(commentsSection => {
+            if (commentsSection.closest('.view-container.active') || commentsSection.closest('.modal-overlay:not(.hidden)')) {
+                commentsSection.classList.toggle('hidden');
+                if (!commentsSection.classList.contains('hidden')) {
+                    const input = commentsSection.querySelector('.comment-input-field');
+                    if (input) input.focus();
+                }
             }
-
-        }
-
+        });
     }
 
 
