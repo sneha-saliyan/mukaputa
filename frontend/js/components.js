@@ -399,17 +399,17 @@ function renderPost(post) {
 
                     <div class="reaction-picker hidden" id="picker-${post.id}">
 
-                        <span class="reaction-icon" data-type="like" title="Like"></span>
+                        <span class="reaction-icon" data-type="like" title="Like">👍</span>
 
-                        <span class="reaction-icon" data-type="love" title="Love"></span>
+                        <span class="reaction-icon" data-type="love" title="Love">❤️</span>
 
-                        <span class="reaction-icon" data-type="haha" title="Haha"></span>
+                        <span class="reaction-icon" data-type="haha" title="Haha">😂</span>
 
-                        <span class="reaction-icon" data-type="wow" title="Wow"></span>
+                        <span class="reaction-icon" data-type="wow" title="Wow">😮</span>
 
-                        <span class="reaction-icon" data-type="sad" title="Sad"></span>
+                        <span class="reaction-icon" data-type="sad" title="Sad">😢</span>
 
-                        <span class="reaction-icon" data-type="angry" title="Angry"></span>
+                        <span class="reaction-icon" data-type="angry" title="Angry">😡</span>
 
                     </div>
 
